@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toko Komponen PC</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800 transition duration-300" id="body">
+
+  <!-- Login Section -->
+  <section id="login-section" class="flex flex-col items-center justify-center min-h-screen">
+    <h1 class="text-2xl font-bold mb-4">Login</h1>
+    <select id="role-select" class="border p-2 rounded mb-2" onchange="toggleAdminFields()">
+      <option value="customer">Pelanggan</option>
+      <option value="admin">Admin</option>
+    </select>
+    <input type="text" id="admin-username" placeholder="Username Admin" class="border p-2 rounded mb-2 hidden">
+    <input type="password" id="admin-password" placeholder="Password Admin" class="border p-2 rounded mb-2 hidden">
+    <button onclick="login()" class="px-4 py-2 bg-blue-600 text-white rounded">Masuk</button>
+  </section>
+
+  <!-- Main App -->
+  <div id="app" class="hidden">
+    <!-- Header -->
+    <header class="bg-blue-900 text-white py-4 px-6 flex justify-between items-center">
+      <h1 class="text-xl font-bold">Toko Komponen PC</h1>
+      <div class="space-x-2">
+        <button onclick="openInstruction()" class="px-3 py-1 bg-yellow-500 text-black rounded hover:bg-yellow-600">Cara Belanja</button>
+        <button onclick="toggleTheme()" class="px-3 py-1 bg-gray-700 rounded hover:bg-gray-800">Mode</button>
+        <button onclick="logout()" class="px-3 py-1 bg-red-600 rounded hover:bg-red-700">Logout</button>
+      </div>
+    </header>
+
+    <!-- Modal Instruksi -->
+    <div id="instruction-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+      <div class="bg-white p-6 rounded shadow-md max-w-md w-full">
+        <h2 class="text-lg font-bold mb-2">Instruksi Pembelian</h2>
+        <ol class="list-decimal list-inside text-sm space-y-1 mb-4">
+          <li>Login sebagai pelanggan.</li>
+          <li>Pilih produk dari daftar dan masukkan jumlah.</li>
+          <li>Lihat keranjang belanja & klik checkout.</li>
+          <li>Masukkan data transfer: bank, nomor rekening, dan link bukti transfer.</li>
+          <li>Invoice otomatis dibuat, notifikasi terkirim ke WhatsApp admin.</li>
+          <li>Tunggu konfirmasi admin bahwa pembayaran diterima.</li>
+        </ol>
+        <button onclick="closeInstruction()" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">Tutup</button>
+      </div>
+    </div>
+
+    <!-- Keranjang -->
+    <section class="m-4 p-4 bg-white rounded shadow">
+      <h2 class="text-lg font-bold mb-2">Keranjang Belanja</h2>
+      <div id="cart-items" class="space-y-2"></div>
+      <p id="cart-total" class="font-bold mt-2">Total: Rp 0</p>
+      <button onclick="checkoutCart()" class="mt-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+        Checkout & Buat Invoice
+      </button>
+    </section>
+
+    <!-- Pencarian Produk -->
+    <section class="m-4 p-4 bg-white rounded shadow">
+      <input type="text" id="search-box" placeholder="Cari produk..."
+             class="border p-2 rounded w-full mb-2">
+    </section>
+
+    <!-- Produk -->
+    <main class="p-6">
+      <h2 class="text-xl font-bold mb-4">Daftar Produk</h2>
+      <div id="product-list" class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"></div>
+    </main>
+
+    <!-- Admin Panel -->
+    <section id="admin-panel" class="m-4 p-4 bg-white rounded shadow hidden">
+      <h2 class="text-lg font-bold mb-2">Admin Panel</h2>
+      <input type="text" id="newName" placeholder="Nama Produk" class="border p-1 rounded mb-1 w-full">
+      <input type="number" id="newPrice" placeholder="Harga" class="border p-1 rounded mb-1 w-full">
+      <input type="number" id="newStock" placeholder="Stok" class="border p-1 rounded mb-1 w-full">
+      <input type="text" id="newCategory" placeholder="Kategori" class="border p-1 rounded mb-1 w-full">
+      <input type="text" id="newImage" placeholder="URL Gambar" class="border p-1 rounded mb-2 w-full">
+      <button onclick="addProduct()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Tambah Produk</button>
+      <button onclick="resetData()" class="mt-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Reset Data Toko</button>
+    </section>
+
+    <!-- Invoice Section -->
+    <section class="p-6 bg-white shadow-md rounded-lg m-6">
+      <h2 class="text-xl font-bold mb-4">Daftar Invoice</h2>
+      <div id="invoice-list" class="space-y-4"></div>
+    </section>
+  </div>
+
+  <script>
+    let products = JSON.parse(localStorage.getItem("products")) || [
+      { name: "Processor Intel Core i5", price: 2500000, stock: 5, category: "Processor", image: "https://images.unsplash.com/photo-1587202372775-98927ac12b23" },
+      { name: "RAM DDR4 16GB", price: 800000, stock: 10, category: "RAM", image: "https://images.unsplash.com/photo-1606813908925-3b87e22140ae" }
+    ];
+    let invoices = JSON.parse(localStorage.getItem('invoices')) || [];
+    let adminNotifications = JSON.parse(localStorage.getItem('adminNotifications')) || [];
+    let cart = [];
+    const adminNumber = "6281234567890"; // nomor WA admin
+
+    function toggleAdminFields() {
+      const role = document.getElementById("role-select").value;
+      document.getElementById("admin-username").classList.toggle("hidden", role !== "admin");
+      document.getElementById("admin-password").classList.toggle("hidden", role !== "admin");
+    }
+
+    function login() {
+      const role = document.getElementById("role-select").value;
+      const username = document.getElementById("admin-username").value;
+      const password = document.getElementById("admin-password").value;
+
+      if (role === "admin") {
+        if (username !== "admin" || password !== "admin123") {
+          alert("Username atau password Admin salah!");
+          return;
+        }
+        if (adminNotifications.length > 0) {
+          alert(`Ada ${adminNotifications.length} pesanan baru!`);
+          adminNotifications = [];
+          localStorage.setItem('adminNotifications', JSON.stringify(adminNotifications));
+        }
+        document.getElementById("admin-panel").classList.remove("hidden");
+      } else {
+        document.getElementById("admin-panel").classList.add("hidden");
+      }
+
+      localStorage.setItem("role", role);
+      document.getElementById("login-section").classList.add("hidden");
+      document.getElementById("app").classList.remove("hidden");
+      renderCart();
+      renderInvoices();
+      displayProducts();
+    }
+
+    function logout() { localStorage.removeItem("role"); location.reload(); }
+
+    function openInstruction() { document.getElementById("instruction-modal").classList.remove("hidden"); }
+    function closeInstruction() { document.getElementById("instruction-modal").classList.add("hidden"); }
+
+    function displayProducts() {
+      const productList = document.getElementById("product-list");
+      productList.innerHTML = "";
+      const search = document.getElementById("search-box").value.toLowerCase();
+      const role = localStorage.getItem("role");
+
+      products
+        .filter(p => p.name.toLowerCase().includes(search))
+        .forEach((p, index) => {
+          const disabled = p.stock <= 0;
+          let adminButtons = "";
+          if (role === "admin") {
+            adminButtons = `
+              <button onclick="editProduct(${index})" class="mt-2 px-3 py-1 bg-yellow-500 text-black rounded hover:bg-yellow-600">Edit</button>
+              <button onclick="deleteProduct(${index})" class="mt-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">Hapus</button>`;
+          }
+          productList.innerHTML += `
+            <div class="bg-white rounded-xl shadow-md overflow-hidden p-4 text-center">
+              <img src="${p.image}" alt="${p.name}" class="w-full h-32 object-cover">
+              <h3 class="font-semibold mt-2">${p.name}</h3>
+              <p class="text-red-600 font-bold">Rp ${p.price.toLocaleString()}</p>
+              <p>Stok: ${p.stock}</p>
+              <button onclick="addToCart(${index})"
+                class="mt-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 ${disabled ? 'opacity-50 cursor-not-allowed' : ''}"
+                ${disabled ? 'disabled' : ''}>
+                Tambah ke Keranjang
+              </button>
+              ${adminButtons}
+            </div>
+          `;
+        });
+    }
+
+    document.getElementById("search-box").addEventListener("input", displayProducts);
+
+    function addProduct() {
+      const name = document.getElementById("newName").value;
+      const price = parseInt(document.getElementById("newPrice").value);
+      const stock = parseInt(document.getElementById("newStock").value);
+      const category = document.getElementById("newCategory").value;
+      const image = document.getElementById("newImage").value;
+      if (!name || !price || !stock || !category || !image) return alert("Lengkapi semua data produk!");
+      products.push({ name, price, stock, category, image });
+      localStorage.setItem("products", JSON.stringify(products));
+      displayProducts();
+    }
+
+    function editProduct(index) {
+      const p = products[index];
+      const newName = prompt("Nama Produk:", p.name);
+      const newPrice = parseInt(prompt("Harga:", p.price));
+      const newStock = parseInt(prompt("Stok:", p.stock));
+      if (!newName || !newPrice || isNaN(newStock)) return;
+      products[index] = { ...p, name: newName, price: newPrice, stock: newStock, category: p.category, image: p.image };
+      localStorage.setItem("products", JSON.stringify(products));
+      displayProducts();
+    }
+
+    function deleteProduct(index) {
+      if (confirm("Yakin ingin menghapus produk ini?")) {
+        products.splice(index, 1);
+        localStorage.setItem("products", JSON.stringify(products));
+        displayProducts();
+      }
+    }
+
+    function addToCart(index) {
+      const qty = parseInt(prompt("Masukkan jumlah barang:"), 10);
+      if (!qty || qty <= 0) return;
+      if (qty > products[index].stock) return alert("Stok tidak mencukupi!");
+      const existing = cart.find(item => item.name === products[index].name);
+      if (existing) existing.qty += qty;
+      else cart.push({ ...products[index], qty });
+      products[index].stock -= qty;
+      localStorage.setItem("products", JSON.stringify(products));
+      renderCart(); displayProducts();
+    }
+
+    function renderCart() {
+      const cartItems = document.getElementById("cart-items");
+      const cartTotal = document.getElementById("cart-total");
+      cartItems.innerHTML = "";
+      let total = 0;
+      cart.forEach((item, i) => {
+        const subtotal = item.qty * item.price;
+        total += subtotal;
+        cartItems.innerHTML += `<div class="flex justify-between items-center border-b pb-1">
+          <span>${item.name} x${item.qty}</span><span>Rp ${subtotal.toLocaleString()}</span>
+        </div>`;
+      });
+      cartTotal.innerText = `Total: Rp ${total.toLocaleString()}`;
+    }
+
+    function checkoutCart() {
+      if (cart.length === 0) return alert("Keranjang kosong!");
+      const buyer = prompt("Masukkan nama pembeli:");
+      if (!buyer) return;
+
+      const bank = prompt("Masukkan Nama Bank:");
+      const rekening = prompt("Masukkan Nomor Rekening:");
+      const bukti = prompt("Masukkan link bukti transfer (gambar):");
+
+      const invoice = {
+        id: Date.now(),
+        buyer,
+        items: cart,
+        total: cart.reduce((sum, item) => sum + item.qty * item.price, 0),
+        payment: { bank, rekening, bukti, status: "Menunggu Konfirmasi Admin" }
+      };
+
+      invoices.push(invoice);
+      localStorage.setItem("invoices", JSON.stringify(invoices));
+
+      adminNotifications.push(`Pesanan baru dari ${buyer}, total Rp ${invoice.total.toLocaleString()}`);
+      localStorage.setItem("adminNotifications", JSON.stringify(adminNotifications));
+
+      const message = `Pesanan baru dari ${buyer}, total Rp ${invoice.total.toLocaleString()}, Bank: ${bank}, Rek: ${rekening}.`;
+      window.open(`https://wa.me/${adminNumber}?text=${encodeURIComponent(message)}`, "_blank");
+
+      cart = [];
+      renderCart();
+      alert("Invoice dan pembayaran berhasil dibuat!");
+      renderInvoices();
+    }
+
+    function renderInvoices() {
+      const invoiceList = document.getElementById("invoice-list");
+      invoiceList.innerHTML = "";
+      if (invoices.length === 0) {
+        invoiceList.innerHTML = "<p class='text-gray-500'>Belum ada invoice.</p>";
+        return;
+      }
+      invoices.forEach(inv => {
+        invoiceList.innerHTML += `
+          <div class="border rounded p-4 shadow-sm">
+            <p><strong>ID:</strong> ${inv.id}</p>
+            <p><strong>Pembeli:</strong> ${inv.buyer}</p>
+            <p>Total: Rp ${inv.total.toLocaleString()}</p>
+            <p>Status Pembayaran: ${inv.payment.status}</p>
+            <p>Bank: ${inv.payment.bank} - Rek: ${inv.payment.rekening}</p>
+            <img src="${inv.payment.bukti}" alt="Bukti Transfer" class="w-32 h-32 object-cover mt-2 border">
+          </div>`;
+      });
+    }
+
+    function toggleTheme() {
+      document.getElementById("body").classList.toggle("bg-gray-900");
+      document.getElementById("body").classList.toggle("text-white");
+    }
+
+    function resetData() {
+      if (confirm("Hapus semua data?")) {
+        products = [];
+        invoices = [];
+        adminNotifications = [];
+        localStorage.clear();
+        renderInvoices();
+        alert("Data direset!");
+      }
+    }
+  </script>
+</body>
+</html>
