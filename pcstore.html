@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PC Store — Fajar Artcom</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+    /* Small extra custom styles & animations */
+    @keyframes floatUp {
+      from { transform: translateY(12px); opacity: 0 }
+      to   { transform: translateY(0); opacity: 1 }
+    }
+    .animate-float { animation: floatUp .7s ease-out both; }
+
+    /* nice glass effect for product cards */
+    .glass {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(6px);
+    }
+    /* modal full-screen on small devices */
+    @media (max-width: 640px) {
+      #cart-modal .modal-box { width: 100%; height: 100%; border-radius: 0; }
+    }
+
+    /* small helper for price aligning */
+    .price { white-space: nowrap; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- NAVBAR -->
+  <header class="fixed w-full z-40 bg-white/80 backdrop-blur-md shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-3">
+          <div class="text-2xl font-extrabold text-blue-600">FAJAR ARTCOM</div>
+          <div class="hidden sm:block text-sm text-gray-600">Komponen PC, Handphone, Jaringan & Aksesoris</div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <nav class="hidden md:flex gap-4 text-sm">
+            <a href="#produk" class="hover:text-blue-600">Produk</a>
+            <a href="#tentang" class="hover:text-blue-600">Tentang</a>
+            <a href="#kontak" class="hover:text-blue-600">Kontak</a>
+            <a href="tracking.html" class="text-sm hover:underline text-gray-600">Tracking Pesanan</a>
+
+          </nav>
+
+          <button id="cart-toggle" aria-label="Buka keranjang"
+            class="flex items-center gap-2 bg-yellow-400 text-black px-3 py-2 rounded-md shadow hover:scale-105 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4"></path></svg>
+            <span class="font-semibold">Keranjang</span>
+            <span id="cart-count" class="ml-1 bg-black text-white text-xs rounded-full px-2 py-0.5">0</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="relative overflow-hidden pt-20">
+    <!-- background gradient -->
+    <div class="absolute inset-0 bg-gradient-to-r from-blue-700 to-indigo-600 -z-10"></div>
+
+    <!-- semi-transparent photo (example) -->
+    <img src="https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=0d8b5d9a7a2f9c197a4d2f9b7b8b0a4b"
+         alt="Foto Toko"
+         class="absolute right-0 top-0 h-full object-cover opacity-20 pointer-events-none -z-20" />
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        <div class="text-white space-y-6 animate-float">
+          <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight drop-shadow-lg">
+            Selamat Datang di <span class="text-yellow-300">FAJAR ARTCOM</span>
+          </h1>
+          <p class="text-sm sm:text-base text-white/90 max-w-xl drop-shadow">
+            Pusat penjualan komponen komputer, RAM, SSD, processor, VGA, Servis Handphone (Ganti LCD, Baterai, Tombol dll), Jaringan, Instal Aplikasi Komputer (Windows, Game, Software) dan aksesoris. Pesan langsung via WhatsApp — cepat, mudah, aman.
+          </p>
+
+          <div class="flex gap-3">
+            <a href="#produk" class="inline-flex items-center gap-2 bg-yellow-400 text-gray-900 font-semibold px-5 py-3 rounded-full shadow-lg hover:scale-105 transition">
+              Lihat Produk
+            </a>
+            <a href="#kontak" class="inline-flex items-center gap-2 border border-white/30 px-5 py-3 rounded-full hover:bg-white/10 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-5 h-5" viewBox="0 0 24 24">
+                    <path d="M20.52 3.48A11.8 11.8 0 0012 .3 11.71 11.71 0 001.5 18.39L.06 24l5.79-1.47a11.72 11.72 0 006.15 1.65h.06A11.8 11.8 0 0020.52 3.48zM12 21.55a9.53 9.53 0 01-5.12-1.46l-.36-.22-3.44.88.91-3.35-.23-.34a9.56 9.56 0 018.21-14.64h.05a9.54 9.54 0 016.74 16.29 9.5 9.5 0 01-6.76 2.29zm5.46-7.3c-.3-.15-1.76-.87-2.03-.97s-.47-.15-.66.15-.76.97-.93 1.17-.34.22-.63.07a7.79 7.79 0 01-2.27-1.41 8.49 8.49 0 01-1.56-1.92c-.16-.26-.02-.4.12-.55s.3-.34.45-.52a1.87 1.87 0 00.3-.51.51.51 0 00-.02-.52c-.08-.15-.66-1.59-.91-2.18s-.47-.5-.65-.51h-.55a1.06 1.06 0 00-.77.36 3.21 3.21 0 00-1 2.39 5.6 5.6 0 001.17 2.56 12.89 12.89 0 004.82 4.57 9.56 9.56 0 003.38 1c.59.09 1.12.06 1.54 0a2.91 2.91 0 001.89-1.33 2.35 2.35 0 00.17-1.33c-.07-.12-.27-.18-.56-.33z"/>
+                  </svg>
+              Hubungi Kami
+            </a>
+          </div>
+
+          <div class="mt-4 flex gap-3">
+            <!-- small trust badges -->
+            <div class="bg-white/10 px-3 py-1 rounded-md text-xs">Stock ready</div>
+            <div class="bg-white/10 px-3 py-1 rounded-md text-xs">Garansi 1 tahun</div>
+            <div class="bg-white/10 px-3 py-1 rounded-md text-xs">COD available</div>
+            
+          </div>
+          <div class="mt-2 flex gap-3">
+            <div class="bg-white/10 px-3 py-1 rounded-md text-xs">Request/Pre Order</div>
+            <div class="bg-white/10 px-3 py-1 rounded-md text-xs">Belanja Aman</div>
+            <div class="bg-white/10 px-3 py-1 rounded-md text-xs">WhatsApp</div>
+          </div>
+        </div>
+
+        <!-- hero image (decorative) -->
+        <div class="hidden md:flex justify-center">
+          <div class="w-full max-w-md p-4 rounded-xl glass shadow-xl">
+            <img src="https://images.unsplash.com/photo-1611078482156-09f2d8a9f6b0?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=2f7c6c36a2f82b9c7a5a4f1a1b6b3a8e"
+                 alt="Foto toko transparan"
+                 class="w-full h-56 object-cover rounded-md" />
+            <div class="mt-4">
+              <div class="text-sm text-white/90 font-semibold">Fajar Artcom - Toko Komputer</div>
+              <div class="text-xs text-white/70">Kepohbaru, Bojonegoro — Buka 09:00 - 18:00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="bg-yellow-100 py-12 px-4 text-center">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="text-3xl font-bold mb-4">🎉 Promo Spesial Bulan Ini!</h2>
+      <p class="text-lg text-gray-700 mb-6">Dapatkan diskon hingga <span class="text-red-600 font-semibold">30%</span> untuk pembelian komponen PC tertentu.</p>
+      <a href="#produk" class="bg-red-600 text-white px-6 py-2 rounded-full shadow-md hover:bg-red-700 transition duration-300">
+        Lihat Produk Promo
+      </a>
+    </div>
+  </section>
+  <section class="bg-gradient-to-r from-red-500 to-orange-400 text-white py-12 px-6">
+    <div class="max-w-6xl mx-auto text-center">
+      <h2 class="text-3xl font-bold mb-2">⚡ Flash Sale Sedang Berlangsung!</h2>
+      <p class="mb-4">Buruan sebelum waktunya habis!</p>
+      <div id="countdown" class="text-2xl font-mono bg-white text-red-700 px-6 py-2 inline-block rounded mb-6">00:00:00</div>
+  
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-4">
+        <!-- Produk flash sale -->
+        <div class="bg-white text-gray-800 rounded shadow p-4">
+          <img src="rakitpc.jpg" alt="RAM" class="mb-2 rounded">
+          <h3 class="font-bold text-lg">Rakit PC</h3>
+          <p class="line-through text-gray-500">Rp5000.000</p>
+          <p class="text-red-600 font-bold">Rp4500.000</p>
+        </div>
+        <!-- Tambahkan produk lainnya sesuai kebutuhan -->
+      </div>
+    </div>
+  </section>
+  
+  
+
+  <!-- PRODUCTS -->
+  <main id="produk" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h2 class="text-2xl font-bold mb-6">Produk Unggulan</h2>
+
+    <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- JS will inject product cards here -->
+    </div>
+    
+  </main>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Testimoni Section -->
+<section id="testimoni" class="py-16 bg-gray-100">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h2 class="text-3xl font-bold mb-8 text-gray-800">Apa Kata Pelanggan</h2>
+  
+      <div id="testimonial-slider" class="relative">
+        <!-- Testimoni Item -->
+        <div class="testimonial-item transition-opacity duration-500 opacity-100">
+          <p class="text-lg italic mb-2">"Pelayanan cepat, harga terjangkau, dan sangat ramah! Sangat puas belanja di sini."</p>
+          <h4 class="font-semibold text-gray-800">Rizal F.</h4>
+          <span class="text-sm text-gray-500">Pelajar - Lamongan</span>
+        </div>
+  
+        <div class="testimonial-item hidden transition-opacity duration-500">
+          <p class="text-lg italic mb-2">"Komponen PC lengkap dan admin sangat membantu memilih spesifikasi terbaik!"</p>
+          <h4 class="font-semibold text-gray-800">Nadya L.</h4>
+          <span class="text-sm text-gray-500">Freelancer - Surabaya</span>
+        </div>
+  
+        <div class="testimonial-item hidden transition-opacity duration-500">
+          <p class="text-lg italic mb-2">"Belanja online mudah banget, tinggal kirim chat WA langsung dibantu semua."</p>
+          <h4 class="font-semibold text-gray-800">Andi S.</h4>
+          <span class="text-sm text-gray-500">Mahasiswa - Gresik</span>
+        </div>
+  
+        <!-- Navigasi -->
+        <div class="mt-6 flex justify-center gap-4">
+          <button onclick="prevTestimoni()" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-full">←</button>
+          <button onclick="nextTestimoni()" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-full">→</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  </div>
+
+  <!-- CART MODAL -->
+  <div id="cart-modal" class="fixed inset-0 hidden items-center justify-center z-50">
+    <div class="absolute inset-0 bg-black/50" onclick="closeCart()"></div>
+    <div class="modal-box relative bg-white rounded-lg shadow-xl max-w-md w-full p-4 z-10" id="cart-content">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold">Keranjang</h3>
+        <button class="text-gray-600 hover:text-gray-900" onclick="closeCart()">✕</button>
+      </div>
+
+      <div id="cart-items" class="space-y-3 max-h-64 overflow-auto pb-2">
+        <!-- items -->
+      </div>
+
+      <div class="border-t pt-3 mt-3 flex items-center justify-between">
+        <div class="text-sm">Total</div>
+        <div class="text-lg font-bold">Rp <span id="cart-total">0</span></div>
+      </div>
+
+      <div class="mt-4 flex gap-2">
+        <button onclick="cetakInvoice()" class="flex-1 bg-green-600 text-white py-2 rounded-md hover:bg-green-700">Cetak Invoice</button>
+        <button onclick="checkoutWA()" class="flex-1 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">Pesan via WA</button>
+      </div>
+
+      <div class="mt-3 text-xs text-gray-500">Masukan nama & nomor WA di form invoice sebelum cetak bila ingin tercantum pada invoice.</div>
+    </div>
+  </div>
+  
+
+  <!-- FOOTER -->
+  <footer id="kontak" class="bg-white border-t mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid grid-cols-1 sm:grid-cols-3 gap-6">
+      <div>
+        <div class="text-2xl font-bold text-blue-600">Fajar Artcom</div>
+        <p class="text-sm text-gray-600 mt-2">Kepohbaru — Bojonegoro <br/> Buka: 09:00 - 18:00</p>
+      </div>
+
+      <div>
+        <h4 class="font-semibold mb-2">Menu</h4>
+        <ul class="text-sm text-gray-600 space-y-1">
+          <li><a href="#produk" class="hover:text-blue-600">Produk</a></li>
+          <li><a href="#tentang" class="hover:text-blue-600">Tentang</a></li>
+          <li><a href="https://wa.me/6285730775261" class="hover:text-blue-600">Kontak</a></li>
+          <li><a href="tracking.html" class="hover:text-blue-600">Lacak pesanan</li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-semibold mb-2">Cara Belanja</h4>
+        <ul class="text-sm text-gray-600 space-y-1">
+          <li><a class="">1. Tambah produk</a></li>
+          <li><a class="">2. Buka Keranjang</a></li>
+          <li><a class="">3. Cetak Invoice/Pesan via WhatsApp</a></li>
+          <li><a class="">4. Kirim bukti invoice ke WhatsApp Admin</a></li>
+          <li><a class="">5. Tunggu Konfirmasi Admin untuk stok barang</a></li>
+          <li><a class="">6. Bayar dan Kirim Bukti atau bisa COD/Cash</a></li>
+          <li><a class="">7. Selesai dan tunggu pesanan anda di Rumah</a></li>       
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-semibold mb-2">Hubungi Kami</h4>
+        <p class="text-sm text-gray-600">WhatsApp: <a id="wa-number-link" href="#" class="text-blue-600 font-semibold"></a>
+        <div class="mt-3 flex gap-2">
+          <a href="#" class="text-gray-500 text-sm hover:text-blue-600">Privacy</a>
+          <a href="#" class="text-gray-500 text-sm hover:text-blue-600">Syarat</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-gray-50 border-t">
+      <div class="max-w-7xl mx-auto px-4 py-4 text-sm text-gray-500">© <span id="year"></span> Fajar Artcom — Semua hak dilindungi.</div>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script>
+    // ---------- CONFIG ----------
+    // Ganti nomor WA di sini (format internasional tanpa +, contoh: 6281234567890)
+    const WA_NUMBER = "6285730775261"; // <-- ganti dengan nomormu
+
+    // ---------- SAMPLE PRODUCTS ----------
+    const products = [
+      { id: 1, name: "Rakit PC (CPU Only/Fullset) Sesuai Budget", price: 4500000, wa: WA_NUMBER, img: "rakitpc.jpg" },
+      { id: 2, name: "RAM 8GB DDR3", price: 230000, wa: WA_NUMBER, img: "ram8gbddr3.jpg" },
+      { id: 3, name: "SSD RX7 128GB", price: 275000, wa: WA_NUMBER, img: "ssdrx7.jpg" },
+      { id: 4, name: "Processor Intel Core i3 2120 LGA 1155", price: 200000, wa: WA_NUMBER, img: "corei31155.jpg" },
+      { id: 5, name: "PSU 500W Inforce", price: 250000, wa: WA_NUMBER, img: "psu.jpg" },
+      { id: 6, name: "Casing Mid Tower", price: 450000, wa: WA_NUMBER, img: "casingpc.jpg" },
+      { id: 7, name: "Motherboard H61 RX7", price: 350000, wa: WA_NUMBER, img: "moboh61rx7.jpg" }
+    ];
+
+    // ---------- STATE ----------
+    let cart = [];
+
+    // ---------- UTILS ----------
+    function formatRp(n) {
+      // format number to '1.234.567'
+      return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    // ---------- INIT ----------
+    document.getElementById('year').innerText = new Date().getFullYear();
+    const waLinkEl = document.getElementById('wa-number-link');
+    waLinkEl.href = `https://wa.me/${WA_NUMBER}`;
+    waLinkEl.innerText = WA_NUMBER;
+
+    // render product list
+    const productListEl = document.getElementById('product-list');
+    products.forEach((p, idx) => {
+      const card = document.createElement('div');
+      card.className = "rounded-lg overflow-hidden shadow hover:shadow-lg transition glass flex flex-col";
+
+      card.innerHTML = `
+        <div class="relative">
+          <img src="${p.img}" alt="${p.name}" class="w-full h-48 object-cover">
+          <div class="absolute top-2 left-2 bg-yellow-400 text-black text-xs font-semibold px-2 py-1 rounded">Stok Ready</div>
+        </div>
+        <div class="p-4 flex-1 flex flex-col">
+          <h3 class="font-semibold text-gray-800">${p.name}</h3>
+          <p class="text-sm text-gray-500 mt-1 flex-1">${p.name}</p>
+          <div class="mt-4 flex items-center justify-between">
+            <div class="price font-bold text-gray-900">Rp ${formatRp(p.price)}</div>
+            <div class="flex gap-2">
+              <button class="add-btn inline-flex items-center gap-2 px-3 py-2 rounded-md bg-blue-600 text-white text-sm hover:bg-blue-700 transition" data-index="${idx}">
+                Tambah
+              </button>
+              <a class="inline-flex items-center gap-2 px-3 py-2 rounded-md bg-green-600 text-white text-sm hover:bg-green-700 transition" href="https://wa.me/${p.wa}?text=${encodeURIComponent('Halo, saya tertarik membeli ' + p.name)}" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-5 h-5" viewBox="0 0 24 24">
+    <path d="M20.52 3.48A11.8 11.8 0 0012 .3 11.71 11.71 0 001.5 18.39L.06 24l5.79-1.47a11.72 11.72 0 006.15 1.65h.06A11.8 11.8 0 0020.52 3.48zM12 21.55a9.53 9.53 0 01-5.12-1.46l-.36-.22-3.44.88.91-3.35-.23-.34a9.56 9.56 0 018.21-14.64h.05a9.54 9.54 0 016.74 16.29 9.5 9.5 0 01-6.76 2.29zm5.46-7.3c-.3-.15-1.76-.87-2.03-.97s-.47-.15-.66.15-.76.97-.93 1.17-.34.22-.63.07a7.79 7.79 0 01-2.27-1.41 8.49 8.49 0 01-1.56-1.92c-.16-.26-.02-.4.12-.55s.3-.34.45-.52a1.87 1.87 0 00.3-.51.51.51 0 00-.02-.52c-.08-.15-.66-1.59-.91-2.18s-.47-.5-.65-.51h-.55a1.06 1.06 0 00-.77.36 3.21 3.21 0 00-1 2.39 5.6 5.6 0 001.17 2.56 12.89 12.89 0 004.82 4.57 9.56 9.56 0 003.38 1c.59.09 1.12.06 1.54 0a2.91 2.91 0 001.89-1.33 2.35 2.35 0 00.17-1.33c-.07-.12-.27-.18-.56-.33z"/>
+  </svg>WA</a>
+            </div>
+          </div>
+        </div>
+      `;
+      productListEl.appendChild(card);
+    });
+
+    // add to cart handlers (event delegation)
+    productListEl.addEventListener('click', (ev) => {
+      const btn = ev.target.closest('.add-btn');
+      if (!btn) return;
+      const idx = Number(btn.getAttribute('data-index'));
+      addToCart(products[idx]);
+    });
+
+    // ---------- CART FUNCTIONS ----------
+    const cartModal = document.getElementById('cart-modal');
+    const cartCountEl = document.getElementById('cart-count');
+    const cartItemsEl = document.getElementById('cart-items');
+    const cartTotalEl = document.getElementById('cart-total');
+
+    document.getElementById('cart-toggle').addEventListener('click', openCart);
+
+    function addToCart(product) {
+      // add new item with quantity 1. If exists, increment qty.
+      const existing = cart.find(i => i.id === product.id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ ...product, qty: 1 });
+      }
+      updateCartUI();
+      // small floating toast (native)
+      showTemporaryToast(`${product.name} ditambahkan ke keranjang`);
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter(i => i.id !== id);
+      updateCartUI();
+    }
+
+    function changeQty(id, delta) {
+      const item = cart.find(i => i.id === id);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) removeFromCart(id);
+      updateCartUI();
+    }
+
+    function getCartTotal() {
+      // compute total digit-by-digit (JS math but precise for integer currency)
+      let total = 0;
+      cart.forEach(item => {
+        // price * qty, both integers - safe in JS for typical currency ranges
+        // adding step-by-step to avoid mistakes:
+        const line = item.price * item.qty;
+        total += line;
+      });
+      return total;
+    }
+
+    function updateCartUI() {
+      // update count, list, total
+      const count = cart.reduce((s, it) => s + it.qty, 0);
+      cartCountEl.innerText = count;
+      cartItemsEl.innerHTML = "";
+
+      if (cart.length === 0) {
+        cartItemsEl.innerHTML = `<div class="text-sm text-gray-500">Belum ada item di keranjang.</div>`;
+      } else {
+        cart.forEach(it => {
+          const row = document.createElement('div');
+          row.className = "flex items-center justify-between gap-2";
+          row.innerHTML = `
+            <div class="flex items-start gap-3">
+              <img src="${it.img}" alt="${it.name}" class="w-12 h-12 object-cover rounded">
+              <div>
+                <div class="text-sm font-semibold">${it.name}</div>
+                <div class="text-xs text-gray-500">Rp ${formatRp(it.price)} x ${it.qty}</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button class="text-xs px-2 py-1 border rounded" onclick="changeQty(${it.id}, -1)">−</button>
+              <div class="text-sm w-6 text-center">${it.qty}</div>
+              <button class="text-xs px-2 py-1 border rounded" onclick="changeQty(${it.id}, 1)">+</button>
+              <button class="text-xs px-2 py-1 text-red-600" onclick="removeFromCart(${it.id})">hapus</button>
+            </div>
+          `;
+          cartItemsEl.appendChild(row);
+        });
+      }
+
+      cartTotalEl.innerText = formatRp(getCartTotal());
+    }
+
+    // expose for inline onclick
+    window.changeQty = changeQty;
+    window.removeFromCart = removeFromCart;
+
+    // ---------- MODAL ----------
+    function openCart() {
+      cartModal.classList.remove('hidden');
+      cartModal.classList.add('flex', 'items-center', 'justify-center');
+      updateCartUI();
+    }
+    function closeCart() {
+      cartModal.classList.add('hidden');
+      cartModal.classList.remove('flex', 'items-center', 'justify-center');
+    }
+
+    // also close when clicking outside content handled earlier by overlay click
+
+    // ---------- INVOICE (PDF) ----------
+    async function cetakInvoice() {
+      if (cart.length === 0) { alert('Keranjang kosong!'); return; }
+
+      // prompt buyer info (simple)
+      const buyerName = prompt("Nama pembeli (opsional):", "") || "";
+      const buyerPhone = prompt("Nomor WA pembeli (opsional, contoh 62812...):", "") || "";
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+
+      const marginLeft = 40;
+      let y = 40;
+
+      // Header
+      doc.setFontSize(16);
+      doc.setFont("helvetica", "bold");
+      doc.text("FAJAR ARTCOM", marginLeft, y);
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.text("Kepohbaru — Bojonegoro", marginLeft, y + 16);
+      doc.text("WhatsApp: " + WA_NUMBER, marginLeft, y + 30);
+
+      // Invoice title & date
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.text("INVOICE", 500, y);
+      const now = new Date();
+      const dateStr = now.toLocaleString();
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "normal");
+      doc.text("Tanggal: " + dateStr, 500, y + 16);
+
+      y += 60;
+
+      // Buyer
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      if (buyerName) doc.text("Nama Pembeli: " + buyerName, marginLeft, y);
+      if (buyerPhone) doc.text("WA Pembeli: " + buyerPhone, marginLeft, y + 14);
+
+      y += buyerName || buyerPhone ? 36 : 0;
+
+      // Table header
+      doc.setFont("helvetica", "bold");
+      doc.text("No", marginLeft, y);
+      doc.text("Produk", marginLeft + 40, y);
+      doc.text("Qty", marginLeft + 360, y, { align: 'right' });
+      doc.text("Harga", marginLeft + 420, y, { align: 'right' });
+      doc.text("Subtotal", marginLeft + 520, y, { align: 'right' });
+
+      y += 12;
+      doc.setLineWidth(0.5);
+      doc.line(marginLeft, y, 560, y);
+      y += 12;
+
+      // Table rows
+      doc.setFont("helvetica", "normal");
+      let index = 1;
+      let total = 0;
+      cart.forEach(item => {
+        const subtotal = item.price * item.qty;
+        // draw text
+        doc.text(String(index), marginLeft, y);
+        doc.text(item.name, marginLeft + 40, y);
+        doc.text(String(item.qty), marginLeft + 360, y, { align: 'right' });
+        doc.text("Rp " + formatRp(item.price), marginLeft + 420, y, { align: 'right' });
+        doc.text("Rp " + formatRp(subtotal), marginLeft + 520, y, { align: 'right' });
+
+        y += 18;
+        total += subtotal;
+        index++;
+        // simple page-break if needed
+        if (y > 720) { doc.addPage(); y = 40; }
+      });
+
+      // total
+      y += 10;
+      doc.setLineWidth(0.5);
+      doc.line(marginLeft, y, 560, y);
+      y += 16;
+      doc.setFont("helvetica", "bold");
+      doc.text("Total", marginLeft + 420, y, { align: 'right' });
+      doc.text("Rp " + formatRp(total), marginLeft + 520, y, { align: 'right' });
+
+      // footer note
+      y += 30;
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.text("Terima kasih telah berbelanja. Silakan hubungi WhatsApp kami untuk konfirmasi pembayaran.", marginLeft, y);
+
+      // Save file
+      doc.save(`invoice_${(new Date()).getTime()}.pdf`);
+    }
+
+    // ---------- CHECKOUT VIA WA ----------
+    function checkoutWA() {
+      if (cart.length === 0) { alert('Keranjang kosong!'); return; }
+
+      // build message
+      let msg = "Halo, saya ingin memesan:%0A";
+      cart.forEach(it => {
+        msg += `- ${it.name} x${it.qty} (Rp ${formatRp(it.price)})%0A`;
+      });
+      const total = getCartTotal();
+      msg += `%0ATotal: Rp ${formatRp(total)}%0A`;
+      msg += "Mohon informasi ketersediaan & cara pembayaran.";
+
+      // open WA; use store WA number
+      const waUrl = `https://wa.me/${WA_NUMBER}?text=${msg}`;
+      window.open(waUrl, '_blank');
+    }
+
+    // ---------- SMALL TOAST ----------
+    function showTemporaryToast(text) {
+      // native simple toast at bottom
+      const t = document.createElement('div');
+      t.className = 'fixed left-1/2 -translate-x-1/2 bottom-8 bg-black text-white px-4 py-2 rounded shadow-lg z-60';
+      t.style.zIndex = 9999;
+      t.innerText = text;
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 1800);
+    }
+
+    // ---------- small keyboard accessibility: close modal on Esc ----------
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeCart();
+    });
+
+    // initial update
+    updateCartUI();
+
+  </script>
+
+<script>
+    const testimonials = document.querySelectorAll('.testimonial-item');
+    let current = 0;
+  
+    function showTestimonial(index) {
+      testimonials.forEach((item, i) => {
+        item.classList.toggle('hidden', i !== index);
+        item.classList.toggle('opacity-100', i === index);
+      });
+    }
+  
+    function nextTestimoni() {
+      current = (current + 1) % testimonials.length;
+      showTestimonial(current);
+    }
+  
+    function prevTestimoni() {
+      current = (current - 1 + testimonials.length) % testimonials.length;
+      showTestimonial(current);
+    }
+  
+    // Inisialisasi pertama
+    showTestimonial(current);
+  </script>
+
+  <script>
+    // Atur waktu akhir flash sale (misal 1 jam dari sekarang)
+    const endTime = new Date(Date.now() + 60 * 60 * 1000);
+  
+    function updateCountdown() {
+      const now = new Date();
+      const diff = endTime - now;
+  
+      if (diff <= 0) {
+        document.getElementById("countdown").textContent = "00:00:00";
+        return;
+      }
+  
+      const hrs = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, '0');
+      const mins = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+      const secs = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
+  
+      document.getElementById("countdown").textContent = `${hrs}:${mins}:${secs}`;
+    }
+  
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+  </script>
+
+  <!-- Floating WhatsApp Chat -->
+<script type="text/javascript">
+    (function () {
+      var options = {
+        whatsapp: "+6285730775261", // Ganti dengan nomor WA kamu
+        call_to_action: "Chat via WhatsApp", 
+        position: "right", 
+      };
+      var proto = document.location.protocol, host = "getbutton.io", url = proto + "//static." + host;
+      var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = url + '/widget-send-button/js/init.js';
+      s.onload = function () { WhWidgetSendButton.init(host, proto, options); };
+      var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x);
+    })();
+  </script>
+  
+  
+</body>
+</html>
