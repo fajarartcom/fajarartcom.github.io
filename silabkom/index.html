@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sistem Informasi Laboratorium Komputer</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS & Flowbite -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+
+  <!-- FullCalendar -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.css"
+    rel="stylesheet"
+  />
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js"></script>
+
+  <!-- Feather Icons -->
+  <script src="https://unpkg.com/feather-icons"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.10.2/lottie.min.js"></script>
+
+  <!-- data-->
+  <script src="data.js"></script>
+  <script src="announcement.js"></script>
+  <script src="gallery.js"></script>
+  <script src="script.js"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    th.sortable {
+      cursor: pointer;
+      user-select: none;
+    }
+    th.sortable:hover {
+      color: #2563eb; /* Tailwind blue-600 */
+    }
+    /* Scrollbar styling for tables if needed */
+    tbody::-webkit-scrollbar {
+      width: 8px;
+    }
+    tbody::-webkit-scrollbar-thumb {
+      background-color: #a0aec0;
+      border-radius: 4px;
+    }
+    /* Toast animation */
+    #toast-maintenance {
+      transition: opacity 0.3s ease;
+    }
+    /* Marquee fallback if marquee tag not supported */
+    #announcement-bar marquee {
+      font-weight: 600;
+    }
+
+    @keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-in-out;
+}
+.hover-zoom img {
+  transition: transform 0.4s ease;
+}
+.hover-zoom img:hover {
+  transform: scale(1.05);
+}
+.bar {
+  display: inline-block;
+  width: 3px;
+  background: white;
+  animation: bounce 1s infinite ease-in-out;
+}
+
+.bar:nth-child(1) { animation-delay: 0s; }
+.bar:nth-child(2) { animation-delay: 0.2s; }
+.bar:nth-child(3) { animation-delay: 0.4s; }
+.bar:nth-child(4) { animation-delay: 0.6s; }
+
+@keyframes bounce {
+  0%, 40%, 100% { height: 5px; }
+  20% { height: 20px; }
+}
+
+.paused .bar {
+  animation-play-state: paused;
+}
+
+
+
+
+  </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+
+  <!-- Navbar -->
+  <nav class="bg-blue-600 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 fixed w-full z-30 top-0 shadow-m">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+      <a href="#" class="flex items-center space-x-2 text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74 9.94"/></svg>
+        <span class="text-xl font-bold">Lab Komputer SMK NU 1 Kedungpring</span>
+      </a>
+      </li>      
+      <button id="theme-toggle" aria-label="Toggle Dark Mode" class="p-2 rounded-lg hover:bg-blue-700 dark:hover:bg-gray-700 text-white">
+        <svg id="icon-theme" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </button>
+    </div>
+  </nav>
+<!-- Floating Music Player -->
+<div id="musicPlayer" 
+    class="fixed bottom-6 right-6 bg-blue-600 text-white rounded-full shadow-lg z-50 overflow-hidden">
+
+    <!-- Tombol Play/Pause -->
+    <button id="toggleMusic" class="w-14 h-14 flex flex-col items-center justify-center">
+        <div id="visualizer" class="flex space-x-1 h-6 items-end">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </button>
+
+    <!-- Playlist Popup -->
+    <div id="playlist" class="hidden bg-white text-black p-2 w-56 rounded-lg absolute bottom-16 right-0 shadow-lg">
+        <h4 class="font-semibold mb-2">🎼 Playlist</h4>
+        <ul id="playlistList" class="space-y-1"></ul>
+    </div>
+
+    <!-- Tombol Playlist -->
+    <button id="togglePlaylist" 
+        class="absolute top-0 right-0 bg-blue-800 p-1 rounded-full transform translate-x-1/2 -translate-y-1/2 text-xs">
+        🎵
+    </button>
+</div>
+
+<!-- Audio Player -->
+<audio id="bgMusic" loop></audio>
+
+<!-- Import Playlist Data -->
+<script src="playlist.js"></script>
+
+
+
+
+
+
+  <!-- Main Content -->
+  <main class="max-w-screen-xl mx-auto px-4 pt-28 pb-16">
+
+    <!-- Announcement Bar -->
+<div id="announcementBar" class="relative py-2 overflow-hidden hidden">
+    <div class="container mx-auto flex items-center space-x-4 px-4">
+      <!-- Icon -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v4a2 2 0 002 2h5m7-4h2a2 2 0 012 2v4a2 2 0 01-2 2h-2m-5 0h.01" />
+      </svg>
+  
+      <!-- Scrolling Text -->
+      <div class="relative w-full overflow-hidden">
+        <div id="announcementText" class="animate-scroll whitespace-nowrap"></div>
+      </div>
+  
+      <!-- Close Button -->
+      <button onclick="document.getElementById('announcementBar').style.display='none'" class="ml-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hover:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  </div>
+  
+  <!-- CSS for Scrolling Animation -->
+  <style>
+    @keyframes scrollText {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+    .animate-scroll {
+      display: inline-block;
+      padding-left: 100%;
+      animation: scrollText 20s linear infinite;
+    }
+  </style>
+  
+<!-- Hero Section -->
+<section class="relative bg-gray-900 text-white">
+    <!-- Background image -->
+    <div class="absolute inset-0">
+      <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1500&q=80" 
+           alt="Lab Komputer"
+           class="w-full h-full object-cover">
+      <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+    </div>
+  
+    <!-- Content -->
+    <div class="relative container mx-auto px-6 py-20 flex flex-col items-center text-center ">
+      <h1 class="text-4xl md:text-5xl font-extrabold mb-4">
+        Sistem Informasi Laboratorium Komputer
+      </h1>
+      <p class="text-lg md:text-xl mb-8 text-gray-200">
+        Menyediakan informasi jadwal, perawatan, inventaris, dan pengumuman terbaru.
+      </p>
+      <a href="#jadwal-title" 
+         class="inline-flex items-center px-6 py-3 text-lg font-medium text-white bg-blue-600 rounded-lg shadow-lg hover:bg-blue-700 transition">
+        Lihat Jadwal
+        <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 h-5 w-5 shadow-lg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+  
+    <!-- Wave transition -->
+    <div class="absolute bottom-0 left-0 w-full overflow-hidden leading-none">
+      <svg class="relative block w-full h-16 text-gray-50 dark:text-gray-900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1200 120">
+        <path d="M985.66,83.29c-42.27,4.31-84.38,8.61-126.84,10.16-73.81,2.74-147.54-2.08-221.34-3.86C546,88.9,454.86,96.09,362.42,99.51c-82.24,3.15-164.65,0.6-246.88-3.71C85.65,93.38,42.83,88.22,0,83.06V120H1200V95.42C1132.73,87,1058,78.83,985.66,83.29Z" fill="currentColor"></path>
+      </svg>
+    </div>
+  </section>
+  
+
+    <!-- Jadwal -->
+    <section aria-labelledby="jadwal-title" class="mb-8 mt-8">
+      <h2 id="jadwal-title" class="text-3xl font-bold mb-6 flex items-center space-x-3 text-blue-600 dark:text-blue-400">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span>Jadwal Penggunaan</span>
+      </h2>
+      <div id="calendar" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md"></div>
+    </section>
+
+
+<!-- Section Roadmap -->
+<section id="roadmap" class="py-10 bg-gray-50 dark:bg-gray-900">
+  <div class="container mx-auto px-6">
+    <h2 class="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-200 flex items-center gap-2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+      Roadmap Kegiatan Lab
+    </h2>
+    <div id="roadmap-container"></div>
+  </div>
+</section>
+
+    <!-- Inventaris -->
+    <section aria-labelledby="inventaris-title" class="mb-16">
+      <h2 id="inventaris-title" class="text-3xl font-bold mb-6 flex items-center space-x-3 text-blue-600 dark:text-blue-400">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><path d="M3 9h18"/></svg>
+        <span>Data Inventaris</span>
+      </h2>
+
+      <input
+        type="text"
+        id="searchInventaris"
+        placeholder="Cari barang..."
+        class="mb-4 p-3 border rounded w-full dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+        aria-label="Cari inventaris"
+      />
+
+      <div class="overflow-x-auto rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+        <table class="w-full text-sm text-left">
+          <thead class="bg-gray-100 dark:bg-gray-700">
+            <tr>
+              <th class="px-6 py-3 sortable" data-column="no" scope="col" tabindex="0" aria-sort="none">No</th>
+              <th class="px-6 py-3 sortable" data-column="nama" scope="col" tabindex="0" aria-sort="none">Nama Barang</th>
+              <th class="px-6 py-3 sortable" data-column="jumlah" scope="col" tabindex="0" aria-sort="none">Jumlah</th>
+              <th class="px-6 py-3 sortable" data-column="kondisi" scope="col" tabindex="0" aria-sort="none">Kondisi</th>
+            </tr>
+          </thead>
+          <tbody id="inventarisTable" class="bg-white dark:bg-gray-800 divide-y dark:divide-gray-700"></tbody>
+        </table>
+      </div>
+      <nav id="inventarisPagination" class="flex justify-end mt-4 space-x-1" aria-label="Pagination Inventaris"></nav>
+    </section>
+
+    <!-- Perawatan -->
+    <section aria-labelledby="perawatan-title" class="mb-8">
+      <h2 id="perawatan-title" class="text-3xl font-bold mb-6 flex items-center space-x-3 text-blue-600 dark:text-blue-400">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 3v1M17 3v1M7 3v1M6 7h12M7 21h10a2 2 0 002-2V8H5v11a2 2 0 002 2z"/></svg>
+        <span>Status Perawatan</span>
+      </h2>
+
+      <input
+        type="text"
+        id="searchPerawatan"
+        placeholder="Cari kegiatan..."
+        class="mb-4 p-3 border rounded w-full dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+        aria-label="Cari perawatan"
+      />
+
+      <div class="overflow-x-auto rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+        <table class="w-full text-sm text-left">
+          <thead class="bg-gray-100 dark:bg-gray-700">
+            <tr>
+              <th class="px-6 py-3 sortable" data-column="no" scope="col" tabindex="0" aria-sort="none">No</th>
+              <th class="px-6 py-3 sortable" data-column="kegiatan" scope="col" tabindex="0" aria-sort="none">Kegiatan</th>
+              <th class="px-6 py-3 sortable" data-column="tanggal" scope="col" tabindex="0" aria-sort="none">Tanggal</th>
+              <th class="px-6 py-3" scope="col">Foto</th>
+              <th class="px-6 py-3 sortable" data-column="status" scope="col" tabindex="0" aria-sort="none">Status</th>
+              <th class="px-6 py-3" scope="col">Laporan</th>
+            </tr>
+          </thead>
+          <tbody id="perawatanTable" class="bg-white dark:bg-gray-800 divide-y dark:divide-gray-700"></tbody>
+        </table>
+      </div>
+      <nav id="perawatanPagination" class="flex justify-end mt-4 space-x-1" aria-label="Pagination Perawatan"></nav>
+    </section>
+  </main>
+
+<!-- Menu Unduhan -->
+<section id="unduhan" class="py-6 bg-gray-50 dark:bg-gray-900">
+    <div class="container mx-auto px-6">
+      <h2 class="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-200 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"/>
+        </svg>
+        Unduhan Lampiran Dokumen
+      </h2>
+  
+      <div class="overflow-x-auto shadow-lg rounded-lg">
+        <table class="w-full text-sm text-left text-gray-700 dark:text-gray-300">
+          <thead class="text-xs uppercase bg-gray-200 dark:bg-gray-800">
+            <tr>
+              <th class="px-4 py-3">Nama Dokumen</th>
+              <th class="px-4 py-3">Unduh</th>
+              <th class="px-4 py-3 text-center">Jumlah Unduhan</th>
+            </tr>
+          </thead>
+          <tbody id="downloadTable" class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+            <!-- Data dari JS -->
+          </tbody>
+        </table>
+      </div>
+  
+      <!-- Pagination -->
+      <div class="flex justify-center mt-6 gap-2" id="pagination">
+        <!-- Tombol halaman dari JS -->
+      </div>
+    </div>
+  </section>
+  
+  <script>
+
+  
+    const rowsPerPage = 10;
+    let currentPage = 1;
+  
+    // Render tabel dengan pagination
+    function renderDownloadTable() {
+      const tbody = document.getElementById("downloadTable");
+      tbody.innerHTML = "";
+  
+      const start = (currentPage - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
+      const paginatedData = dokumenData.slice(start, end);
+  
+      paginatedData.forEach((doc, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="px-4 py-3">${doc.nama}</td>
+          <td class="px-4 py-3">
+            <a href="${doc.url}" download
+               class="inline-flex items-center px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+               onclick="incrementDownload(${start + index})">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"/>
+              </svg>
+              Unduh
+            </a>
+          </td>
+          <td class="px-4 py-3 text-center font-semibold">${doc.unduhan}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+  
+      renderPagination();
+    }
+  
+    // Render tombol pagination
+    function renderPagination() {
+      const pageCount = Math.ceil(dokumenData.length / rowsPerPage);
+      const pagination = document.getElementById("pagination");
+      pagination.innerHTML = "";
+  
+      for (let i = 1; i <= pageCount; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        btn.className = `px-3 py-1 rounded ${i === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'} hover:bg-blue-400 hover:text-white`;
+        btn.onclick = () => {
+          currentPage = i;
+          renderDownloadTable();
+        };
+        pagination.appendChild(btn);
+      }
+    }
+  
+    // Tambah jumlah unduhan
+    function incrementDownload(index) {
+      dokumenData[index].unduhan++;
+      renderDownloadTable();
+    }
+  
+    // Inisialisasi tabel
+    renderDownloadTable();
+  </script>
+  
+  <!-- Panduan / SOP Laboratorium -->
+<section id="panduan" class="py-10 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+    <div class="container mx-auto px-6">
+      <h2 class="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-200 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 1.343-3 3v4h6v-4c0-1.657-1.343-3-3-3z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 20h14v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2z" />
+        </svg>
+        Panduan & SOP Laboratorium
+      </h2>
+  
+      <div id="accordion-collapse" data-accordion="collapse" class="space-y-2">
+        
+        <!-- SOP 1 -->
+        <h2 id="accordion-heading-1">
+          <button type="button" class="flex items-center justify-between w-full p-4 font-medium text-left text-gray-600 border border-gray-200 rounded-lg dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+            data-accordion-target="#accordion-body-1" aria-expanded="false" aria-controls="accordion-body-1">
+            Tata Tertib Penggunaan Lab
+            <svg data-accordion-icon class="w-6 h-6 rotate-180 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M5.293 9.293a1 1 0 011.414 0L10 12.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+            </svg>
+          </button>
+        </h2>
+        <div id="accordion-body-1" class="hidden" aria-labelledby="accordion-heading-1">
+          <div class="p-4 border border-t-0 border-gray-200 dark:border-gray-700 dark:bg-gray-800">
+            <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300">
+              <li>Dilarang membawa makanan atau minuman ke dalam laboratorium.</li>
+              <li>Gunakan komputer sesuai nomor dan login yang diberikan.</li>
+              <li>Matikan komputer dan peralatan setelah digunakan.</li>
+            </ul>
+          </div>
+        </div>
+  
+        <!-- SOP 2 -->
+        <h2 id="accordion-heading-2">
+          <button type="button" class="flex items-center justify-between w-full p-4 font-medium text-left text-gray-600 border border-gray-200 rounded-lg dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+            data-accordion-target="#accordion-body-2" aria-expanded="false" aria-controls="accordion-body-2">
+            Prosedur Maintenance
+            <svg data-accordion-icon class="w-6 h-6 rotate-180 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M5.293 9.293a1 1 0 011.414 0L10 12.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+            </svg>
+          </button>
+        </h2>
+        <div id="accordion-body-2" class="hidden" aria-labelledby="accordion-heading-2">
+          <div class="p-4 border border-t-0 border-gray-200 dark:border-gray-700 dark:bg-gray-800">
+            <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300">
+              <li>Backup data penting sebelum instal ulang OS.</li>
+              <li>Gunakan software legal dan berlisensi resmi.</li>
+              <li>Catat setiap perbaikan di logbook.</li>
+            </ul>
+          </div>
+        </div>
+  
+        <!-- SOP 3 -->
+        <h2 id="accordion-heading-3">
+          <button type="button" class="flex items-center justify-between w-full p-4 font-medium text-left text-gray-600 border border-gray-200 rounded-lg dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+            data-accordion-target="#accordion-body-3" aria-expanded="false" aria-controls="accordion-body-3">
+            Panduan Penggunaan Jaringan
+            <svg data-accordion-icon class="w-6 h-6 rotate-180 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M5.293 9.293a1 1 0 011.414 0L10 12.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+            </svg>
+          </button>
+        </h2>
+        <div id="accordion-body-3" class="hidden" aria-labelledby="accordion-heading-3">
+          <div class="p-4 border border-t-0 border-gray-200 dark:border-gray-700 dark:bg-gray-800">
+            <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300">
+              <li>Dilarang mengubah konfigurasi router tanpa izin.</li>
+              <li>Pastikan semua kabel terpasang sebelum menyalakan perangkat.</li>
+              <li>Gunakan UPS untuk menghindari kerusakan akibat listrik padam.</li>
+            </ul>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  </section>
+
+  <!-- Galeri Dokumentasi -->
+<section class="bg-gray-50 py-10">
+    <div class="container mx-auto px-4">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l4.586-4.586a2 2 0 012.828 0L28 14" />
+        </svg>
+        Dokumentasi Perawatan
+      </h2>
+  
+      <!-- Carousel -->
+      <div id="galleryCarousel" class="relative w-full overflow-hidden rounded-lg shadow-lg">
+        <div id="gallerySlides" class="flex transition-transform duration-700 ease-in-out"></div>
+  
+        <!-- Controls -->
+        <button id="prevSlide" class="absolute top-1/2 left-4 -translate-y-1/2 bg-white/70 p-2 rounded-full shadow hover:bg-white transition">
+          ◀
+        </button>
+        <button id="nextSlide" class="absolute top-1/2 right-4 -translate-y-1/2 bg-white/70 p-2 rounded-full shadow hover:bg-white transition">
+          ▶
+        </button>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Lightbox Modal -->
+  <div id="lightbox" class="fixed inset-0 bg-black bg-opacity-90 hidden items-center justify-center z-50">
+    <div class="max-w-4xl mx-auto p-4 text-center">
+      <img id="lightboxImg" src="" alt="Lightbox Image" class="mx-auto max-h-[80vh] rounded shadow-lg animate-fadeIn" />
+      <h3 id="lightboxTitle" class="text-white text-xl font-bold mt-4"></h3>
+      <p id="lightboxDesc" class="text-gray-300 mt-2"></p>
+      <button id="lightboxClose" class="mt-4 bg-red-500 px-4 py-2 rounded text-white hover:bg-red-600">Tutup</button>
+    </div>
+  </div>
+  
+  
+  
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-300 py-10">
+    <div class="container mx-auto px-6 md:flex md:justify-between md:items-start">
+      <!-- Logo dan deskripsi -->
+      <div class="mb-8 md:mb-0 md:w-1/3 animate-fadeInUp">
+        <h2 class="text-2xl font-semibold text-white mb-4">Lab Komputer SMK NU 1 Kedungpring</h2>
+        <p class="text-gray-400 max-w-xs">
+          Sistem Informasi laboratorium komputer untuk memudahkan pengelolaan jadwal, perawatan, dan inventaris.
+        </p>
+ 
+      </div>
+  
+      <!-- Menu Navigasi -->
+      <div class="mb-8 md:mb-0 md:w-1/3 animate-fadeInUp animate-delay-100">
+        <h3 class="text-lg font-semibold text-white mb-4">Menu</h3>
+        <ul>
+          <li class="mb-2 hover:text-white transition-colors duration-300"><a href="#jadwal">Jadwal</a></li>
+          <li class="mb-2 hover:text-white transition-colors duration-300"><a href="#perawatan">Perawatan</a></li>
+          <li class="mb-2 hover:text-white transition-colors duration-300"><a href="#inventaris">Inventaris</a></li>
+          <li class="mb-2 hover:text-white transition-colors duration-300"><a href="#panduan">Panduan dan SOP</a></li>
+        </ul>
+      </div>
+  
+      <!-- Kontak & Sosial Media -->
+      <div class="md:w-1/3 animate-fadeInUp animate-delay-200">
+        <h3 class="text-lg font-semibold text-white mb-4">Kontak</h3>
+        <p>Email: <a href="https://smknusakdp@gmail.com" class="text-blue-400 hover:underline">smknusakdp@gmail.com</a></p>
+        <p>WhatsApp: <a href="https://wa.me/6285730775261" target="_blank" class="text-blue-400 hover:underline">+62 857-3077-5261</a></p>
+        <p class="mt-4">Ikuti kami di:</p>
+        <div class="flex space-x-4 mt-2">
+          <a href="#" aria-label="Facebook" class="hover:text-blue-600 transition-colors duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M22 12a10 10 0 10-11 9.87V15h-3v-3h3v-2.2c0-3 1.79-4.7 4.54-4.7 1.32 0 2.7.24 2.7.24v3h-1.53c-1.5 0-1.97.93-1.97 1.88V12h3.35l-.54 3h-2.81v6.87A10 10 0 0022 12z"/>
+            </svg>
+          </a>
+          <a href="#" aria-label="Twitter" class="hover:text-blue-400 transition-colors duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M23 3a10.9 10.9 0 01-3.14.86A4.48 4.48 0 0022.4.36a9.15 9.15 0 01-2.89 1.11 4.52 4.52 0 00-7.72 4.13A12.8 12.8 0 013 4.79a4.52 4.52 0 001.4 6.04A4.42 4.42 0 012 10v.05a4.53 4.53 0 003.63 4.43 4.52 4.52 0 01-2.04.08 4.53 4.53 0 004.22 3.13A9.05 9.05 0 012 19.54a12.73 12.73 0 006.88 2.01c8.26 0 12.78-6.85 12.78-12.78 0-.2 0-.39-.02-.58A9.18 9.18 0 0023 3z"/>
+            </svg>
+          </a>
+          <a href="#" aria-label="Instagram" class="hover:text-pink-500 transition-colors duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M7.75 2h8.5A5.75 5.75 0 0122 7.75v8.5A5.75 5.75 0 0116.25 22h-8.5A5.75 5.75 0 012 16.25v-8.5A5.75 5.75 0 017.75 2zm0 1.5a4.25 4.25 0 00-4.25 4.25v8.5a4.25 4.25 0 004.25 4.25h8.5a4.25 4.25 0 004.25-4.25v-8.5a4.25 4.25 0 00-4.25-4.25h-8.5zm8.5 2a1 1 0 110 2 1 1 0 010-2zM12 7a5 5 0 11-.001 10.001A5 5 0 0112 7z"/>
+            </svg>
+          </a>
+
+        </div>
+        <p class="mt-4 text-sm text-gray-500">&copy; 2025 Lab Komputer SMK NU 1 kedungpring. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+  
+  <style>
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-fadeInUp {
+      animation: fadeInUp 0.6s ease forwards;
+    }
+    .animate-delay-100 {
+      animation-delay: 0.1s;
+    }
+    .animate-delay-200 {
+      animation-delay: 0.2s;
+    }
+  </style>
+  
+
+  <!-- Photo Modal -->
+  <div
+    id="photoModal"
+    class="hidden fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="photoModalLabel"
+  >
+    <button
+      id="closePhotoModal"
+      aria-label="Close photo"
+      class="absolute top-6 right-6 text-white hover:text-gray-300 focus:outline-none"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </svg>
+    </button>
+    <img id="modalImage" alt="Foto dokumentasi" class="max-h-[90vh] max-w-[90vw] rounded" />
+  </div>
+
+  <!-- Toast Maintenance -->
+  <div
+    id="toast-maintenance"
+    class="hidden fixed bottom-5 right-5 z-50 max-w-xs bg-yellow-400 dark:bg-yellow-600 border border-yellow-700 dark:border-yellow-300 rounded-lg shadow-lg text-black dark:text-white p-4 flex space-x-3 items-start"
+    role="alert"
+    aria-live="assertive"
+  >
+    <div class="flex-shrink-0 mt-0.5">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12" y2="17"/></svg>
+    </div>
+    <div>
+      <p class="font-bold">Pengumuman Maintenance</p>
+      <p id="toast-text" class="text-sm"></p>
+    </div>
+  </div>
+
+<script>
+  // Dark Mode Toggle
+  const themeToggleBtn = document.getElementById('theme-toggle');
+  const iconTheme = document.getElementById('icon-theme');
+  function isDarkMode() {
+    return document.documentElement.classList.contains('dark');
+  }
+  function updateIcon() {
+    if (isDarkMode()) {
+      // Moon icon
+      iconTheme.innerHTML = `<path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/>`;
+    } else {
+      // Sun icon
+      iconTheme.innerHTML = `
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      `;
+    }
+  }
+  themeToggleBtn.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+    updateIcon();
+  });
+  // Initialize icon
+  updateIcon();
+
+
+
+
+  // Initialize FullCalendar
+  document.addEventListener("DOMContentLoaded", function () {
+    const calendarEl = document.getElementById("calendar");
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: "dayGridMonth",
+      height: 'auto',
+      headerToolbar: {
+        left: "prev,next today",
+        center: "title",
+        right: "dayGridMonth,timeGridWeek,timeGridDay",
+      },
+      events: jadwalEvents,
+      eventClick: function (info) {
+        info.jsEvent.preventDefault();
+        alert(info.event.title + "\nTanggal: " + info.event.start.toLocaleDateString());
+      },
+    });
+    calendar.render();
+  });
+
+  
+  // Utility function to create elements with classes
+  function createElement(tag, classNames = [], textContent = '') {
+    const el = document.createElement(tag);
+    if (classNames.length) el.classList.add(...classNames);
+    if (textContent) el.textContent = textContent;
+    return el;
+  }
+
+  // Render Inventaris table with pagination, search, sorting
+  const inventarisTableBody = document.getElementById('inventarisTable');
+  const inventarisSearch = document.getElementById('searchInventaris');
+  const inventarisPagination = document.getElementById('inventarisPagination');
+
+  let inventarisCurrentPage = 1;
+  const inventarisPerPage = 10;
+  let inventarisCurrentSort = { column: 'no', asc: true };
+
+  function renderInventarisTable() {
+    let filtered = inventarisData.filter(item => {
+      const q = inventarisSearch.value.toLowerCase();
+      return item.nama.toLowerCase().includes(q) || item.kondisi.toLowerCase().includes(q) || item.jumlah.toString().includes(q);
+    });
+
+    // Sorting
+    filtered.sort((a, b) => {
+      const col = inventarisCurrentSort.column;
+      let valA, valB;
+      if (col === 'no') {
+        valA = inventarisData.indexOf(a);
+        valB = inventarisData.indexOf(b);
+      } else {
+        valA = a[col];
+        valB = b[col];
+      }
+      if (typeof valA === 'string') valA = valA.toLowerCase();
+      if (typeof valB === 'string') valB = valB.toLowerCase();
+      if (valA < valB) return inventarisCurrentSort.asc ? -1 : 1;
+      if (valA > valB) return inventarisCurrentSort.asc ? 1 : -1;
+      return 0;
+    });
+
+    // Pagination slice
+    const start = (inventarisCurrentPage - 1) * inventarisPerPage;
+    const pagedItems = filtered.slice(start, start + inventarisPerPage);
+
+    // Render rows
+    inventarisTableBody.innerHTML = '';
+    pagedItems.forEach((item, idx) => {
+      const tr = document.createElement('tr');
+      tr.className = (idx % 2 === 0) ? 'bg-gray-50 dark:bg-gray-700' : 'bg-white dark:bg-gray-800';
+      tr.innerHTML = `
+        <td class="px-6 py-3 align-middle">${start + idx + 1}</td>
+        <td class="px-6 py-3 align-middle">${item.nama}</td>
+        <td class="px-6 py-3 align-middle">${item.jumlah}</td>
+        <td class="px-6 py-3 align-middle">${item.kondisi}</td>
+      `;
+      inventarisTableBody.appendChild(tr);
+    });
+
+    // Render pagination buttons
+    renderPagination(inventarisPagination, filtered.length, inventarisPerPage, inventarisCurrentPage, (p) => {
+      inventarisCurrentPage = p;
+      renderInventarisTable();
+    });
+  }
+
+  inventarisSearch.addEventListener('input', () => {
+    inventarisCurrentPage = 1;
+    renderInventarisTable();
+  });
+
+  document.querySelectorAll('th.sortable[data-column]').forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.getAttribute('data-column');
+      if (inventarisCurrentSort.column === col) {
+        inventarisCurrentSort.asc = !inventarisCurrentSort.asc;
+      } else {
+        inventarisCurrentSort.column = col;
+        inventarisCurrentSort.asc = true;
+      }
+      renderInventarisTable();
+      updateSortAria(th, inventarisCurrentSort);
+    });
+    th.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        th.click();
+      }
+    });
+  });
+
+  // Render Perawatan table with pagination, search, sorting
+  const perawatanTableBody = document.getElementById('perawatanTable');
+  const perawatanSearch = document.getElementById('searchPerawatan');
+  const perawatanPagination = document.getElementById('perawatanPagination');
+
+  let perawatanCurrentPage = 1;
+  const perawatanPerPage = 5;
+  let perawatanCurrentSort = { column: 'no', asc: true };
+
+  function renderPerawatanTable() {
+    let filtered = perawatanData.filter(item => {
+      const q = perawatanSearch.value.toLowerCase();
+      return (
+        item.kegiatan.toLowerCase().includes(q) ||
+        item.status.toLowerCase().includes(q) ||
+        item.tanggal.includes(q)
+      );
+    });
+
+    // Sorting
+    filtered.sort((a, b) => {
+      const col = perawatanCurrentSort.column;
+      let valA, valB;
+      if (col === 'no') {
+        valA = perawatanData.indexOf(a);
+        valB = perawatanData.indexOf(b);
+      } else {
+        valA = a[col];
+        valB = b[col];
+      }
+      if (typeof valA === 'string') valA = valA.toLowerCase();
+      if (typeof valB === 'string') valB = valB.toLowerCase();
+      if (valA < valB) return perawatanCurrentSort.asc ? -1 : 1;
+      if (valA > valB) return perawatanCurrentSort.asc ? 1 : -1;
+      return 0;
+    });
+
+    // Pagination slice
+    const start = (perawatanCurrentPage - 1) * perawatanPerPage;
+    const pagedItems = filtered.slice(start, start + perawatanPerPage);
+
+    // Render rows
+    perawatanTableBody.innerHTML = '';
+    pagedItems.forEach((item, idx) => {
+      const tr = document.createElement('tr');
+      tr.className = (idx % 2 === 0) ? 'bg-gray-50 dark:bg-gray-700' : 'bg-white dark:bg-gray-800';
+
+      // Foto kecil bisa diklik untuk modal
+      const fotoCell = createElement('td', ['px-6', 'py-3', 'align-middle']);
+      const fotoImg = createElement('img', ['rounded', 'cursor-pointer', 'hover:ring-2', 'hover:ring-blue-500']);
+      fotoImg.src = item.foto;
+      fotoImg.alt = `Foto dokumentasi ${item.kegiatan}`;
+      fotoImg.style.maxWidth = '80px';
+      fotoImg.addEventListener('click', () => openPhotoModal(item.foto));
+      fotoCell.appendChild(fotoImg);
+
+      // Laporan dengan link download icon
+      const laporanCell = createElement('td', ['px-6', 'py-3', 'align-middle']);
+      if (item.laporan.length) {
+        item.laporan.forEach(file => {
+          const a = createElement('a', ['inline-flex', 'items-center', 'space-x-1', 'text-blue-600', 'hover:underline', 'mr-3']);
+          a.href = file.url;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          a.title = `Unduh ${file.nama}`;
+          a.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+              <path d="M12 3v12m0 0l3-3m-3 3l-3-3m6 6v2a2 2 0 01-2 2H8a2 2 0 01-2-2v-2"/>
+            </svg>
+            <span>${file.nama}</span>
+          `;
+          laporanCell.appendChild(a);
+        });
+      } else {
+        laporanCell.textContent = '-';
+      }
+
+      tr.innerHTML = `
+        <td class="px-6 py-3 align-middle">${start + idx + 1}</td>
+        <td class="px-6 py-3 align-middle">${item.kegiatan}</td>
+        <td class="px-6 py-3 align-middle">${item.tanggal}</td>
+      `;
+      tr.appendChild(fotoCell);
+      tr.innerHTML += `<td class="px-6 py-3 align-middle">${item.status}</td>`;
+      tr.appendChild(laporanCell);
+
+      perawatanTableBody.appendChild(tr);
+    });
+
+    // Render pagination buttons
+    renderPagination(perawatanPagination, filtered.length, perawatanPerPage, perawatanCurrentPage, (p) => {
+      perawatanCurrentPage = p;
+      renderPerawatanTable();
+    });
+  }
+
+  perawatanSearch.addEventListener('input', () => {
+    perawatanCurrentPage = 1;
+    renderPerawatanTable();
+  });
+
+  document.querySelectorAll('#perawatan-title + div table thead th.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.getAttribute('data-column');
+      if (perawatanCurrentSort.column === col) {
+        perawatanCurrentSort.asc = !perawatanCurrentSort.asc;
+      } else {
+        perawatanCurrentSort.column = col;
+        perawatanCurrentSort.asc = true;
+      }
+      renderPerawatanTable();
+      updateSortAria(th, perawatanCurrentSort);
+    });
+    th.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        th.click();
+      }
+    });
+  });
+
+  // Pagination render helper
+  function renderPagination(container, totalItems, perPage, currentPage, onPageChange) {
+    container.innerHTML = '';
+    const totalPages = Math.ceil(totalItems / perPage);
+    if (totalPages <= 1) return;
+
+    // Previous button
+    const prevBtn = createElement('button', [
+      'px-3', 'py-1', 'rounded-l', 'border', 'border-gray-300', 'hover:bg-gray-200', 'dark:border-gray-600', 'dark:hover:bg-gray-700'
+    ]);
+    prevBtn.textContent = '‹';
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.classList.toggle('opacity-50', prevBtn.disabled);
+    prevBtn.addEventListener('click', () => onPageChange(currentPage - 1));
+    container.appendChild(prevBtn);
+
+    // Page buttons (max 7 page buttons)
+    let startPage = Math.max(1, currentPage - 3);
+    let endPage = Math.min(totalPages, startPage + 6);
+    if (endPage - startPage < 6) {
+      startPage = Math.max(1, endPage - 6);
+    }
+    for (let i = startPage; i <= endPage; i++) {
+      const btn = createElement('button', [
+        'px-3', 'py-1', 'border', 'border-gray-300', 'hover:bg-gray-200', 'dark:border-gray-600', 'dark:hover:bg-gray-700'
+      ]);
+      if (i === currentPage) {
+        btn.classList.add('bg-blue-600', 'text-white', 'font-semibold', 'cursor-default', 'pointer-events-none');
+      }
+      btn.textContent = i;
+      btn.addEventListener('click', () => onPageChange(i));
+      container.appendChild(btn);
+    }
+
+    // Next button
+    const nextBtn = createElement('button', [
+      'px-3', 'py-1', 'rounded-r', 'border', 'border-gray-300', 'hover:bg-gray-200', 'dark:border-gray-600', 'dark:hover:bg-gray-700'
+    ]);
+    nextBtn.textContent = '›';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.classList.toggle('opacity-50', nextBtn.disabled);
+    nextBtn.addEventListener('click', () => onPageChange(currentPage + 1));
+    container.appendChild(nextBtn);
+  }
+
+  // Update ARIA for sorting headers
+  function updateSortAria(th, sortState) {
+    document.querySelectorAll('th.sortable').forEach(h => {
+      if (h !== th) {
+        h.setAttribute('aria-sort', 'none');
+      }
+    });
+    th.setAttribute('aria-sort', sortState.asc ? 'ascending' : 'descending');
+  }
+
+  // Photo Modal logic
+  const photoModal = document.getElementById('photoModal');
+  const modalImage = document.getElementById('modalImage');
+  const closePhotoModalBtn = document.getElementById('closePhotoModal');
+
+  function openPhotoModal(src) {
+    modalImage.src = src;
+    photoModal.classList.remove('hidden');
+  }
+  closePhotoModalBtn.addEventListener('click', () => {
+    photoModal.classList.add('hidden');
+    modalImage.src = '';
+  });
+  photoModal.addEventListener('click', (e) => {
+    if (e.target === photoModal) {
+      photoModal.classList.add('hidden');
+      modalImage.src = '';
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !photoModal.classList.contains('hidden')) {
+      photoModal.classList.add('hidden');
+      modalImage.src = '';
+    }
+  });
+
+
+
+  // Initialize all renders
+  renderInventarisTable();
+  renderPerawatanTable();
+  updateMaintenanceAnnouncements();
+
+  // Activate Feather icons if used (optional)
+  // feather.replace();
+
+  // js/script.js
+
+function renderRoadmap() {
+  const roadmapContainer = document.getElementById("roadmap-container");
+
+  let html = `<ol class="relative border-l border-gray-200 dark:border-gray-700">`;
+
+  roadmapData.forEach(item => {
+    let statusColor = {
+      success: "bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300",
+      warning: "bg-yellow-100 text-yellow-600 dark:bg-yellow-900 dark:text-yellow-300",
+      danger: "bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300",
+      info: "bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300"
+    }[item.status] || "bg-gray-100 text-gray-600 dark:bg-gray-900 dark:text-gray-300";
+
+    html += `
+      <li class="mb-10 ml-6">
+        <span class="absolute flex items-center justify-center w-8 h-8 rounded-full -left-4 ring-4 ring-white dark:ring-gray-900 ${statusColor}">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414L9 14.414l-3.707-3.707a1 1 0 011.414-1.414L9 11.586l6.293-6.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+          </svg>
+        </span>
+        <h3 class="mb-1 text-lg font-semibold text-gray-900 dark:text-white">${item.bulan} - ${item.judul}</h3>
+        <p class="text-base font-normal text-gray-500 dark:text-gray-400">${item.deskripsi}</p>
+      </li>
+    `;
+  });
+
+  html += `</ol>`;
+  roadmapContainer.innerHTML = html;
+}
+
+// Panggil render roadmap saat halaman selesai load
+document.addEventListener("DOMContentLoaded", () => {
+  renderRoadmap();
+});
+
+
+
+</script>
+<script>
+  const music = document.getElementById('bgMusic');
+  const btn = document.getElementById('toggleMusic');
+  const playlistDiv = document.getElementById('playlist');
+  const togglePlaylistBtn = document.getElementById('togglePlaylist');
+  const visualizer = document.getElementById('visualizer');
+  const playlistList = document.getElementById('playlistList');
+  let isPlaying = false;
+  
+  // Render playlist dari playlistData
+  function renderPlaylist() {
+      playlistData.forEach(track => {
+          const li = document.createElement('li');
+          const btnTrack = document.createElement('button');
+          btnTrack.textContent = track.title;
+          btnTrack.className = "track w-full text-left hover:bg-gray-200 p-1 rounded";
+          btnTrack.setAttribute('data-src', track.src);
+  
+          btnTrack.addEventListener('click', () => {
+              music.src = track.src;
+              music.play();
+              isPlaying = true;
+              visualizer.classList.remove('paused');
+              playlistDiv.classList.add('hidden');
+          });
+  
+          li.appendChild(btnTrack);
+          playlistList.appendChild(li);
+      });
+  }
+  
+  // Play/Pause
+  btn.addEventListener('click', () => {
+      if (isPlaying) {
+          music.pause();
+          visualizer.classList.add('paused');
+      } else {
+          music.play();
+          visualizer.classList.remove('paused');
+      }
+      isPlaying = !isPlaying;
+  });
+  
+  // Toggle Playlist
+  togglePlaylistBtn.addEventListener('click', () => {
+      playlistDiv.classList.toggle('hidden');
+  });
+  
+  // Set lagu awal & render playlist
+  music.src = playlistData[0].src;
+  renderPlaylist();
+  </script>
+  
+  
+  
+  
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+</body>
+</html>
