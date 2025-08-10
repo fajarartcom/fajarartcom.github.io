@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Katalog Buku TKJ - SMK NU 1 KEDUNGPRING</title>
+
+  <!-- Tailwind (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Flowbite (for modal convenience) -->
+  <link href="https://unpkg.com/flowbite@1.6.6/dist/flowbite.min.css" rel="stylesheet" />
+  <script src="https://unpkg.com/flowbite@1.6.6/dist/flowbite.min.js" defer></script>
+
+  <!-- AOS -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+
+  <style>
+    /* Premium card hover / glow */
+    .card-hover { transition: transform .28s ease, box-shadow .28s ease; }
+    .card-hover:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 20px 40px rgba(16,185,129,0.12), 0 6px 12px rgba(16,185,129,0.06); z-index:20; }
+    /* overlay blur at bottom of cover */
+    .overlay-blur { backdrop-filter: blur(8px); background: linear-gradient(180deg, rgba(10,10,10,0) 0%, rgba(2,6,23,0.7) 100%); }
+    /* line clamp for description */
+    .line-clamp-4 { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+    /* pagination active style */
+    .page-active { background: #064e3b; color: white; }
+    /* navbar solid like Netflix but emerald accent */
+    nav.navbar { background: #141414; }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
+
+  <!-- NAVBAR (solid, premium) -->
+  <nav class="navbar fixed top-0 left-0 w-full z-50 shadow-md">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="#" class="text-2xl md:text-3xl font-extrabold text-emerald-500">TKJ SMK NU 1 KEDUNGPRING</a>
+      <ul class="hidden md:flex gap-8 text-white/90 font-medium">
+        <li><a href="#katalog" class="hover:text-emerald-400 transition">Katalog</a></li>
+        <li><a href="#tentang" class="hover:text-emerald-400 transition">Tentang</a></li>
+        <li><a href="#kontak" class="hover:text-emerald-400 transition">Kontak</a></li>
+      </ul>
+      <button id="menu-btn" class="md:hidden mr-1">
+        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+    <!-- mobile menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-[#141414] border-t border-gray-700">
+      <ul class="flex flex-col p-4 text-white/90">
+        <li class="py-2"><a href="#katalog">Katalog</a></li>
+        <li class="py-2"><a href="#tentang">Tentang</a></li>
+        <li class="py-2"><a href="#kontak">Kontak</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- PAGE CONTAINER -->
+  <main class="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- HERO / HEADER KATALOG -->
+    <header class="relative rounded-2xl overflow-hidden mb-10">
+      <div class="relative aspect-[3/1] rounded-2xl overflow-hidden">
+        <img src="https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?auto=format&fit=crop&w=1800&q=80"
+             alt="Hero" class="w-full h-full object-cover brightness-75">
+        <div class="absolute inset-0 flex flex-col justify-center items-start px-6 md:px-12">
+          <h1 class="text-3xl md:text-5xl font-extrabold leading-tight mb-2" data-aos="fade-up">Katalog Buku TKJ</h1>
+          <p class="text-gray-300 max-w-2xl mb-4" data-aos="fade-up" data-aos-delay="80">
+            Koleksi buku dan modul mata pelajaran.
+          </p>
+
+          <div class="flex gap-3" data-aos="fade-up" data-aos-delay="160">
+            <a href="#katalog" class="px-5 py-3 rounded-full bg-emerald-500 hover:bg-emerald-600 font-semibold shadow">Cari Buku</a>
+            <button id="openAddSample" class="px-5 py-3 rounded-full bg-white/10 hover:bg-white/20 font-semibold">Refresh</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTROLS (search, category, sort, per-page) -->
+    <section id="controls" class="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4 items-center" data-aos="fade-up">
+      <div class="col-span-1 md:col-span-2 flex gap-4">
+        <input id="searchInput" type="search" placeholder="Cari judul, penulis, tahun..."
+          class="flex-1 rounded-full px-4 py-3 text-gray-900 focus:outline-none" />
+        <select id="categoryFilter" class="rounded-full px-4 py-3 text-gray-900">
+          <option value="all">Semua Kategori</option>
+        </select>
+      </div>
+
+      <div class="flex justify-end items-center gap-3">
+        <label class="text-sm text-gray-300 mr-2">Per halaman</label>
+        <select id="perPage" class="rounded-full px-3 py-2 text-gray-900">
+          <option value="8">8</option>
+          <option value="12" selected>12</option>
+          <option value="20">20</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- GRID KARTU BUKU -->
+    <section id="katalog" class="mb-8">
+      <div id="booksGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8"></div>
+    </section>
+
+    <!-- PAGINATION -->
+    <section id="paginationWrap" class="flex justify-center items-center gap-3 mt-8" data-aos="fade-up">
+      <button id="prevPage" class="px-3 py-2 rounded-md bg-gray-800">Prev</button>
+      <div id="pages" class="flex gap-2"></div>
+      <button id="nextPage" class="px-3 py-2 rounded-md bg-gray-800">Next</button>
+    </section>
+
+    <!-- TENTANG -->
+    <section id="tentang" class="mt-12 p-8 rounded-xl bg-gray-800 text-gray-300" data-aos="fade-up">
+      <h2 class="text-2xl font-bold mb-3">Tentang Katalog</h2>
+      <p>Katalog ini adalah sebagai media untuk mencari referensi belajar.</p>
+    </section>
+  </main>
+
+  <!-- FOOTER singkat -->
+  <footer class="mt-12 py-8 text-center text-gray-400">
+    &copy; 2025 TKJ SMK NU 1 Kedungpring — Katalog Buku TKJ
+  </footer>
+
+  <!-- BOOK DETAIL MODAL (Flowbite markup) -->
+  <div id="bookModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full">
+    <div class="relative p-4 w-full max-w-3xl h-full md:h-auto mx-auto">
+      <div class="relative bg-gray-900 rounded-lg shadow">
+        <button type="button" id="closeModal" class="absolute top-3 right-3 text-gray-400 hover:text-white">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-6">
+          <div class="md:col-span-1">
+            <img id="modalCover" src="" alt="cover" class="w-full rounded-lg object-cover h-64">
+          </div>
+          <div class="md:col-span-2">
+            <h3 id="modalTitle" class="text-2xl font-bold mb-2"></h3>
+            <p id="modalMeta" class="text-sm text-emerald-300 mb-4"></p>
+            <p id="modalDesc" class="text-gray-300 mb-4"></p>
+            <div class="flex gap-3">
+              <a id="modalDownload" href="#" target="_blank" class="px-4 py-2 bg-emerald-500 rounded-md font-semibold hover:bg-emerald-600">Download</a>
+              <button id="modalCloseBtn" class="px-4 py-2 bg-white/10 rounded-md hover:bg-white/20">Tutup</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      AOS.init({ duration: 700, once: true });
+
+      // Mobile menu toggle
+      const menuBtn = document.getElementById('menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      menuBtn?.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+      // SAMPLE DATA JSON (replace or load from external .json)
+      const books = [
+        /* 24 sample books to demo pagination */
+        {id:1, title:"Jaringan Komputer Dasar", author:"Budi Santoso", year:2020, category:"Jaringan", cover:"https://images.unsplash.com/photo-1526378727516-6f2a0d3b2f0e?auto=format&fit=crop&w=800&q=80", desc:"Konsep dasar jaringan, model TCP/IP, dan praktik konfigurasi dasar.", file:"#"},
+        {id:2, title:"Keamanan Jaringan Modern", author:"Siti Aminah", year:2021, category:"Keamanan", cover:"https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=800&q=80", desc:"Praktik pengamanan jaringan, IDS/IPS, firewall, dan enkripsi.", file:"#"},
+        {id:3, title:"Pemrograman Python untuk Jaringan", author:"Andi Wijaya", year:2019, category:"Pemrograman", cover:"https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=800&q=80", desc:"Automasi jaringan menggunakan Python — skrip, socket, dan API.", file:"#"},
+        {id:4, title:"Instalasi Server & Virtualisasi", author:"Rina Kusuma", year:2022, category:"Server", cover:"https://images.unsplash.com/photo-1549921296-3b0f7b8f8b4b?auto=format&fit=crop&w=800&q=80", desc:"Panduan instalasi Linux server, layanan, dan virtual machine.", file:"#"},
+        {id:5, title:"Fiber Optic & Infrastruktur", author:"Hendra", year:2018, category:"Jaringan", cover:"https://images.unsplash.com/photo-1581091870632-6d8a4d4f7f0e?auto=format&fit=crop&w=800&q=80", desc:"Pemasangan fiber optic, terminasi, dan pengujian link optik.", file:"#"},
+        {id:6, title:"Administrasi Windows Server", author:"Lisa", year:2020, category:"Server", cover:"https://images.unsplash.com/photo-1542831371-d531d36971e6?auto=format&fit=crop&w=800&q=80", desc:"Manajemen Active Directory, DNS, DHCP, dan backup.", file:"#"},
+        {id:7, title:"Routing & Switching Lanjut", author:"Arief", year:2021, category:"Jaringan", cover:"https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80", desc:"Routing protocols, BGP, OSPF, VLAN dan QoS.", file:"#"},
+        {id:8, title:"Keamanan Aplikasi Web", author:"Dewi", year:2019, category:"Keamanan", cover:"https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80", desc:"XSS, SQL Injection, dan pengujian keamanan aplikasi web.", file:"#"},
+        {id:9, title:"Cloud Fundamentals", author:"Yoga", year:2022, category:"Cloud", cover:"https://images.unsplash.com/photo-1508881597331-5c24a7a1e8d2?auto=format&fit=crop&w=800&q=80", desc:"Dasar-dasar cloud computing, IaaS, PaaS, dan model deployment.", file:"#"},
+        {id:10, title:"Sistem Operasi Linux", author:"Nanda", year:2017, category:"Server", cover:"https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80", desc:"Perintah dasar Linux, scripting, dan automasi tugas.", file:"#"},
+        {id:11, title:"IoT untuk Jaringan", author:"Putri", year:2020, category:"IoT", cover:"https://images.unsplash.com/photo-1516728778615-2d590ea1856f?auto=format&fit=crop&w=800&q=80", desc:"Implementasi IoT pada monitoring jaringan dan infrastruktur.", file:"#"},
+        {id:12, title:"Virtualisasi & Container", author:"Rizal", year:2021, category:"Server", cover:"https://images.unsplash.com/photo-1581093367119-5f5b7f7e3d7a?auto=format&fit=crop&w=800&q=80", desc:"Docker, Kubernetes, dan best-practice deploy aplikasi.", file:"#"},
+        {id:13, title:"Network Automation", author:"Sari", year:2023, category:"Pemrograman", cover:"https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80", desc:"Ansible, Nornir, dan automasi konfigurasi netwerk.", file:"#"},
+        {id:14, title:"Forensik Digital Dasar", author:"Joko", year:2018, category:"Keamanan", cover:"https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=800&q=80", desc:"Metode forensik digital dan pengumpulan bukti.", file:"#"},
+        {id:15, title:"Monitoring Jaringan", author:"Rahma", year:2019, category:"Jaringan", cover:"https://images.unsplash.com/photo-1549921296-3b0f7b8f8b4b?auto=format&fit=crop&w=800&q=80", desc:"Zabbix, Nagios, Grafana untuk monitoring jaringan.", file:"#"},
+        {id:16, title:"Sertifikasi CCNA Prep", author:"Fajar", year:2020, category:"Sertifikasi", cover:"https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=800&q=80", desc:"Materi persiapan sertifikasi Cisco CCNA.", file:"#"},
+        {id:17, title:"Dasar Jaringan Nirkabel", author:"Bima", year:2021, category:"Jaringan", cover:"https://images.unsplash.com/photo-1581091870632-6d8a4d4f7f0e?auto=format&fit=crop&w=800&q=80", desc:"Teknik instalasi dan optimasi jaringan wireless.", file:"#"},
+        {id:18, title:"Scripting Bash untuk Admin", author:"Melati", year:2016, category:"Pemrograman", cover:"https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=800&q=80", desc:"Scripting otomatis tugas admin di Linux.", file:"#"},
+        {id:19, title:"Manajemen Proyek IT", author:"Wawan", year:2018, category:"Manajemen", cover:"https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80", desc:"Dasar manajemen proyek untuk proyek IT.", file:"#"},
+        {id:20, title:"Penetration Testing Advance", author:"Galuh", year:2022, category:"Keamanan", cover:"https://images.unsplash.com/photo-1517433456452-f9633a875f6f?auto=format&fit=crop&w=800&q=80", desc:"Teknik lanjutan pentest dan exploit development.", file:"#"},
+        {id:21, title:"Backup & Disaster Recovery", author:"Eka", year:2017, category:"Server", cover:"https://images.unsplash.com/photo-1542831371-d531d36971e6?auto=format&fit=crop&w=800&q=80", desc:"Strategi backup dan recovery untuk sistem kritikal.", file:"#"},
+        {id:22, title:"Data Center Design", author:"Tito", year:2019, category:"Infrastruktur", cover:"https://images.unsplash.com/photo-1508881597331-5c24a7a1e8d2?auto=format&fit=crop&w=800&q=80", desc:"Prinsip desain data center dan best practice.", file:"#"},
+        {id:23, title:"Sistem Keamanan Fisik", author:"Nina", year:2018, category:"Keamanan", cover:"https://images.unsplash.com/photo-1516728778615-2d590ea1856f?auto=format&fit=crop&w=800&q=80", desc:"Keamanan fisik untuk ruang server dan fasilitas jaringan.", file:"#"},
+        {id:24, title:"Troubleshooting Lanjutan", author:"Hadi", year:2020, category:"Jaringan", cover:"https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80", desc:"Metode lanjutan identifikasi dan perbaikan masalah jaringan.", file:"#"}
+      ];
+
+      // Populate category filter from data
+      const categorySet = new Set(books.map(b => b.category));
+      const categoryFilter = document.getElementById('categoryFilter');
+      categorySet.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat; opt.textContent = cat;
+        categoryFilter.appendChild(opt);
+      });
+
+      // Pagination state
+      let currentPage = 1;
+      let perPage = parseInt(document.getElementById('perPage').value, 10);
+      let filtered = [...books];
+
+      // Elements
+      const booksGrid = document.getElementById('booksGrid');
+      const searchInput = document.getElementById('searchInput');
+      const pagesWrap = document.getElementById('pages');
+      const prevBtn = document.getElementById('prevPage');
+      const nextBtn = document.getElementById('nextPage');
+
+      // Modal elements
+      const bookModal = document.getElementById('bookModal');
+      const modalCover = document.getElementById('modalCover');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalMeta = document.getElementById('modalMeta');
+      const modalDesc = document.getElementById('modalDesc');
+      const modalDownload = document.getElementById('modalDownload');
+      const closeModal = document.getElementById('closeModal');
+      const modalCloseBtn = document.getElementById('modalCloseBtn');
+
+      // Utility: render cards for current page
+      function renderGrid() {
+        booksGrid.innerHTML = '';
+        if (filtered.length === 0) {
+          booksGrid.innerHTML = '<p class="col-span-full text-center text-gray-400">Tidak ada buku.</p>';
+          renderPagination();
+          return;
+        }
+
+        // clamp current page
+        const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
+        if (currentPage > totalPages) currentPage = totalPages;
+
+        const start = (currentPage - 1) * perPage;
+        const pageItems = filtered.slice(start, start + perPage);
+
+        pageItems.forEach(book => {
+          const card = document.createElement('article');
+          card.className = 'relative rounded-2xl overflow-hidden shadow-lg card-hover bg-gradient-to-tr from-gray-800 to-gray-900';
+          card.setAttribute('data-aos','fade-up');
+          card.innerHTML = `
+            <div class="w-full h-60 overflow-hidden">
+              <img src="${book.cover}" alt="${escapeHtml(book.title)}" class="w-full h-full object-cover transition duration-300" />
+            </div>
+            <div class="absolute left-4 right-4 bottom-4 p-4 rounded-xl overlay-blur text-left">
+              <h3 class="text-lg font-bold">${escapeHtml(book.title)}</h3>
+              <p class="text-sm text-emerald-300 mb-2">${escapeHtml(book.author)} • ${book.year} • ${escapeHtml(book.category)}</p>
+              <p class="text-gray-200 text-sm line-clamp-4">${escapeHtml(book.desc)}</p>
+            </div>
+          `;
+          // open modal on click
+          card.addEventListener('click', () => openModal(book));
+          booksGrid.appendChild(card);
+        });
+
+        // refresh AOS for newly added items
+        AOS.refresh();
+        renderPagination();
+      }
+
+      // Render pagination controls
+      function renderPagination() {
+        pagesWrap.innerHTML = '';
+        const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
+        const visible = 7; // max visible page numbers
+        let startPage = Math.max(1, currentPage - Math.floor(visible/2));
+        let endPage = Math.min(totalPages, startPage + visible -1);
+        if (endPage - startPage < visible -1) startPage = Math.max(1, endPage - visible +1);
+
+        for (let i = startPage; i <= endPage; i++) {
+          const btn = document.createElement('button');
+          btn.className = `px-3 py-2 rounded-md ${i===currentPage ? 'page-active' : 'bg-gray-800 hover:bg-gray-700'}`;
+          btn.textContent = i;
+          btn.addEventListener('click', () => { currentPage = i; renderGrid(); window.scrollTo({top:200, behavior:'smooth'}); });
+          pagesWrap.appendChild(btn);
+        }
+
+        // disable prev/next when necessary
+        prevBtn.disabled = currentPage === 1;
+        nextBtn.disabled = currentPage === totalPages;
+        prevBtn.classList.toggle('opacity-50', prevBtn.disabled);
+        nextBtn.classList.toggle('opacity-50', nextBtn.disabled);
+      }
+
+      // Filtering logic
+      function applyFilters() {
+        const q = (searchInput.value || '').trim().toLowerCase();
+        const cat = categoryFilter.value;
+        filtered = books.filter(b => {
+          const matchesCat = cat === 'all' || b.category === cat;
+          const matchesQ = !q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q) || String(b.year).includes(q);
+          return matchesCat && matchesQ;
+        });
+        currentPage = 1;
+        renderGrid();
+      }
+
+      // Open modal details
+      function openModal(book) {
+        modalCover.src = book.cover;
+        modalTitle.textContent = book.title;
+        modalMeta.textContent = `${book.author} • ${book.year} • ${book.category}`;
+        modalDesc.textContent = book.desc;
+        modalDownload.href = book.file || '#';
+        // show modal (simple)
+        bookModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModalFn() {
+        bookModal.classList.add('hidden');
+        document.body.style.overflow = '';
+      }
+      closeModal?.addEventListener('click', closeModalFn);
+      modalCloseBtn?.addEventListener('click', closeModalFn);
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModalFn(); });
+
+      // Helpers
+      function escapeHtml(str='') {
+        return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+      }
+
+      // Controls events
+      searchInput.addEventListener('input', () => { applyFilters(); });
+      categoryFilter.addEventListener('change', () => { applyFilters(); });
+      document.getElementById('perPage').addEventListener('change', (e) => {
+        perPage = parseInt(e.target.value,10); currentPage=1; renderGrid();
+      });
+      prevBtn.addEventListener('click', () => { if (currentPage>1) { currentPage--; renderGrid(); window.scrollTo({top:200, behavior:'smooth'}); }});
+      nextBtn.addEventListener('click', () => { const total = Math.ceil(filtered.length/perPage); if (currentPage<total) { currentPage++; renderGrid(); window.scrollTo({top:200, behavior:'smooth'}); }});
+
+      // button add sample (demo) to append more items (optional)
+      document.getElementById('openAddSample').addEventListener('click', () => {
+        const template = {id: Date.now(), title:"Buku Contoh Baru", author:"Admin", year:2025, category:"Jaringan", cover:"https://images.unsplash.com/photo-1517433456452-f9633a875f6f?auto=format&fit=crop&w=800&q=80", desc:"Contoh buku ditambahkan secara dinamis.", file:"#"};
+        books.unshift(template);
+        // update category set if new
+        const exists = Array.from(categoryFilter.options).some(o => o.value === template.category);
+        if (!exists) {
+          const opt = document.createElement('option'); opt.value=template.category; opt.textContent=template.category; categoryFilter.appendChild(opt);
+        }
+        applyFilters();
+      });
+
+      // initial render
+      renderGrid();
+    }); // DOMContentLoaded
+  </script>
+</body>
+</html>
