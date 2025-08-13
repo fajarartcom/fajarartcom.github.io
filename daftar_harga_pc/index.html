@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Harga Komponen PC</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Flowbite CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css">
+        <!-- CSS untuk cetak -->
+        <link rel="stylesheet" href="print.css" media="print">
+<!-- Di head -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#ffffff">
+    <!-- Di head -->
+<meta name="description" content="Simulator rakitan PC dengan daftar harga komponen terbaru dan pengecekan kompatibilitas">
+<meta property="og:title" content="PC Builder Simulator">
+<meta property="og:description" content="Rakit PC impian Anda dengan simulator kami">
+<link rel="manifest" href="/manifest.json">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">   
+    <h1 class="flex items-center text-5xl font-extrabold dark:text-white">FAJAR<span class="bg-blue-100 text-blue-800 text-2xl font-semibold me-2 px-2.5 py-0.5 rounded-sm dark:bg-blue-200 dark:text-blue-800 ms-2">ARTCOM</span></h1>
+    <h5 class="text-md font-semibold dark:text-white text-gray-500 dark:text-gray-400">DAFTAR HARGA KOMPONEN PC</h5>
+    <hr class="mb-8">
+
+
+        <!-- Filter dan Search -->
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+            <div class="w-full md:w-auto">
+                <label for="category-filter" class="block mb-2 text-sm font-medium text-gray-900">Filter Kategori:</label>
+                <select id="category-filter" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <option value="all">Semua Kategori</option>
+                    <option value="processor">Processor</option>
+                    <option value="motherboard">Motherboard</option>
+                    <option value="ram">RAM</option>
+                    <option value="vga">VGA</option>
+                    <option value="storage">Storage</option>
+                    <option value="psu">Power Supply</option>
+                    <option value="case">Casing</option>
+                </select>
+            </div>
+            
+            <div class="w-full md:w-auto">
+                <label for="search" class="block mb-2 text-sm font-medium text-gray-900">Cari Komponen:</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                        </svg>
+                    </div>
+                    <input type="text" id="search" class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Cari komponen...">
+                </div>
+            </div>
+            
+            <button id="update-prices" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 mt-6 md:mt-0">
+                Update Semua Harga
+            </button>
+        </div>
+        
+        <!-- Tabel Harga -->
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table class="w-full text-sm text-left text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">No</th>
+                        <th scope="col" class="px-6 py-3">Nama Komponen</th>
+                        <th scope="col" class="px-6 py-3">Kategori</th>
+                        <th scope="col" class="px-6 py-3">Harga (Rp)</th>
+                        <th scope="col" class="px-6 py-3">Stok</th>
+                        <th scope="col" class="px-6 py-3">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="components-table">
+                    <!-- Data akan diisi oleh JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Modal untuk edit harga -->
+        <div id="edit-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-md max-h-full">
+                <div class="relative bg-white rounded-lg shadow">
+                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                        <h3 class="text-xl font-semibold text-gray-900">
+                            Edit Harga Komponen
+                        </h3>
+                        <button type="button" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="edit-modal">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                    </div>
+                    <div class="p-4 md:p-5">
+                        <form class="space-y-4">
+                            <input type="hidden" id="edit-id">
+                            <div>
+                                <label for="edit-name" class="block mb-2 text-sm font-medium text-gray-900">Nama Komponen</label>
+                                <input type="text" id="edit-name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" disabled>
+                            </div>
+                            <div>
+                                <label for="edit-price" class="block mb-2 text-sm font-medium text-gray-900">Harga Baru (Rp)</label>
+                                <input type="number" id="edit-price" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                            </div>
+                            <div>
+                                <label for="edit-stock" class="block mb-2 text-sm font-medium text-gray-900">Stok Baru</label>
+                                <input type="number" id="edit-stock" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                            </div>
+                            <button type="submit" id="save-edit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                                Simpan Perubahan
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+                <!-- Simulasi Rakit PC -->
+                <div class="mt-12 p-6 bg-white rounded-lg shadow-md">
+                    <h2 class="text-2xl font-bold mb-4 text-blue-800">Simulasi Rakit PC</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Daftar Komponen yang Dipilih -->
+                        <div>
+                            <h3 class="text-xl font-semibold mb-3">Komponen Terpilih</h3>
+                            <div id="selected-components" class="border rounded-lg p-4 min-h-64">
+                                <p class="text-gray-500 italic" id="empty-message">Belum ada komponen dipilih</p>
+                                <table class="w-full text-sm mt-4 hidden" id="selected-table">
+                                    <thead>
+                                        <tr class="border-b">
+                                            <th class="text-left py-2">Komponen</th>
+                                            <th class="text-right py-2">Harga</th>
+                                            <th class="text-right py-2">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="selected-components-list">
+                                        <!-- Daftar komponen akan diisi oleh JavaScript -->
+                                    </tbody>
+                                    <tfoot class="border-t">
+                                        <tr>
+                                            <th class="text-left py-2">Total</th>
+                                            <th class="text-right py-2" id="total-price">Rp 0</th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Ringkasan dan Tombol Aksi -->
+                        <div>
+                            <h3 class="text-xl font-semibold mb-3">Ringkasan</h3>
+                            <div class="border rounded-lg p-4">
+                                <div class="mb-4">
+                                    <label for="build-name" class="block mb-2 text-sm font-medium text-gray-900">Nama Rakitan</label>
+                                    <input type="text" id="build-name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Misal: Gaming PC Mid-Range">
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <p class="text-sm text-gray-500">Jumlah Komponen</p>
+                                        <p class="font-semibold" id="component-count">0</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-500">Total Harga</p>
+                                        <p class="font-semibold" id="summary-total">Rp 0</p>
+                                    </div>
+                                </div>                              
+                                <div class="flex flex-wrap gap-3">
+                                    <button id="print-build" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:ring-4 focus:ring-green-300">
+                                        Cetak Rakitan
+                                    </button>
+                                    <button id="save-build" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300">
+                                        Simpan Rakitan
+                                    </button>
+                                    <button id="clear-build" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:ring-4 focus:ring-red-300">
+                                        Kosongkan
+                                    </button>
+                                    <!-- Tambahkan di bagian Ringkasan, bersama tombol lainnya -->
+<div class="flex flex-wrap gap-3">
+    <!-- Tombol yang sudah ada -->
+    <button id="share-build" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 focus:ring-4 focus:ring-purple-300 flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"></path>
+        </svg>
+        Bagikan
+    </button>
+</div>
+
+<!-- Tambahkan modal sharing -->
+<div id="share-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    Bagikan Rakitan PC
+                </h3>
+                <button type="button" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="share-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Tutup</span>
+                </button>
+            </div>
+            <div class="p-4 md:p-5">
+                <div class="mb-4">
+                    <label for="share-link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Link Rakitan</label>
+                    <div class="flex">
+                        <input type="text" id="share-link" readonly class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Generating link...">
+                        <button id="copy-link" class="bg-blue-600 text-white p-2.5 rounded-r-lg hover:bg-blue-700">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"></path>
+                                <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Bagikan ke</label>
+                    <div class="flex space-x-2">
+                        <button class="share-platform p-2 bg-blue-800 text-white rounded-full hover:bg-blue-900" data-platform="facebook">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"></path>
+                            </svg>
+                        </button>
+                        <button class="share-platform p-2 bg-blue-400 text-white rounded-full hover:bg-blue-500" data-platform="twitter">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
+                            </svg>
+                        </button>
+                        <button class="share-platform p-2 bg-red-600 text-white rounded-full hover:bg-red-700" data-platform="whatsapp">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path>
+                            </svg>
+                        </button>
+                        <button class="share-platform p-2 bg-gray-800 text-white rounded-full hover:bg-gray-900" data-platform="telegram">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.35-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"></path>
+                            </svg>
+                        </button>
+                        <button class="share-platform p-2 bg-gray-600 text-white rounded-full hover:bg-gray-700" data-platform="email">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kode Embed</label>
+                    <textarea id="embed-code" readonly class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 h-20 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Daftar Rakitan Tersimpan -->
+                            <div class="mt-6" id="saved-builds-container">
+                                <h3 class="text-xl font-semibold mb-3">Rakitan Tersimpan</h3>
+                                <div class="border rounded-lg p-4">
+                                    <div id="saved-builds-list">
+                                        <!-- Daftar rakitan tersimpan akan diisi oleh JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tambahkan di bagian bawah sebelum penutup container -->
+<div class="mt-12 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+    <h2 class="text-2xl font-bold mb-4 text-blue-800 dark:text-blue-400">Panduan Perakitan PC</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Video Tutorial -->
+        <div>
+            <h3 class="text-xl font-semibold mb-3">Video Tutorial</h3>
+            <div class="aspect-w-16 aspect-h-9 bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
+                <iframe id="tutorial-video" class="w-full h-full" src="https://www.youtube.com/embed/PXaLc9AYIcg" frameborder="0" allowfullscreen></iframe>
+            </div>
+            <div class="mt-3 grid grid-cols-3 gap-2">
+                <button class="video-option px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 text-sm" data-video="PXaLc9AYIcg">
+                    Pemula
+                </button>
+                <button class="video-option px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 text-sm" data-video="d_7sLmsJj6k">
+                    Gaming
+                </button>
+                <button class="video-option px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 text-sm" data-video="BL4DCEp7blY">
+                    Workstation
+                </button>
+            </div>
+        </div>
+        
+        <!-- Step-by-Step Guide -->
+        <div>
+            <h3 class="text-xl font-semibold mb-3">Langkah Demi Langkah</h3>
+            <div class="space-y-3">
+                <div class="assembly-step p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+                    <div class="flex items-center cursor-pointer">
+                        <span class="step-number mr-3 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full w-6 h-6 flex items-center justify-center">1</span>
+                        <h4 class="font-medium flex-grow">Persiapan Alat dan Komponen</h4>
+                        <svg class="w-5 h-5 text-gray-500 transform transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                    <div class="step-content hidden mt-2 pl-9 text-sm text-gray-600 dark:text-gray-300">
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li>Siapkan obeng magnetik (khususnya Phillips #2)</li>
+                            <li>Gunakan gelang anti-statis atau sentuh logam sebelum memegang komponen</li>
+                            <li>Siapkan semua komponen di ruang kerja yang bersih dan cukup cahaya</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Tambahkan langkah-langkah lainnya -->
+                <div class="assembly-step p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+                    <div class="flex items-center cursor-pointer">
+                        <span class="step-number mr-3 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full w-6 h-6 flex items-center justify-center">2</span>
+                        <h4 class="font-medium flex-grow">Memasang Processor ke Motherboard</h4>
+                        <svg class="w-5 h-5 text-gray-500 transform transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                    <div class="step-content hidden mt-2 pl-9 text-sm text-gray-600 dark:text-gray-300">
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li>Buka pengunci socket processor</li>
+                            <li>Pasang processor sesuai tanda segitiga di sudut processor dan socket</li>
+                            <li>Jangan paksa jika tidak masuk dengan mudah</li>
+                            <li>Kunci kembali socket setelah processor terpasang</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Langkah 3-6 bisa ditambahkan dengan pola yang sama -->
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mt-12 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+    <h2 class="text-2xl font-bold mb-4 text-blue-800 dark:text-blue-400">Glosarium Istilah Teknis</h2>
+    
+    <div class="mb-4">
+        <input type="text" id="glossary-search" placeholder="Cari istilah..." class="w-full p-2 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600">
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="glossary-container">
+        <!-- Istilah akan diisi oleh JavaScript -->
+    </div>
+</div>
+<div class="mt-12 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+    <h2 class="text-2xl font-bold mb-4 text-blue-800 dark:text-blue-400">Kalkulator Kebutuhan Daya</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Form Input -->
+        <div class="md:col-span-2">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block mb-2 text-sm font-medium">Processor</label>
+                    <select id="psu-cpu" class="w-full p-2 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                        <option value="65">Entry-level (65W)</option>
+                        <option value="95">Mid-range (95W)</option>
+                        <option value="125">High-end (125W)</option>
+                        <option value="250">Enthusiast (250W+)</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block mb-2 text-sm font-medium">VGA</label>
+                    <select id="psu-gpu" class="w-full p-2 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                        <option value="75">Integrated (75W)</option>
+                        <option value="120">Entry-level (120W)</option>
+                        <option value="180">Mid-range (180W)</option>
+                        <option value="250">High-end (250W)</option>
+                        <option value="350">Enthusiast (350W+)</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block mb-2 text-sm font-medium">Jumlah RAM</label>
+                    <select id="psu-ram" class="w-full p-2 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                        <option value="5">8GB (5W)</option>
+                        <option value="10">16GB (10W)</option>
+                        <option value="15">32GB (15W)</option>
+                        <option value="20">64GB+ (20W)</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block mb-2 text-sm font-medium">Storage</label>
+                    <select id="psu-storage" class="w-full p-2 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                        <option value="5">SSD (5W)</option>
+                        <option value="10">HDD (10W)</option>
+                        <option value="15">NVMe (15W)</option>
+                        <option value="25">Multiple Drives (25W+)</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block mb-2 text-sm font-medium">Pendinginan</label>
+                    <select id="psu-cooling" class="w-full p-2 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                        <option value="5">Stock Cooler (5W)</option>
+                        <option value="10">Air Cooling (10W)</option>
+                        <option value="30">Liquid Cooling (30W)</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block mb-2 text-sm font-medium">Periferal</label>
+                    <select id="psu-peripherals" class="w-full p-2 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                        <option value="20">Dasar (20W)</option>
+                        <option value="50">RGB/Advanced (50W)</option>
+                        <option value="100">Workstation (100W+)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <button id="calculate-psu" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    Hitung Kebutuhan Daya
+                </button>
+            </div>
+        </div>
+        
+        <!-- Hasil Perhitungan -->
+        <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600">
+            <h3 class="text-lg font-semibold mb-4">Hasil Perhitungan</h3>
+            
+            <div class="space-y-3">
+                <div>
+                    <p class="text-sm text-gray-500">Total Kebutuhan Daya</p>
+                    <p class="text-2xl font-bold" id="psu-total">0W</p>
+                </div>
+                
+                <div>
+                    <p class="text-sm text-gray-500">Rekomendasi PSU</p>
+                    <p class="text-xl font-semibold" id="psu-recommendation">-</p>
+                </div>
+                
+                <div class="pt-3 border-t border-gray-200 dark:border-gray-600">
+                    <p class="text-sm text-gray-500">Efisiensi</p>
+                    <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5 mt-1">
+                        <div id="psu-efficiency-bar" class="bg-green-600 h-2.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1" id="psu-efficiency-text">Gunakan PSU 80+ Bronze atau lebih tinggi</p>
+                </div>
+                
+                <div class="pt-3 border-t border-gray-200 dark:border-gray-600">
+                    <p class="text-sm font-medium mb-2">Tips:</p>
+                    <ul class="text-xs space-y-1 text-gray-600 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <svg class="w-3 h-3 mt-0.5 mr-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Tambahkan 20-30% dari total kebutuhan sebagai headroom</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-3 h-3 mt-0.5 mr-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>PSU dengan efisiensi tinggi menghemat biaya listrik jangka panjang</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mt-12 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+    <h2 class="text-2xl font-bold mb-4 text-blue-800 dark:text-blue-400">Artikel & Tips</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Artikel 1 -->
+        <div class="article-card bg-gray-50 dark:bg-gray-700 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600 hover:shadow-lg transition-shadow">
+            <img src="https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="PC Gaming" class="w-full h-48 object-cover">
+            <div class="p-4">
+                <span class="inline-block px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full mb-2">Gaming</span>
+                <h3 class="font-bold text-lg mb-2">5 Kesalahan Umum Saat Merakit PC Gaming</h3>
+                <p class="text-gray-600 dark:text-gray-300 text-sm mb-3">Hindari kesalahan umum yang bisa merusak komponen atau mengurangi performa...</p>
+                <button class="read-article text-blue-600 dark:text-blue-400 text-sm font-medium">Baca Selengkapnya →</button>
+            </div>
+        </div>
+        
+        <!-- Artikel 2 -->
+        <div class="article-card bg-gray-50 dark:bg-gray-700 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600 hover:shadow-lg transition-shadow">
+            <img src="https://images.unsplash.com/photo-1560419015-7c427e8ae5ba?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Budget PC" class="w-full h-48 object-cover">
+            <div class="p-4">
+                <span class="inline-block px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs rounded-full mb-2">Budget</span>
+                <h3 class="font-bold text-lg mb-2">Rakitan PC Terbaik di Bawah 10 Juta</h3>
+                <p class="text-gray-600 dark:text-gray-300 text-sm mb-3">Konfigurasi optimal untuk produktivitas dan gaming ringan dengan budget terbatas...</p>
+                <button class="read-article text-blue-600 dark:text-blue-400 text-sm font-medium">Baca Selengkapnya →</button>
+            </div>
+        </div>
+        
+        <!-- Artikel 3 -->
+        <div class="article-card bg-gray-50 dark:bg-gray-700 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600 hover:shadow-lg transition-shadow">
+            <img src="https://images.unsplash.com/photo-1560419015-7c427e8ae5ba?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Cooling" class="w-full h-48 object-cover">
+            <div class="p-4">
+                <span class="inline-block px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 text-xs rounded-full mb-2">Cooling</span>
+                <h3 class="font-bold text-lg mb-2">Air Cooling vs Liquid Cooling: Mana yang Lebih Baik?</h3>
+                <p class="text-gray-600 dark:text-gray-300 text-sm mb-3">Perbandingan mendalam antara dua sistem pendingin populer untuk PC...</p>
+                <button class="read-article text-blue-600 dark:text-blue-400 text-sm font-medium">Baca Selengkapnya →</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-6 text-center">
+        <button class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600">
+            Lihat Artikel Lainnya
+        </button>
+    </div>
+</div>
+<div class="mt-12 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+    <h2 class="text-2xl font-bold mb-4 text-blue-800 dark:text-blue-400">Pertanyaan Umum</h2>
+    
+    <div class="space-y-3">
+        <!-- FAQ Item 1 -->
+        <div class="faq-item border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+            <button class="faq-question w-full text-left p-4 hover:bg-gray-50 dark:hover:bg-gray-700 flex justify-between items-center">
+                <span class="font-medium">Berapa lama waktu yang dibutuhkan untuk merakit PC?</span>
+                <svg class="w-5 h-5 transform transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </button>
+            <div class="faq-answer hidden p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
+                <p class="text-gray-600 dark:text-gray-300">Untuk pemula, merakit PC biasanya memakan waktu 2-4 jam tergantung kompleksitas rakitan. Yang berpengalaman bisa menyelesaikan dalam 1-2 jam. Pastikan Anda menyediakan waktu cukup dan tidak terburu-buru untuk menghindari kesalahan.</p>
+            </div>
+        </div>
+        
+        <!-- FAQ Item 2 -->
+        <div class="faq-item border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+            <button class="faq-question w-full text-left p-4 hover:bg-gray-50 dark:hover:bg-gray-700 flex justify-between items-center">
+                <span class="font-medium">Apakah saya perlu gelang anti-statik saat merakit PC?</span>
+                <svg class="w-5 h-5 transform transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </button>
+            <div class="faq-answer hidden p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
+                <p class="text-gray-600 dark:text-gray-300">Gelang anti-statik sangat disarankan tetapi bukan keharusan. Alternatifnya, Anda bisa secara berkala menyentuh casing logam yang tidak dicat untuk membuang muatan statis. Risiko kerusakan komponen akibat listrik statis memang kecil tetapi konsekuensinya bisa mahal.</p>
+            </div>
+        </div>
+        
+        <!-- Tambahkan lebih banyak FAQ item sesuai kebutuhan -->
+    </div>
+</div>
+    </div>
+    
+
+<footer class="bg-white rounded-lg shadow-sm m-4 dark:bg-gray-800">
+    <div class="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
+      <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2025 <a href="https://fajarartcom.github.io/pcstore.html" class="hover:underline">FajarArtcom</a>. All Rights Reserved.
+    </span>
+    <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
+        <li>
+            <a href="#" class="hover:underline me-4 md:me-6">About</a>
+        </li>
+        <li>
+            <a href="#" class="hover:underline me-4 md:me-6">Privacy Policy</a>
+        </li>
+        <li>
+            <a href="#" class="hover:underline me-4 md:me-6">Licensing</a>
+        </li>
+        <li>
+            <a href="#" class="hover:underline">Contact</a>
+        </li>
+    </ul>
+    </div>
+</footer>
+
+
+    <!-- Flowbite JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lz-string@1.4.4/libs/lz-string.min.js"></script>
+</body>
+</html>

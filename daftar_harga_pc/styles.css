@@ -1,0 +1,170 @@
+/* Animasi perubahan harga */
+.price-change {
+    animation: priceChange 1s;
+    background-color: #fef9c3; /* Warna kuning muda */
+}
+
+@keyframes priceChange {
+    0% { background-color: #fef9c3; }
+    100% { background-color: white; }
+}
+
+/* Responsif untuk tabel */
+@media (max-width: 768px) {
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+
+/* Hover effect untuk baris tabel */
+.component-row:hover {
+    background-color: #f8fafc !important;
+}
+/* Dark Mode */
+.dark {
+    background-color: #1a202c;
+    color: #e2e8f0;
+}
+
+.dark .bg-white {
+    background-color: #2d3748 !important;
+}
+
+.dark .text-gray-900 {
+    color: #e2e8f0 !important;
+}
+
+.dark .text-gray-500 {
+    color: #a0aec0 !important;
+}
+
+.dark .border-gray-300 {
+    border-color: #4a5568 !important;
+}
+
+.dark .bg-gray-100 {
+    background-color: #4a5568 !important;
+}
+
+.dark .bg-gray-50 {
+    background-color: #2d3748 !important;
+}
+
+.dark .shadow-md {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Animasi untuk komponen */
+.component-card {
+    transition: all 0.3s ease;
+}
+
+.component-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading spinner */
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+@media (pointer: coarse) {
+    button, input[type="button"], input[type="submit"] {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    .component-card {
+        padding: 16px;
+    }
+}
+/* Sharing Modal */
+#share-modal .share-platform {
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+#share-modal .share-platform:hover {
+    transform: scale(1.1);
+}
+
+#share-link {
+    font-family: monospace;
+    background-color: #f8f9fa;
+}
+
+/* Embed code */
+#embed-code {
+    font-family: monospace;
+    font-size: 0.8rem;
+    resize: none;
+}
+
+/* Responsive sharing buttons */
+@media (max-width: 640px) {
+    #share-modal .flex.space-x-2 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+    }
+    
+    #share-modal .share-platform {
+        width: 100%;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+/* Assembly Guide Styles */
+.assembly-step {
+    transition: all 0.3s ease;
+}
+
+.assembly-step:hover {
+    border-color: #3b82f6;
+}
+
+.step-content.show {
+    display: block;
+}
+
+/* Video Container */
+.aspect-w-16 {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+}
+
+.aspect-w-16 iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+/* Article Cards */
+.article-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.article-card:hover {
+    transform: translateY(-5px);
+}
+
+.read-article {
+    transition: color 0.2s ease;
+}
+
+.read-article:hover {
+    color: #1e40af;
+}
+
+.dark .read-article:hover {
+    color: #93c5fd;
+}

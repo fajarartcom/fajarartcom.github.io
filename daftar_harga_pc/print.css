@@ -1,0 +1,31 @@
+/* Style khusus untuk cetakan */
+@media print {
+    body {
+        font-size: 12pt;
+        color: #000;
+        background: none;
+    }
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    th, td {
+        padding: 4px 8px;
+        border: 1px solid #ddd;
+    }
+    
+    th {
+        background-color: #f5f5f5;
+        font-weight: bold;
+    }
+    
+    .no-print {
+        display: none !important;
+    }
+    
+    @page {
+        margin: 1cm;
+    }
+}
