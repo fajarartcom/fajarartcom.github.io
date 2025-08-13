@@ -1,0 +1,1881 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Kegiatan Harian Teknisi Komputer</title>
+    <!-- Flowbite CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .sidebar-collapsed {
+            width: 5rem !important;
+        }
+        .sidebar-collapsed .sidebar-text {
+            display: none;
+        }
+        .sidebar-collapsed .logo-text {
+            display: none;
+        }
+        .main-content-expanded {
+            margin-left: 5rem !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0">
+            <div class="h-full px-3 py-4 overflow-y-auto bg-blue-700">
+                <div class="flex items-center ps-2.5 mb-5">
+                    <i class="fas fa-laptop-code text-white text-2xl mr-3"></i>
+                    <span class="self-center text-xl font-semibold whitespace-nowrap text-white logo-text">Teknisi Komputer</span>
+                </div>
+                <ul class="space-y-2 font-medium">
+                    <li>
+                        <a href="#" id="dashboard-link" class="flex items-center p-2 text-white rounded-lg hover:bg-blue-800 group">
+                            <i class="fas fa-home w-5 h-5"></i>
+                            <span class="ms-3 sidebar-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" id="kegiatan-link" class="flex items-center p-2 text-white rounded-lg bg-blue-800 hover:bg-blue-800 group">
+                            <i class="fas fa-tasks w-5 h-5"></i>
+                            <span class="ms-3 sidebar-text">Kegiatan Harian</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" id="perbaikan-link" class="flex items-center p-2 text-white rounded-lg hover:bg-blue-800 group">
+                            <i class="fas fa-wrench w-5 h-5"></i>
+                            <span class="ms-3 sidebar-text">Perbaikan</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" id="inventaris-link" class="flex items-center p-2 text-white rounded-lg hover:bg-blue-800 group">
+                            <i class="fas fa-clipboard-check w-5 h-5"></i>
+                            <span class="ms-3 sidebar-text">Inventaris</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" id="laporan-link" class="flex items-center p-2 text-white rounded-lg hover:bg-blue-800 group">
+                            <i class="fas fa-chart-bar w-5 h-5"></i>
+                            <span class="ms-3 sidebar-text">Laporan</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="absolute bottom-4 left-0 right-0 px-4">
+                    <button id="toggle-sidebar" class="w-full text-white bg-blue-800 hover:bg-blue-900 rounded-lg p-2 text-sm">
+                        <i class="fas fa-chevron-left"></i>
+                        <span class="sidebar-text">Sembunyikan Sidebar</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div id="main-content" class="p-4 sm:ml-64">
+            <!-- Header -->
+            <header class="bg-white shadow-md rounded-lg p-4 mb-4">
+                <div class="flex justify-between items-center">
+                    <h1 id="page-title" class="text-2xl font-bold text-gray-800">Kegiatan Harian</h1>
+                    <div class="flex items-center space-x-4">
+                        <span id="current-date" class="text-sm text-gray-600"></span>
+                        <button id="dropdownUserAvatarButton" data-dropdown-toggle="dropdownAvatar" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300" type="button">
+                            <span class="sr-only">Open user menu</span>
+                            <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo">
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content (hidden by default) -->
+            <div id="dashboard-content" class="hidden">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <div class="flex items-center">
+                            <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                                <i class="fas fa-tasks w-5 h-5"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500">Total Kegiatan</p>
+                                <p id="total-kegiatan" class="text-xl font-semibold text-gray-800">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <div class="flex items-center">
+                            <div class="p-3 rounded-full bg-green-100 text-green-600">
+                                <i class="fas fa-check-circle w-5 h-5"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500">Selesai</p>
+                                <p id="selesai-kegiatan" class="text-xl font-semibold text-gray-800">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <div class="flex items-center">
+                            <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                                <i class="fas fa-spinner w-5 h-5"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500">Dalam Proses</p>
+                                <p id="proses-kegiatan" class="text-xl font-semibold text-gray-800">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <div class="flex items-center">
+                            <div class="p-3 rounded-full bg-red-100 text-red-600">
+                                <i class="fas fa-clock w-5 h-5"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500">Ditunda</p>
+                                <p id="tunda-kegiatan" class="text-xl font-semibold text-gray-800">0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <h2 class="text-lg font-semibold mb-4">Kegiatan Terakhir</h2>
+                        <div class="relative overflow-x-auto">
+                            <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">Tanggal</th>
+                                        <th scope="col" class="px-6 py-3">Kegiatan</th>
+                                        <th scope="col" class="px-6 py-3">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-activities">
+                                    <!-- Data akan diisi oleh JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <h2 class="text-lg font-semibold mb-4">Statistik Perbaikan</h2>
+                        <canvas id="repairChart" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kegiatan Harian Content -->
+            <div id="kegiatan-content">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Form Tambah Kegiatan -->
+                    <div class="md:col-span-1">
+                        <div class="bg-white rounded-lg shadow p-4">
+                            <h2 class="text-lg font-semibold mb-4">Tambah Kegiatan Baru</h2>
+                            <form id="kegiatan-form">
+                                <div class="mb-4">
+                                    <label for="tanggal" class="block mb-2 text-sm font-medium text-gray-900">Tanggal</label>
+                                    <input type="date" id="tanggal" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="jenis_kegiatan" class="block mb-2 text-sm font-medium text-gray-900">Jenis Kegiatan</label>
+                                    <select id="jenis_kegiatan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                        <option value="" selected disabled>Pilih jenis kegiatan</option>
+                                        <option value="perawatan">Perawatan Rutin</option>
+                                        <option value="perbaikan">Perbaikan Hardware</option>
+                                        <option value="instalasi">Instalasi Software</option>
+                                        <option value="troubleshooting">Troubleshooting</option>
+                                        <option value="jaringan">Perbaikan Jaringan</option>
+                                        <option value="lainnya">Lainnya</option>
+                                    </select>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="perangkat" class="block mb-2 text-sm font-medium text-gray-900">Perangkat</label>
+                                    <input type="text" id="perangkat" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="No. Inventaris/Nama PC" required>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="deskripsi" class="block mb-2 text-sm font-medium text-gray-900">Deskripsi Kegiatan</label>
+                                    <textarea id="deskripsi" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Detail kegiatan yang dilakukan..." required></textarea>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="status" class="block mb-2 text-sm font-medium text-gray-900">Status</label>
+                                    <select id="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                        <option value="selesai" selected>Selesai</option>
+                                        <option value="proses">Dalam Proses</option>
+                                        <option value="tunda">Ditunda</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Simpan Kegiatan</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Daftar Kegiatan -->
+                    <div class="md:col-span-2">
+                        <div class="bg-white rounded-lg shadow p-4">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="text-lg font-semibold">Daftar Kegiatan</h2>
+                                <div class="flex space-x-2">
+                                    <button id="filter-hari-ini" class="px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200">Hari Ini</button>
+                                    <button id="filter-minggu-ini" class="px-3 py-1 text-sm bg-gray-100 rounded-lg hover:bg-gray-200">Minggu Ini</button>
+                                    <button id="filter-bulan-ini" class="px-3 py-1 text-sm bg-gray-100 rounded-lg hover:bg-gray-200">Bulan Ini</button>
+                                    <button id="filter-semua" class="px-3 py-1 text-sm bg-gray-100 rounded-lg hover:bg-gray-200">Semua</button>
+                                </div>
+                            </div>
+
+                            <!-- Filter -->
+                            <div class="mb-4">
+                                <div class="flex flex-wrap gap-2">
+                                    <select id="filter-jenis" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2">
+                                        <option value="" selected>Semua Jenis</option>
+                                        <option value="perawatan">Perawatan</option>
+                                        <option value="perbaikan">Perbaikan</option>
+                                        <option value="instalasi">Instalasi</option>
+                                        <option value="troubleshooting">Troubleshooting</option>
+                                        <option value="jaringan">Jaringan</option>
+                                        <option value="lainnya">Lainnya</option>
+                                    </select>
+                                    <select id="filter-status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2">
+                                        <option value="" selected>Semua Status</option>
+                                        <option value="selesai">Selesai</option>
+                                        <option value="proses">Dalam Proses</option>
+                                        <option value="tunda">Ditunda</option>
+                                    </select>
+                                    <input type="text" id="search-input" placeholder="Cari..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2 w-48">
+                                </div>
+                            </div>
+
+                            <!-- Table Kegiatan -->
+                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                                <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3">Tanggal</th>
+                                            <th scope="col" class="px-6 py-3">Kegiatan</th>
+                                            <th scope="col" class="px-6 py-3">Perangkat</th>
+                                            <th scope="col" class="px-6 py-3">Status</th>
+                                            <th scope="col" class="px-6 py-3">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="kegiatan-table-body">
+                                        <!-- Data akan diisi oleh JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Pagination -->
+                            <nav class="flex items-center justify-between pt-4" aria-label="Table navigation">
+                                <span id="pagination-info" class="text-sm font-normal text-gray-500">Menampilkan <span class="font-semibold text-gray-900">0-0</span> dari <span class="font-semibold text-gray-900">0</span></span>
+                                <ul id="pagination" class="inline-flex -space-x-px text-sm h-8">
+                                    <!-- Pagination akan diisi oleh JavaScript -->
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Perbaikan Content (hidden by default) -->
+            <div id="perbaikan-content" class="hidden">
+                <div class="bg-white rounded-lg shadow p-4 mb-4">
+                    <h2 class="text-lg font-semibold mb-4">Form Laporan Perbaikan</h2>
+                    <form id="perbaikan-form">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <div class="mb-4">
+                                    <label for="perbaikan-tanggal" class="block mb-2 text-sm font-medium text-gray-900">Tanggal</label>
+                                    <input type="date" id="perbaikan-tanggal" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="perbaikan-perangkat" class="block mb-2 text-sm font-medium text-gray-900">Perangkat</label>
+                                    <input type="text" id="perbaikan-perangkat" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="No. Inventaris/Nama PC" required>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="perbaikan-kerusakan" class="block mb-2 text-sm font-medium text-gray-900">Jenis Kerusakan</label>
+                                    <select id="perbaikan-kerusakan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                        <option value="" selected disabled>Pilih jenis kerusakan</option>
+                                        <option value="hardware">Hardware</option>
+                                        <option value="software">Software</option>
+                                        <option value="jaringan">Jaringan</option>
+                                        <option value="lainnya">Lainnya</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="mb-4">
+                                    <label for="perbaikan-deskripsi" class="block mb-2 text-sm font-medium text-gray-900">Deskripsi Kerusakan</label>
+                                    <textarea id="perbaikan-deskripsi" rows="3" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Deskripsi kerusakan yang ditemukan..." required></textarea>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="perbaikan-tindakan" class="block mb-2 text-sm font-medium text-gray-900">Tindakan Perbaikan</label>
+                                    <textarea id="perbaikan-tindakan" rows="3" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Tindakan yang dilakukan untuk perbaikan..." required></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="perbaikan-status" class="block mb-2 text-sm font-medium text-gray-900">Status Perbaikan</label>
+                            <select id="perbaikan-status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                <option value="selesai" selected>Selesai</option>
+                                <option value="proses">Dalam Proses</option>
+                                <option value="butuh-part">Butuh Part Pengganti</option>
+                                <option value="tunda">Ditunda</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label for="perbaikan-keterangan" class="block mb-2 text-sm font-medium text-gray-900">Keterangan Tambahan</label>
+                            <textarea id="perbaikan-keterangan" rows="2" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Keterangan tambahan..."></textarea>
+                        </div>
+                        <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Simpan Laporan Perbaikan</button>
+                    </form>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-semibold">Daftar Laporan Perbaikan</h2>
+                        <div class="flex space-x-2">
+                            <button id="filter-perbaikan-hari-ini" class="px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200">Hari Ini</button>
+                            <button id="filter-perbaikan-minggu-ini" class="px-3 py-1 text-sm bg-gray-100 rounded-lg hover:bg-gray-200">Minggu Ini</button>
+                            <button id="filter-perbaikan-bulan-ini" class="px-3 py-1 text-sm bg-gray-100 rounded-lg hover:bg-gray-200">Bulan Ini</button>
+                            <button id="filter-perbaikan-semua" class="px-3 py-1 text-sm bg-gray-100 rounded-lg hover:bg-gray-200">Semua</button>
+                        </div>
+                    </div>
+
+                    <!-- Filter Perbaikan -->
+                    <div class="mb-4">
+                        <div class="flex flex-wrap gap-2">
+                            <select id="filter-perbaikan-kerusakan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2">
+                                <option value="" selected>Semua Jenis</option>
+                                <option value="hardware">Hardware</option>
+                                <option value="software">Software</option>
+                                <option value="jaringan">Jaringan</option>
+                                <option value="lainnya">Lainnya</option>
+                            </select>
+                            <select id="filter-perbaikan-status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2">
+                                <option value="" selected>Semua Status</option>
+                                <option value="selesai">Selesai</option>
+                                <option value="proses">Dalam Proses</option>
+                                <option value="butuh-part">Butuh Part</option>
+                                <option value="tunda">Ditunda</option>
+                            </select>
+                            <input type="text" id="search-perbaikan-input" placeholder="Cari..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2 w-48">
+                        </div>
+                    </div>
+
+                    <!-- Table Perbaikan -->
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                        <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">Tanggal</th>
+                                    <th scope="col" class="px-6 py-3">Perangkat</th>
+                                    <th scope="col" class="px-6 py-3">Kerusakan</th>
+                                    <th scope="col" class="px-6 py-3">Status</th>
+                                    <th scope="col" class="px-6 py-3">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="perbaikan-table-body">
+                                <!-- Data akan diisi oleh JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination Perbaikan -->
+                    <nav class="flex items-center justify-between pt-4" aria-label="Table navigation">
+                        <span id="pagination-perbaikan-info" class="text-sm font-normal text-gray-500">Menampilkan <span class="font-semibold text-gray-900">0-0</span> dari <span class="font-semibold text-gray-900">0</span></span>
+                        <ul id="pagination-perbaikan" class="inline-flex -space-x-px text-sm h-8">
+                            <!-- Pagination akan diisi oleh JavaScript -->
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Inventaris Content (hidden by default) -->
+            <div id="inventaris-content" class="hidden">
+                <div class="bg-white rounded-lg shadow p-4">
+                    <h2 class="text-lg font-semibold mb-4">Inventaris Perangkat</h2>
+                    <p class="text-gray-500">Fitur inventaris akan dikembangkan lebih lanjut.</p>
+                </div>
+            </div>
+
+            <!-- Laporan Content (hidden by default) -->
+            <div id="laporan-content" class="hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <h2 class="text-lg font-semibold mb-4">Laporan Kegiatan</h2>
+                        <form id="laporan-kegiatan-form">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label for="laporan-kegiatan-dari" class="block mb-2 text-sm font-medium text-gray-900">Dari Tanggal</label>
+                                    <input type="date" id="laporan-kegiatan-dari" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                </div>
+                                <div>
+                                    <label for="laporan-kegiatan-sampai" class="block mb-2 text-sm font-medium text-gray-900">Sampai Tanggal</label>
+                                    <input type="date" id="laporan-kegiatan-sampai" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="laporan-kegiatan-jenis" class="block mb-2 text-sm font-medium text-gray-900">Filter Jenis Kegiatan</label>
+                                <select id="laporan-kegiatan-jenis" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                    <option value="" selected>Semua Jenis</option>
+                                    <option value="perawatan">Perawatan</option>
+                                    <option value="perbaikan">Perbaikan</option>
+                                    <option value="instalasi">Instalasi</option>
+                                    <option value="troubleshooting">Troubleshooting</option>
+                                    <option value="jaringan">Jaringan</option>
+                                    <option value="lainnya">Lainnya</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label for="laporan-kegiatan-status" class="block mb-2 text-sm font-medium text-gray-900">Filter Status</label>
+                                <select id="laporan-kegiatan-status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                    <option value="" selected>Semua Status</option>
+                                    <option value="selesai">Selesai</option>
+                                    <option value="proses">Dalam Proses</option>
+                                    <option value="tunda">Ditunda</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Generate Laporan</button>
+                        </form>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <h2 class="text-lg font-semibold mb-4">Laporan Perbaikan</h2>
+                        <form id="laporan-perbaikan-form">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label for="laporan-perbaikan-dari" class="block mb-2 text-sm font-medium text-gray-900">Dari Tanggal</label>
+                                    <input type="date" id="laporan-perbaikan-dari" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                </div>
+                                <div>
+                                    <label for="laporan-perbaikan-sampai" class="block mb-2 text-sm font-medium text-gray-900">Sampai Tanggal</label>
+                                    <input type="date" id="laporan-perbaikan-sampai" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="laporan-perbaikan-kerusakan" class="block mb-2 text-sm font-medium text-gray-900">Filter Jenis Kerusakan</label>
+                                <select id="laporan-perbaikan-kerusakan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                    <option value="" selected>Semua Jenis</option>
+                                    <option value="hardware">Hardware</option>
+                                    <option value="software">Software</option>
+                                    <option value="jaringan">Jaringan</option>
+                                    <option value="lainnya">Lainnya</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label for="laporan-perbaikan-status" class="block mb-2 text-sm font-medium text-gray-900">Filter Status</label>
+                                <select id="laporan-perbaikan-status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                    <option value="" selected>Semua Status</option>
+                                    <option value="selesai">Selesai</option>
+                                    <option value="proses">Dalam Proses</option>
+                                    <option value="butuh-part">Butuh Part</option>
+                                    <option value="tunda">Ditunda</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Generate Laporan</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="laporan-result" class="bg-white rounded-lg shadow p-4 hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 id="laporan-title" class="text-lg font-semibold"></h2>
+                        <button id="cetak-laporan" class="px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 flex items-center">
+                            <i class="fas fa-print mr-2"></i> Cetak Laporan
+                        </button>
+                    </div>
+                    <div id="laporan-content-data" class="overflow-x-auto">
+                        <!-- Hasil laporan akan ditampilkan di sini -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detail Kegiatan -->
+    <div id="detail-kegiatan-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-2xl max-h-full">
+            <div class="relative bg-white rounded-lg shadow">
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                    <h3 class="text-xl font-semibold text-gray-900">
+                        Detail Kegiatan
+                    </h3>
+                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="detail-kegiatan-modal">
+                        <i class="fas fa-times"></i>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <div class="p-4 md:p-5 space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm text-gray-500">Tanggal</p>
+                            <p id="detail-tanggal" class="font-medium"></p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Jenis Kegiatan</p>
+                            <p id="detail-jenis" class="font-medium"></p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Perangkat</p>
+                            <p id="detail-perangkat" class="font-medium"></p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Status</p>
+                            <p id="detail-status" class="font-medium"></p>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Deskripsi Kegiatan</p>
+                        <p id="detail-deskripsi" class="font-medium"></p>
+                    </div>
+                </div>
+                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b">
+                    <button id="edit-kegiatan-btn" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Edit</button>
+                    <button id="hapus-kegiatan-btn" class="ms-3 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Hapus</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detail Perbaikan -->
+    <div id="detail-perbaikan-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-2xl max-h-full">
+            <div class="relative bg-white rounded-lg shadow">
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                    <h3 class="text-xl font-semibold text-gray-900">
+                        Detail Laporan Perbaikan
+                    </h3>
+                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="detail-perbaikan-modal">
+                        <i class="fas fa-times"></i>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <div class="p-4 md:p-5 space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm text-gray-500">Tanggal</p>
+                            <p id="detail-perbaikan-tanggal" class="font-medium"></p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Perangkat</p>
+                            <p id="detail-perbaikan-perangkat" class="font-medium"></p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Jenis Kerusakan</p>
+                            <p id="detail-perbaikan-kerusakan" class="font-medium"></p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Status Perbaikan</p>
+                            <p id="detail-perbaikan-status" class="font-medium"></p>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Deskripsi Kerusakan</p>
+                        <p id="detail-perbaikan-deskripsi" class="font-medium"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Tindakan Perbaikan</p>
+                        <p id="detail-perbaikan-tindakan" class="font-medium"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Keterangan Tambahan</p>
+                        <p id="detail-perbaikan-keterangan" class="font-medium"></p>
+                    </div>
+                </div>
+                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b">
+                    <button id="edit-perbaikan-btn" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Edit</button>
+                    <button id="hapus-perbaikan-btn" class="ms-3 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Hapus</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flowbite JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Data Storage
+        let kegiatanData = JSON.parse(localStorage.getItem('kegiatanData')) || [];
+        let perbaikanData = JSON.parse(localStorage.getItem('perbaikanData')) || [];
+        
+        // Current Page State
+        let currentKegiatanPage = 1;
+        let currentPerbaikanPage = 1;
+        const itemsPerPage = 5;
+        let currentDetailId = null;
+        let isEditing = false;
+        let currentActiveNav = 'kegiatan';
+        
+        // DOM Elements
+        const kegiatanForm = document.getElementById('kegiatan-form');
+        const perbaikanForm = document.getElementById('perbaikan-form');
+        const kegiatanTableBody = document.getElementById('kegiatan-table-body');
+        const perbaikanTableBody = document.getElementById('perbaikan-table-body');
+        const pagination = document.getElementById('pagination');
+        const paginationPerbaikan = document.getElementById('pagination-perbaikan');
+        const paginationInfo = document.getElementById('pagination-info');
+        const paginationPerbaikanInfo = document.getElementById('pagination-perbaikan-info');
+        const searchInput = document.getElementById('search-input');
+        const searchPerbaikanInput = document.getElementById('search-perbaikan-input');
+        const filterJenis = document.getElementById('filter-jenis');
+        const filterStatus = document.getElementById('filter-status');
+        const filterPerbaikanKerusakan = document.getElementById('filter-perbaikan-kerusakan');
+        const filterPerbaikanStatus = document.getElementById('filter-perbaikan-status');
+        const currentDateElement = document.getElementById('current-date');
+        
+        // Content Sections
+        const dashboardContent = document.getElementById('dashboard-content');
+        const kegiatanContent = document.getElementById('kegiatan-content');
+        const perbaikanContent = document.getElementById('perbaikan-content');
+        const inventarisContent = document.getElementById('inventaris-content');
+        const laporanContent = document.getElementById('laporan-content');
+        
+        // Navigation Links
+        const dashboardLink = document.getElementById('dashboard-link');
+        const kegiatanLink = document.getElementById('kegiatan-link');
+        const perbaikanLink = document.getElementById('perbaikan-link');
+        const inventarisLink = document.getElementById('inventaris-link');
+        const laporanLink = document.getElementById('laporan-link');
+        
+        // Filter Buttons
+        const filterHariIni = document.getElementById('filter-hari-ini');
+        const filterMingguIni = document.getElementById('filter-minggu-ini');
+        const filterBulanIni = document.getElementById('filter-bulan-ini');
+        const filterSemua = document.getElementById('filter-semua');
+        const filterPerbaikanHariIni = document.getElementById('filter-perbaikan-hari-ini');
+        const filterPerbaikanMingguIni = document.getElementById('filter-perbaikan-minggu-ini');
+        const filterPerbaikanBulanIni = document.getElementById('filter-perbaikan-bulan-ini');
+        const filterPerbaikanSemua = document.getElementById('filter-perbaikan-semua');
+        
+        // Laporan Form
+        const laporanKegiatanForm = document.getElementById('laporan-kegiatan-form');
+        const laporanPerbaikanForm = document.getElementById('laporan-perbaikan-form');
+        const laporanResult = document.getElementById('laporan-result');
+        const laporanTitle = document.getElementById('laporan-title');
+        const laporanContentData = document.getElementById('laporan-content-data');
+        const cetakLaporanBtn = document.getElementById('cetak-laporan');
+        
+        // Sidebar Toggle
+        const toggleSidebarBtn = document.getElementById('toggle-sidebar');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content');
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current date
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            currentDateElement.textContent = now.toLocaleDateString('id-ID', options);
+            
+            // Set default date in forms
+            document.getElementById('tanggal').valueAsDate = now;
+            document.getElementById('perbaikan-tanggal').valueAsDate = now;
+            
+            // Load initial data
+            renderKegiatanTable();
+            renderPerbaikanTable();
+            updateStats();
+            
+            // Set active nav
+            setActiveNav(currentActiveNav);
+            
+            // Initialize chart
+            initChart();
+        });
+        
+        // Navigation
+        dashboardLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            setActiveNav('dashboard');
+        });
+        
+        kegiatanLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            setActiveNav('kegiatan');
+        });
+        
+        perbaikanLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            setActiveNav('perbaikan');
+        });
+        
+        inventarisLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            setActiveNav('inventaris');
+        });
+        
+        laporanLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            setActiveNav('laporan');
+        });
+        
+        function setActiveNav(nav) {
+            currentActiveNav = nav;
+            
+            // Hide all content
+            dashboardContent.classList.add('hidden');
+            kegiatanContent.classList.add('hidden');
+            perbaikanContent.classList.add('hidden');
+            inventarisContent.classList.add('hidden');
+            laporanContent.classList.add('hidden');
+            
+            // Remove active class from all nav links
+            dashboardLink.classList.remove('bg-blue-800');
+            kegiatanLink.classList.remove('bg-blue-800');
+            perbaikanLink.classList.remove('bg-blue-800');
+            inventarisLink.classList.remove('bg-blue-800');
+            laporanLink.classList.remove('bg-blue-800');
+            
+            // Show selected content and set active nav link
+            switch(nav) {
+                case 'dashboard':
+                    dashboardContent.classList.remove('hidden');
+                    dashboardLink.classList.add('bg-blue-800');
+                    document.getElementById('page-title').textContent = 'Dashboard';
+                    break;
+                case 'kegiatan':
+                    kegiatanContent.classList.remove('hidden');
+                    kegiatanLink.classList.add('bg-blue-800');
+                    document.getElementById('page-title').textContent = 'Kegiatan Harian';
+                    break;
+                case 'perbaikan':
+                    perbaikanContent.classList.remove('hidden');
+                    perbaikanLink.classList.add('bg-blue-800');
+                    document.getElementById('page-title').textContent = 'Laporan Perbaikan';
+                    break;
+                case 'inventaris':
+                    inventarisContent.classList.remove('hidden');
+                    inventarisLink.classList.add('bg-blue-800');
+                    document.getElementById('page-title').textContent = 'Inventaris Perangkat';
+                    break;
+                case 'laporan':
+                    laporanContent.classList.remove('hidden');
+                    laporanLink.classList.add('bg-blue-800');
+                    document.getElementById('page-title').textContent = 'Laporan';
+                    break;
+            }
+        }
+        
+        // Toggle Sidebar
+        toggleSidebarBtn.addEventListener('click', function() {
+            sidebar.classList.toggle('sidebar-collapsed');
+            mainContent.classList.toggle('main-content-expanded');
+            
+            if (sidebar.classList.contains('sidebar-collapsed')) {
+                toggleSidebarBtn.innerHTML = '<i class="fas fa-chevron-right"></i><span class="sidebar-text">Perluas Sidebar</span>';
+            } else {
+                toggleSidebarBtn.innerHTML = '<i class="fas fa-chevron-left"></i><span class="sidebar-text">Sembunyikan Sidebar</span>';
+            }
+        });
+        
+        // Kegiatan Form Submission
+        kegiatanForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                id: Date.now(),
+                tanggal: document.getElementById('tanggal').value,
+                jenis: document.getElementById('jenis_kegiatan').value,
+                perangkat: document.getElementById('perangkat').value,
+                deskripsi: document.getElementById('deskripsi').value,
+                status: document.getElementById('status').value,
+                createdAt: new Date().toISOString()
+            };
+            
+            if (isEditing) {
+                // Update existing kegiatan
+                const index = kegiatanData.findIndex(item => item.id === currentDetailId);
+                if (index !== -1) {
+                    kegiatanData[index] = formData;
+                }
+                isEditing = false;
+            } else {
+                // Add new kegiatan
+                kegiatanData.unshift(formData);
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('kegiatanData', JSON.stringify(kegiatanData));
+            
+            // Reset form
+            kegiatanForm.reset();
+            document.getElementById('tanggal').valueAsDate = new Date();
+            
+            // Refresh table
+            renderKegiatanTable();
+            updateStats();
+            
+            // Show success message
+            alert('Kegiatan berhasil disimpan!');
+        });
+        
+        // Perbaikan Form Submission
+        perbaikanForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                id: Date.now(),
+                tanggal: document.getElementById('perbaikan-tanggal').value,
+                perangkat: document.getElementById('perbaikan-perangkat').value,
+                kerusakan: document.getElementById('perbaikan-kerusakan').value,
+                deskripsi: document.getElementById('perbaikan-deskripsi').value,
+                tindakan: document.getElementById('perbaikan-tindakan').value,
+                status: document.getElementById('perbaikan-status').value,
+                keterangan: document.getElementById('perbaikan-keterangan').value,
+                createdAt: new Date().toISOString()
+            };
+            
+            if (isEditing) {
+                // Update existing perbaikan
+                const index = perbaikanData.findIndex(item => item.id === currentDetailId);
+                if (index !== -1) {
+                    perbaikanData[index] = formData;
+                }
+                isEditing = false;
+            } else {
+                // Add new perbaikan
+                perbaikanData.unshift(formData);
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('perbaikanData', JSON.stringify(perbaikanData));
+            
+            // Reset form
+            perbaikanForm.reset();
+            document.getElementById('perbaikan-tanggal').valueAsDate = new Date();
+            
+            // Refresh table
+            renderPerbaikanTable();
+            updateStats();
+            
+            // Show success message
+            alert('Laporan perbaikan berhasil disimpan!');
+        });
+        
+        // Render Kegiatan Table
+        function renderKegiatanTable(page = 1, filter = {}) {
+            currentKegiatanPage = page;
+            
+            // Apply filters
+            let filteredData = [...kegiatanData];
+            
+            if (filter.jenis) {
+                filteredData = filteredData.filter(item => item.jenis === filter.jenis);
+            }
+            
+            if (filter.status) {
+                filteredData = filteredData.filter(item => item.status === filter.status);
+            }
+            
+            if (filter.search) {
+                const searchTerm = filter.search.toLowerCase();
+                filteredData = filteredData.filter(item => 
+                    item.perangkat.toLowerCase().includes(searchTerm) || 
+                    item.deskripsi.toLowerCase().includes(searchTerm) ||
+                    item.jenis.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            if (filter.dateRange) {
+                const startDate = new Date(filter.dateRange.start);
+                const endDate = new Date(filter.dateRange.end);
+                
+                filteredData = filteredData.filter(item => {
+                    const itemDate = new Date(item.tanggal);
+                    return itemDate >= startDate && itemDate <= endDate;
+                });
+            }
+            
+            // Pagination
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedData = filteredData.slice(startIndex, endIndex);
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            
+            // Clear table
+            kegiatanTableBody.innerHTML = '';
+            
+            // Populate table
+            if (paginatedData.length === 0) {
+                kegiatanTableBody.innerHTML = `
+                    <tr class="bg-white border-b hover:bg-gray-50">
+                        <td colspan="5" class="px-6 py-4 text-center">Tidak ada data kegiatan</td>
+                    </tr>
+                `;
+            } else {
+                paginatedData.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.className = 'bg-white border-b hover:bg-gray-50';
+                    row.innerHTML = `
+                        <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                            ${formatDate(item.tanggal)}
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="font-medium">${getJenisKegiatanText(item.jenis)}</div>
+                            <div class="text-gray-500 text-xs">${item.deskripsi.substring(0, 50)}${item.deskripsi.length > 50 ? '...' : ''}</div>
+                        </td>
+                        <td class="px-6 py-4">${item.perangkat}</td>
+                        <td class="px-6 py-4">
+                            ${getStatusBadge(item.status)}
+                        </td>
+                        <td class="px-6 py-4">
+                            <button data-id="${item.id}" class="detail-kegiatan-btn font-medium text-blue-600 hover:underline">Detail</button>
+                        </td>
+                    `;
+                    kegiatanTableBody.appendChild(row);
+                });
+            }
+            
+            // Update pagination info
+            paginationInfo.innerHTML = `Menampilkan <span class="font-semibold text-gray-900">${startIndex + 1}-${Math.min(endIndex, filteredData.length)}</span> dari <span class="font-semibold text-gray-900">${filteredData.length}</span>`;
+            
+            // Render pagination buttons
+            renderPagination(pagination, totalPages, page, 'kegiatan');
+            
+            // Add event listeners to detail buttons
+            document.querySelectorAll('.detail-kegiatan-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    showDetailKegiatanModal(parseInt(this.getAttribute('data-id')));
+                });
+            });
+        }
+        
+        // Render Perbaikan Table
+        function renderPerbaikanTable(page = 1, filter = {}) {
+            currentPerbaikanPage = page;
+            
+            // Apply filters
+            let filteredData = [...perbaikanData];
+            
+            if (filter.kerusakan) {
+                filteredData = filteredData.filter(item => item.kerusakan === filter.kerusakan);
+            }
+            
+            if (filter.status) {
+                filteredData = filteredData.filter(item => item.status === filter.status);
+            }
+            
+            if (filter.search) {
+                const searchTerm = filter.search.toLowerCase();
+                filteredData = filteredData.filter(item => 
+                    item.perangkat.toLowerCase().includes(searchTerm) || 
+                    item.deskripsi.toLowerCase().includes(searchTerm) ||
+                    item.kerusakan.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            if (filter.dateRange) {
+                const startDate = new Date(filter.dateRange.start);
+                const endDate = new Date(filter.dateRange.end);
+                
+                filteredData = filteredData.filter(item => {
+                    const itemDate = new Date(item.tanggal);
+                    return itemDate >= startDate && itemDate <= endDate;
+                });
+            }
+            
+            // Pagination
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedData = filteredData.slice(startIndex, endIndex);
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            
+            // Clear table
+            perbaikanTableBody.innerHTML = '';
+            
+            // Populate table
+            if (paginatedData.length === 0) {
+                perbaikanTableBody.innerHTML = `
+                    <tr class="bg-white border-b hover:bg-gray-50">
+                        <td colspan="5" class="px-6 py-4 text-center">Tidak ada data perbaikan</td>
+                    </tr>
+                `;
+            } else {
+                paginatedData.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.className = 'bg-white border-b hover:bg-gray-50';
+                    row.innerHTML = `
+                        <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                            ${formatDate(item.tanggal)}
+                        </td>
+                        <td class="px-6 py-4">${item.perangkat}</td>
+                        <td class="px-6 py-4">${getJenisKerusakanText(item.kerusakan)}</td>
+                        <td class="px-6 py-4">
+                            ${getPerbaikanStatusBadge(item.status)}
+                        </td>
+                        <td class="px-6 py-4">
+                            <button data-id="${item.id}" class="detail-perbaikan-btn font-medium text-blue-600 hover:underline">Detail</button>
+                        </td>
+                    `;
+                    perbaikanTableBody.appendChild(row);
+                });
+            }
+            
+            // Update pagination info
+            paginationPerbaikanInfo.innerHTML = `Menampilkan <span class="font-semibold text-gray-900">${startIndex + 1}-${Math.min(endIndex, filteredData.length)}</span> dari <span class="font-semibold text-gray-900">${filteredData.length}</span>`;
+            
+            // Render pagination buttons
+            renderPagination(paginationPerbaikan, totalPages, page, 'perbaikan');
+            
+            // Add event listeners to detail buttons
+            document.querySelectorAll('.detail-perbaikan-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    showDetailPerbaikanModal(parseInt(this.getAttribute('data-id')));
+                });
+            });
+        }
+        
+        // Render Pagination
+        function renderPagination(element, totalPages, currentPage, type) {
+            element.innerHTML = '';
+            
+            if (totalPages <= 1) return;
+            
+            // Previous button
+            const prevLi = document.createElement('li');
+            prevLi.innerHTML = `
+                <a href="#" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 ${currentPage === 1 ? 'cursor-not-allowed opacity-50' : ''}">
+                    Previous
+                </a>
+            `;
+            prevLi.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    if (type === 'kegiatan') {
+                        renderKegiatanTable(currentPage - 1, getCurrentKegiatanFilters());
+                    } else {
+                        renderPerbaikanTable(currentPage - 1, getCurrentPerbaikanFilters());
+                    }
+                }
+            });
+            element.appendChild(prevLi);
+            
+            // Page buttons
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            
+            if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const pageLi = document.createElement('li');
+                pageLi.innerHTML = `
+                    <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight ${i === currentPage ? 'text-blue-600 bg-blue-50 border border-blue-300 hover:bg-blue-100 hover:text-blue-700' : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700'}">
+                        ${i}
+                    </a>
+                `;
+                pageLi.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (type === 'kegiatan') {
+                        renderKegiatanTable(i, getCurrentKegiatanFilters());
+                    } else {
+                        renderPerbaikanTable(i, getCurrentPerbaikanFilters());
+                    }
+                });
+                element.appendChild(pageLi);
+            }
+            
+            // Next button
+            const nextLi = document.createElement('li');
+            nextLi.innerHTML = `
+                <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 ${currentPage === totalPages ? 'cursor-not-allowed opacity-50' : ''}">
+                    Next
+                </a>
+            `;
+            nextLi.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (currentPage < totalPages) {
+                    if (type === 'kegiatan') {
+                        renderKegiatanTable(currentPage + 1, getCurrentKegiatanFilters());
+                    } else {
+                        renderPerbaikanTable(currentPage + 1, getCurrentPerbaikanFilters());
+                    }
+                }
+            });
+            element.appendChild(nextLi);
+        }
+        
+        // Show Detail Kegiatan Modal
+        function showDetailKegiatanModal(id) {
+            currentDetailId = id;
+            const kegiatan = kegiatanData.find(item => item.id === id);
+            
+            if (kegiatan) {
+                document.getElementById('detail-tanggal').textContent = formatDate(kegiatan.tanggal, true);
+                document.getElementById('detail-jenis').textContent = getJenisKegiatanText(kegiatan.jenis);
+                document.getElementById('detail-perangkat').textContent = kegiatan.perangkat;
+                document.getElementById('detail-status').textContent = getStatusText(kegiatan.status);
+                document.getElementById('detail-deskripsi').textContent = kegiatan.deskripsi;
+                
+                // Show modal
+                const modal = new FlowbiteModal(document.getElementById('detail-kegiatan-modal'));
+                modal.show();
+            }
+        }
+        
+        // Show Detail Perbaikan Modal
+        function showDetailPerbaikanModal(id) {
+            currentDetailId = id;
+            const perbaikan = perbaikanData.find(item => item.id === id);
+            
+            if (perbaikan) {
+                document.getElementById('detail-perbaikan-tanggal').textContent = formatDate(perbaikan.tanggal, true);
+                document.getElementById('detail-perbaikan-perangkat').textContent = perbaikan.perangkat;
+                document.getElementById('detail-perbaikan-kerusakan').textContent = getJenisKerusakanText(perbaikan.kerusakan);
+                document.getElementById('detail-perbaikan-status').textContent = getPerbaikanStatusText(perbaikan.status);
+                document.getElementById('detail-perbaikan-deskripsi').textContent = perbaikan.deskripsi;
+                document.getElementById('detail-perbaikan-tindakan').textContent = perbaikan.tindakan;
+                document.getElementById('detail-perbaikan-keterangan').textContent = perbaikan.keterangan || '-';
+                
+                // Show modal
+                const modal = new FlowbiteModal(document.getElementById('detail-perbaikan-modal'));
+                modal.show();
+            }
+        }
+        
+        // Edit Kegiatan
+        document.getElementById('edit-kegiatan-btn').addEventListener('click', function() {
+            const kegiatan = kegiatanData.find(item => item.id === currentDetailId);
+            
+            if (kegiatan) {
+                document.getElementById('tanggal').value = kegiatan.tanggal;
+                document.getElementById('jenis_kegiatan').value = kegiatan.jenis;
+                document.getElementById('perangkat').value = kegiatan.perangkat;
+                document.getElementById('deskripsi').value = kegiatan.deskripsi;
+                document.getElementById('status').value = kegiatan.status;
+                
+                isEditing = true;
+                
+                // Hide modal
+                const modal = new FlowbiteModal(document.getElementById('detail-kegiatan-modal'));
+                modal.hide();
+                
+                // Scroll to form
+                document.getElementById('kegiatan-form').scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+        
+        // Hapus Kegiatan
+        document.getElementById('hapus-kegiatan-btn').addEventListener('click', function() {
+            if (confirm('Apakah Anda yakin ingin menghapus kegiatan ini?')) {
+                kegiatanData = kegiatanData.filter(item => item.id !== currentDetailId);
+                localStorage.setItem('kegiatanData', JSON.stringify(kegiatanData));
+                
+                // Hide modal
+                const modal = new FlowbiteModal(document.getElementById('detail-kegiatan-modal'));
+                modal.hide();
+                
+                // Refresh table
+                renderKegiatanTable(currentKegiatanPage, getCurrentKegiatanFilters());
+                updateStats();
+                
+                alert('Kegiatan berhasil dihapus!');
+            }
+        });
+        
+        // Edit Perbaikan
+        document.getElementById('edit-perbaikan-btn').addEventListener('click', function() {
+            const perbaikan = perbaikanData.find(item => item.id === currentDetailId);
+            
+            if (perbaikan) {
+                document.getElementById('perbaikan-tanggal').value = perbaikan.tanggal;
+                document.getElementById('perbaikan-perangkat').value = perbaikan.perangkat;
+                document.getElementById('perbaikan-kerusakan').value = perbaikan.kerusakan;
+                document.getElementById('perbaikan-deskripsi').value = perbaikan.deskripsi;
+                document.getElementById('perbaikan-tindakan').value = perbaikan.tindakan;
+                document.getElementById('perbaikan-status').value = perbaikan.status;
+                document.getElementById('perbaikan-keterangan').value = perbaikan.keterangan || '';
+                
+                isEditing = true;
+                
+                // Hide modal
+                const modal = new FlowbiteModal(document.getElementById('detail-perbaikan-modal'));
+                modal.hide();
+                
+                // Scroll to form
+                document.getElementById('perbaikan-form').scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+        
+        // Hapus Perbaikan
+        document.getElementById('hapus-perbaikan-btn').addEventListener('click', function() {
+            if (confirm('Apakah Anda yakin ingin menghapus laporan perbaikan ini?')) {
+                perbaikanData = perbaikanData.filter(item => item.id !== currentDetailId);
+                localStorage.setItem('perbaikanData', JSON.stringify(perbaikanData));
+                
+                // Hide modal
+                const modal = new FlowbiteModal(document.getElementById('detail-perbaikan-modal'));
+                modal.hide();
+                
+                // Refresh table
+                renderPerbaikanTable(currentPerbaikanPage, getCurrentPerbaikanFilters());
+                updateStats();
+                
+                alert('Laporan perbaikan berhasil dihapus!');
+            }
+        });
+        
+        // Filter Kegiatan
+        filterJenis.addEventListener('change', function() {
+            renderKegiatanTable(1, getCurrentKegiatanFilters());
+        });
+        
+        filterStatus.addEventListener('change', function() {
+            renderKegiatanTable(1, getCurrentKegiatanFilters());
+        });
+        
+        searchInput.addEventListener('input', function() {
+            renderKegiatanTable(1, getCurrentKegiatanFilters());
+        });
+        
+        filterHariIni.addEventListener('click', function() {
+            const today = new Date();
+            const startDate = new Date(today.setHours(0, 0, 0, 0));
+            const endDate = new Date(today.setHours(23, 59, 59, 999));
+            
+            // Update filter buttons style
+            filterHariIni.classList.add('bg-blue-100', 'text-blue-800');
+            filterHariIni.classList.remove('bg-gray-100');
+            filterMingguIni.classList.remove('bg-blue-100', 'text-blue-800');
+            filterMingguIni.classList.add('bg-gray-100');
+            filterBulanIni.classList.remove('bg-blue-100', 'text-blue-800');
+            filterBulanIni.classList.add('bg-gray-100');
+            filterSemua.classList.remove('bg-blue-100', 'text-blue-800');
+            filterSemua.classList.add('bg-gray-100');
+            
+            renderKegiatanTable(1, {
+                ...getCurrentKegiatanFilters(),
+                dateRange: {
+                    start: startDate.toISOString().split('T')[0],
+                    end: endDate.toISOString().split('T')[0]
+                }
+            });
+        });
+        
+        filterMingguIni.addEventListener('click', function() {
+            const today = new Date();
+            const startDate = new Date(today.setDate(today.getDate() - today.getDay()));
+            const endDate = new Date(today.setDate(today.getDate() + 6));
+            
+            // Update filter buttons style
+            filterHariIni.classList.remove('bg-blue-100', 'text-blue-800');
+            filterHariIni.classList.add('bg-gray-100');
+            filterMingguIni.classList.add('bg-blue-100', 'text-blue-800');
+            filterMingguIni.classList.remove('bg-gray-100');
+            filterBulanIni.classList.remove('bg-blue-100', 'text-blue-800');
+            filterBulanIni.classList.add('bg-gray-100');
+            filterSemua.classList.remove('bg-blue-100', 'text-blue-800');
+            filterSemua.classList.add('bg-gray-100');
+            
+            renderKegiatanTable(1, {
+                ...getCurrentKegiatanFilters(),
+                dateRange: {
+                    start: startDate.toISOString().split('T')[0],
+                    end: endDate.toISOString().split('T')[0]
+                }
+            });
+        });
+        
+        filterBulanIni.addEventListener('click', function() {
+            const today = new Date();
+            const startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+            const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+            
+            // Update filter buttons style
+            filterHariIni.classList.remove('bg-blue-100', 'text-blue-800');
+            filterHariIni.classList.add('bg-gray-100');
+            filterMingguIni.classList.remove('bg-blue-100', 'text-blue-800');
+            filterMingguIni.classList.add('bg-gray-100');
+            filterBulanIni.classList.add('bg-blue-100', 'text-blue-800');
+            filterBulanIni.classList.remove('bg-gray-100');
+            filterSemua.classList.remove('bg-blue-100', 'text-blue-800');
+            filterSemua.classList.add('bg-gray-100');
+            
+            renderKegiatanTable(1, {
+                ...getCurrentKegiatanFilters(),
+                dateRange: {
+                    start: startDate.toISOString().split('T')[0],
+                    end: endDate.toISOString().split('T')[0]
+                }
+            });
+        });
+        
+        filterSemua.addEventListener('click', function() {
+            // Update filter buttons style
+            filterHariIni.classList.remove('bg-blue-100', 'text-blue-800');
+            filterHariIni.classList.add('bg-gray-100');
+            filterMingguIni.classList.remove('bg-blue-100', 'text-blue-800');
+            filterMingguIni.classList.add('bg-gray-100');
+            filterBulanIni.classList.remove('bg-blue-100', 'text-blue-800');
+            filterBulanIni.classList.add('bg-gray-100');
+            filterSemua.classList.add('bg-blue-100', 'text-blue-800');
+            filterSemua.classList.remove('bg-gray-100');
+            
+            renderKegiatanTable(1, {
+                ...getCurrentKegiatanFilters(),
+                dateRange: null
+            });
+        });
+        
+        // Filter Perbaikan
+        filterPerbaikanKerusakan.addEventListener('change', function() {
+            renderPerbaikanTable(1, getCurrentPerbaikanFilters());
+        });
+        
+        filterPerbaikanStatus.addEventListener('change', function() {
+            renderPerbaikanTable(1, getCurrentPerbaikanFilters());
+        });
+        
+        searchPerbaikanInput.addEventListener('input', function() {
+            renderPerbaikanTable(1, getCurrentPerbaikanFilters());
+        });
+        
+        filterPerbaikanHariIni.addEventListener('click', function() {
+            const today = new Date();
+            const startDate = new Date(today.setHours(0, 0, 0, 0));
+            const endDate = new Date(today.setHours(23, 59, 59, 999));
+            
+            // Update filter buttons style
+            filterPerbaikanHariIni.classList.add('bg-blue-100', 'text-blue-800');
+            filterPerbaikanHariIni.classList.remove('bg-gray-100');
+            filterPerbaikanMingguIni.classList.remove('bg-blue-100', 'text-blue-800');
+            filterPerbaikanMingguIni.classList.add('bg-gray-100');
+            filterPerbaikanBulanIni.classList.remove('bg-blue-100', 'text-blue-800');
+            filterPerbaikanBulanIni.classList.add('bg-gray-100');
+            filterPerbaikanSemua.classList.remove('bg-blue-100', 'text-blue-800');
+            filterPerbaikanSemua.classList.add('bg-gray-100');
+            
+            renderPerbaikanTable(1, {
+                ...getCurrentPerbaikanFilters(),
+                dateRange: {
+                    start: startDate.toISOString().split('T')[0],
+                    end: endDate.toISOString().split('T')[0]
+                }
+            });
+        });
+        
+        filterPerbaikanMingguIni.addEventListener('click', function() {
+            const today = new Date();
+            const startDate = new Date(today.setDate(today.getDate() - today.getDay()));
+            const endDate = new Date(today.setDate(today.getDate() + 6));
+            
+            // Update filter buttons style
+            filterPerbaikanHariIni.classList.remove('bg-blue-100', 'text-blue-800');
+            filterPerbaikanHariIni.classList.add('bg-gray-100');
+            filterPerbaikanMingguIni.classList.add('bg-blue-100', 'text-blue-800');
+            filterPerbaikanMingguIni.classList.remove('bg-gray-100');
+            filterPerbaikanBulanIni.classList.remove('bg-blue-100', 'text-blue-800');
+            filterPerbaikanBulanIni.classList.add('bg-gray-100');
+            filterPerbaikanSemua.classList.remove('bg-blue-100', 'text-blue-800');
+            filterPerbaikanSemua.classList.add('bg-gray-100');
+            
+            renderPerbaikanTable(1, {
+                ...getCurrentPerbaikanFilters(),
+                dateRange: {
+                    start: startDate.toISOString().split('T')[0],
+                    end: endDate.toISOString().split('T')[0]
+                }
+            });
+        });
+        
+        filterPerbaikanBulanIni.addEventListener('click', function() {
+            const today = new Date();
+            const startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+            const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+            
+            // Update filter buttons style
+            filterPerbaikanHariIni.classList.remove('bg-blue-100', 'text-blue-800');
+            filterPerbaikanHariIni.classList.add('bg-gray-100');
+            filterPerbaikanMingguIni.classList.remove('bg-blue-100', 'text-blue-800');
+            filterPerbaikanMingguIni.classList.add('bg-gray-100');
+            filterPerbaikanBulanIni.classList.add('bg-blue-100', 'text-blue-800');
+            filterPerbaikanBulanIni.classList.remove('bg-gray-100');
+            filterPerbaikanSemua.classList.remove('bg-blue-100', 'text-blue-800');
+            filterPerbaikanSemua.classList.add('bg-gray-100');
+            
+            renderPerbaikanTable(1, {
+                ...getCurrentPerbaikanFilters(),
+                dateRange: {
+                    start: startDate.toISOString().split('T')[0],
+                    end: endDate.toISOString().split('T')[0]
+                }
+            });
+        });
+        
+        filterPerbaikanSemua.addEventListener('click', function() {
+            // Update filter buttons style
+            filterPerbaikanHariIni.classList.remove('bg-blue-100', 'text-blue-800');
+            filterPerbaikanHariIni.classList.add('bg-gray-100');
+            filterPerbaikanMingguIni.classList.remove('bg-blue-100', 'text-blue-800');
+            filterPerbaikanMingguIni.classList.add('bg-gray-100');
+            filterPerbaikanBulanIni.classList.remove('bg-blue-100', 'text-blue-800');
+            filterPerbaikanBulanIni.classList.add('bg-gray-100');
+            filterPerbaikanSemua.classList.add('bg-blue-100', 'text-blue-800');
+            filterPerbaikanSemua.classList.remove('bg-gray-100');
+            
+            renderPerbaikanTable(1, {
+                ...getCurrentPerbaikanFilters(),
+                dateRange: null
+            });
+        });
+        
+        // Get Current Kegiatan Filters
+        function getCurrentKegiatanFilters() {
+            const today = new Date();
+            let dateRange = null;
+            
+            if (filterHariIni.classList.contains('bg-blue-100')) {
+                const startDate = new Date(today.setHours(0, 0, 0, 0));
+                const endDate = new Date(today.setHours(23, 59, 59, 999));
+                dateRange = {
+                    start: startDate.toISOString().split('T')[0],
+                    end: endDate.toISOString().split('T')[0]
+                };
+            } else if (filterMingguIni.classList.contains('bg-blue-100')) {
+                const startDate = new Date(today.setDate(today.getDate() - today.getDay()));
+                const endDate = new Date(today.setDate(today.getDate() + 6));
+                dateRange = {
+                    start: startDate.toISOString().split('T')[0],
+                    end: endDate.toISOString().split('T')[0]
+                };
+            } else if (filterBulanIni.classList.contains('bg-blue-100')) {
+                const startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+                const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                dateRange = {
+                    start: startDate.toISOString().split('T')[0],
+                    end: endDate.toISOString().split('T')[0]
+                };
+            }
+            
+            return {
+                jenis: filterJenis.value || '',
+                status: filterStatus.value || '',
+                search: searchInput.value || '',
+                dateRange: dateRange
+            };
+        }
+        
+        // Get Current Perbaikan Filters
+        function getCurrentPerbaikanFilters() {
+            const today = new Date();
+            let dateRange = null;
+            
+            if (filterPerbaikanHariIni.classList.contains('bg-blue-100')) {
+                const startDate = new Date(today.setHours(0, 0, 0, 0));
+                const endDate = new Date(today.setHours(23, 59, 59, 999));
+                dateRange = {
+                    start: startDate.toISOString().split('T')[0],
+                    end: endDate.toISOString().split('T')[0]
+                };
+            } else if (filterPerbaikanMingguIni.classList.contains('bg-blue-100')) {
+                const startDate = new Date(today.setDate(today.getDate() - today.getDay()));
+                const endDate = new Date(today.setDate(today.getDate() + 6));
+                dateRange = {
+                    start: startDate.toISOString().split('T')[0],
+                    end: endDate.toISOString().split('T')[0]
+                };
+            } else if (filterPerbaikanBulanIni.classList.contains('bg-blue-100')) {
+                const startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+                const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                dateRange = {
+                    start: startDate.toISOString().split('T')[0],
+                    end: endDate.toISOString().split('T')[0]
+                };
+            }
+            
+            return {
+                kerusakan: filterPerbaikanKerusakan.value || '',
+                status: filterPerbaikanStatus.value || '',
+                search: searchPerbaikanInput.value || '',
+                dateRange: dateRange
+            };
+        }
+        
+        // Laporan Kegiatan Form
+        laporanKegiatanForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const dariTanggal = document.getElementById('laporan-kegiatan-dari').value;
+            const sampaiTanggal = document.getElementById('laporan-kegiatan-sampai').value;
+            const jenis = document.getElementById('laporan-kegiatan-jenis').value;
+            const status = document.getElementById('laporan-kegiatan-status').value;
+            
+            if (new Date(dariTanggal) > new Date(sampaiTanggal)) {
+                alert('Tanggal "Dari" tidak boleh lebih besar dari tanggal "Sampai"');
+                return;
+            }
+            
+            // Filter data
+            let filteredData = [...kegiatanData].filter(item => {
+                const itemDate = new Date(item.tanggal);
+                return itemDate >= new Date(dariTanggal) && itemDate <= new Date(sampaiTanggal);
+            });
+            
+            if (jenis) {
+                filteredData = filteredData.filter(item => item.jenis === jenis);
+            }
+            
+            if (status) {
+                filteredData = filteredData.filter(item => item.status === status);
+            }
+            
+            // Generate laporan
+            generateLaporanKegiatan(filteredData, dariTanggal, sampaiTanggal, jenis, status);
+        });
+        
+        // Laporan Perbaikan Form
+        laporanPerbaikanForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const dariTanggal = document.getElementById('laporan-perbaikan-dari').value;
+            const sampaiTanggal = document.getElementById('laporan-perbaikan-sampai').value;
+            const kerusakan = document.getElementById('laporan-perbaikan-kerusakan').value;
+            const status = document.getElementById('laporan-perbaikan-status').value;
+            
+            if (new Date(dariTanggal) > new Date(sampaiTanggal)) {
+                alert('Tanggal "Dari" tidak boleh lebih besar dari tanggal "Sampai"');
+                return;
+            }
+            
+            // Filter data
+            let filteredData = [...perbaikanData].filter(item => {
+                const itemDate = new Date(item.tanggal);
+                return itemDate >= new Date(dariTanggal) && itemDate <= new Date(sampaiTanggal);
+            });
+            
+            if (kerusakan) {
+                filteredData = filteredData.filter(item => item.kerusakan === kerusakan);
+            }
+            
+            if (status) {
+                filteredData = filteredData.filter(item => item.status === status);
+            }
+            
+            // Generate laporan
+            generateLaporanPerbaikan(filteredData, dariTanggal, sampaiTanggal, kerusakan, status);
+        });
+        
+        // Generate Laporan Kegiatan
+        function generateLaporanKegiatan(data, dariTanggal, sampaiTanggal, jenis, status) {
+            laporanTitle.textContent = `Laporan Kegiatan ${formatDate(dariTanggal, true)} - ${formatDate(sampaiTanggal, true)}`;
+            
+            let html = `
+                <div class="mb-4">
+                    <p><strong>Periode:</strong> ${formatDate(dariTanggal, true)} - ${formatDate(sampaiTanggal, true)}</p>
+                    <p><strong>Jumlah Data:</strong> ${data.length}</p>
+                    ${jenis ? `<p><strong>Jenis Kegiatan:</strong> ${getJenisKegiatanText(jenis)}</p>` : ''}
+                    ${status ? `<p><strong>Status:</strong> ${getStatusText(status)}</p>` : ''}
+                </div>
+                <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">Tanggal</th>
+                                <th scope="col" class="px-6 py-3">Jenis Kegiatan</th>
+                                <th scope="col" class="px-6 py-3">Perangkat</th>
+                                <th scope="col" class="px-6 py-3">Deskripsi</th>
+                                <th scope="col" class="px-6 py-3">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            if (data.length === 0) {
+                html += `
+                    <tr class="bg-white border-b hover:bg-gray-50">
+                        <td colspan="5" class="px-6 py-4 text-center">Tidak ada data kegiatan</td>
+                    </tr>
+                `;
+            } else {
+                data.forEach(item => {
+                    html += `
+                        <tr class="bg-white border-b hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                ${formatDate(item.tanggal)}
+                            </td>
+                            <td class="px-6 py-4">${getJenisKegiatanText(item.jenis)}</td>
+                            <td class="px-6 py-4">${item.perangkat}</td>
+                            <td class="px-6 py-4">${item.deskripsi}</td>
+                            <td class="px-6 py-4">
+                                ${getStatusBadge(item.status)}
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            laporanContentData.innerHTML = html;
+            laporanResult.classList.remove('hidden');
+            
+            // Scroll to result
+            laporanResult.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Generate Laporan Perbaikan
+        function generateLaporanPerbaikan(data, dariTanggal, sampaiTanggal, kerusakan, status) {
+            laporanTitle.textContent = `Laporan Perbaikan ${formatDate(dariTanggal, true)} - ${formatDate(sampaiTanggal, true)}`;
+            
+            let html = `
+                <div class="mb-4">
+                    <p><strong>Periode:</strong> ${formatDate(dariTanggal, true)} - ${formatDate(sampaiTanggal, true)}</p>
+                    <p><strong>Jumlah Data:</strong> ${data.length}</p>
+                    ${kerusakan ? `<p><strong>Jenis Kerusakan:</strong> ${getJenisKerusakanText(kerusakan)}</p>` : ''}
+                    ${status ? `<p><strong>Status:</strong> ${getPerbaikanStatusText(status)}</p>` : ''}
+                </div>
+                <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">Tanggal</th>
+                                <th scope="col" class="px-6 py-3">Perangkat</th>
+                                <th scope="col" class="px-6 py-3">Kerusakan</th>
+                                <th scope="col" class="px-6 py-3">Deskripsi</th>
+                                <th scope="col" class="px-6 py-3">Tindakan</th>
+                                <th scope="col" class="px-6 py-3">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            if (data.length === 0) {
+                html += `
+                    <tr class="bg-white border-b hover:bg-gray-50">
+                        <td colspan="6" class="px-6 py-4 text-center">Tidak ada data perbaikan</td>
+                    </tr>
+                `;
+            } else {
+                data.forEach(item => {
+                    html += `
+                        <tr class="bg-white border-b hover:bg-gray-50">
+                            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                ${formatDate(item.tanggal)}
+                            </td>
+                            <td class="px-6 py-4">${item.perangkat}</td>
+                            <td class="px-6 py-4">${getJenisKerusakanText(item.kerusakan)}</td>
+                            <td class="px-6 py-4">${item.deskripsi}</td>
+                            <td class="px-6 py-4">${item.tindakan}</td>
+                            <td class="px-6 py-4">
+                                ${getPerbaikanStatusBadge(item.status)}
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            laporanContentData.innerHTML = html;
+            laporanResult.classList.remove('hidden');
+            
+            // Scroll to result
+            laporanResult.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Cetak Laporan
+        cetakLaporanBtn.addEventListener('click', function() {
+            const printContent = laporanContentData.innerHTML;
+            const originalContent = document.body.innerHTML;
+            
+            document.body.innerHTML = `
+                <div style="padding: 20px;">
+                    <h1 style="text-align: center; margin-bottom: 20px;">${laporanTitle.textContent}</h1>
+                    ${printContent}
+                </div>
+            `;
+            
+            window.print();
+            document.body.innerHTML = originalContent;
+            renderKegiatanTable(currentKegiatanPage, getCurrentKegiatanFilters());
+            renderPerbaikanTable(currentPerbaikanPage, getCurrentPerbaikanFilters());
+        });
+        
+        // Update Stats
+        function updateStats() {
+            // Total kegiatan
+            document.getElementById('total-kegiatan').textContent = kegiatanData.length;
+            
+            // Kegiatan selesai
+            const selesai = kegiatanData.filter(item => item.status === 'selesai').length;
+            document.getElementById('selesai-kegiatan').textContent = selesai;
+            
+            // Kegiatan dalam proses
+            const proses = kegiatanData.filter(item => item.status === 'proses').length;
+            document.getElementById('proses-kegiatan').textContent = proses;
+            
+            // Kegiatan ditunda
+            const tunda = kegiatanData.filter(item => item.status === 'tunda').length;
+            document.getElementById('tunda-kegiatan').textContent = tunda;
+            
+            // Update recent activities
+            const recentActivities = document.getElementById('recent-activities');
+            recentActivities.innerHTML = '';
+            
+            const sortedKegiatan = [...kegiatanData].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
+            
+            if (sortedKegiatan.length === 0) {
+                recentActivities.innerHTML = `
+                    <tr class="bg-white border-b hover:bg-gray-50">
+                        <td colspan="3" class="px-6 py-4 text-center">Tidak ada data kegiatan</td>
+                    </tr>
+                `;
+            } else {
+                sortedKegiatan.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.className = 'bg-white border-b hover:bg-gray-50';
+                    row.innerHTML = `
+                        <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                            ${formatDate(item.tanggal)}
+                        </td>
+                        <td class="px-6 py-4">${getJenisKegiatanText(item.jenis)}</td>
+                        <td class="px-6 py-4">
+                            ${getStatusBadge(item.status)}
+                        </td>
+                    `;
+                    recentActivities.appendChild(row);
+                });
+            }
+            
+            // Update chart
+            updateChart();
+        }
+        
+        // Initialize Chart
+        function initChart() {
+            const ctx = document.getElementById('repairChart').getContext('2d');
+            window.repairChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Perawatan', 'Perbaikan', 'Instalasi', 'Troubleshooting', 'Jaringan', 'Lainnya'],
+                    datasets: [{
+                        label: 'Jumlah Kegiatan',
+                        data: [0, 0, 0, 0, 0, 0],
+                        backgroundColor: [
+                            'rgba(54, 162, 235, 0.5)',
+                            'rgba(255, 99, 132, 0.5)',
+                            'rgba(75, 192, 192, 0.5)',
+                            'rgba(255, 206, 86, 0.5)',
+                            'rgba(153, 102, 255, 0.5)',
+                            'rgba(201, 203, 207, 0.5)'
+                        ],
+                        borderColor: [
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(201, 203, 207, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Update Chart
+        function updateChart() {
+            const jenisKegiatan = ['perawatan', 'perbaikan', 'instalasi', 'troubleshooting', 'jaringan', 'lainnya'];
+            const data = jenisKegiatan.map(jenis => 
+                kegiatanData.filter(item => item.jenis === jenis).length
+            );
+            
+            window.repairChart.data.datasets[0].data = data;
+            window.repairChart.update();
+        }
+        
+        // Helper Functions
+        function formatDate(dateString, full = false) {
+            const date = new Date(dateString);
+            const options = full 
+                ? { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+                : { day: '2-digit', month: '2-digit', year: 'numeric' };
+            return date.toLocaleDateString('id-ID', options);
+        }
+        
+        function getJenisKegiatanText(jenis) {
+            const jenisMap = {
+                'perawatan': 'Perawatan Rutin',
+                'perbaikan': 'Perbaikan Hardware',
+                'instalasi': 'Instalasi Software',
+                'troubleshooting': 'Troubleshooting',
+                'jaringan': 'Perbaikan Jaringan',
+                'lainnya': 'Lainnya'
+            };
+            return jenisMap[jenis] || jenis;
+        }
+        
+        function getJenisKerusakanText(jenis) {
+            const jenisMap = {
+                'hardware': 'Hardware',
+                'software': 'Software',
+                'jaringan': 'Jaringan',
+                'lainnya': 'Lainnya'
+            };
+            return jenisMap[jenis] || jenis;
+        }
+        
+        function getStatusText(status) {
+            const statusMap = {
+                'selesai': 'Selesai',
+                'proses': 'Dalam Proses',
+                'tunda': 'Ditunda'
+            };
+            return statusMap[status] || status;
+        }
+        
+        function getPerbaikanStatusText(status) {
+            const statusMap = {
+                'selesai': 'Selesai',
+                'proses': 'Dalam Proses',
+                'butuh-part': 'Butuh Part Pengganti',
+                'tunda': 'Ditunda'
+            };
+            return statusMap[status] || status;
+        }
+        
+        function getStatusBadge(status) {
+            const statusMap = {
+                'selesai': { text: 'Selesai', class: 'bg-green-100 text-green-800' },
+                'proses': { text: 'Dalam Proses', class: 'bg-yellow-100 text-yellow-800' },
+                'tunda': { text: 'Ditunda', class: 'bg-red-100 text-red-800' }
+            };
+            
+            const statusInfo = statusMap[status] || { text: status, class: 'bg-gray-100 text-gray-800' };
+            
+            return `<span class="${statusInfo.class} text-xs font-medium px-2.5 py-0.5 rounded">${statusInfo.text}</span>`;
+        }
+        
+        function getPerbaikanStatusBadge(status) {
+            const statusMap = {
+                'selesai': { text: 'Selesai', class: 'bg-green-100 text-green-800' },
+                'proses': { text: 'Dalam Proses', class: 'bg-yellow-100 text-yellow-800' },
+                'butuh-part': { text: 'Butuh Part', class: 'bg-blue-100 text-blue-800' },
+                'tunda': { text: 'Ditunda', class: 'bg-red-100 text-red-800' }
+            };
+            
+            const statusInfo = statusMap[status] || { text: status, class: 'bg-gray-100 text-gray-800' };
+            
+            return `<span class="${statusInfo.class} text-xs font-medium px-2.5 py-0.5 rounded">${statusInfo.text}</span>`;
+        }
+    </script>
+</body>
+</html>
