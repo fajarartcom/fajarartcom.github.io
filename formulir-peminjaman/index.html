@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Peminjaman Barang Lab Komputer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .header-border {
+            border-bottom: 2px solid #1a365d;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .footer-border {
+            border-top: 1px dashed #1a365d;
+            padding-top: 10px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-blue-600 mb-2">FORMULIR PEMINJAMAN BARANG</h1>
+            <h2 class="text-xl text-gray-600">Laboratorium Komputer</h2>
+        </div>
+        
+        <!-- Form Peminjaman -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8" id="formSection">
+            <form id="peminjamanForm">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Data Peminjam -->
+                    <div class="space-y-4">
+                        <h2 class="text-xl font-semibold border-b pb-2 text-blue-700">Data Peminjam</h2>
+                        <div>
+                            <label for="nama" class="block mb-2 text-sm font-medium text-gray-900">Nama Lengkap <span class="text-red-500">*</span></label>
+                            <input type="text" id="nama" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                        </div>
+                        <div>
+                            <label for="nim" class="block mb-2 text-sm font-medium text-gray-900">NIM/NIDN <span class="text-red-500">*</span></label>
+                            <input type="text" id="nim" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                        </div>
+                        <div>
+                            <label for="prodi" class="block mb-2 text-sm font-medium text-gray-900">Program Studi/Fakultas <span class="text-red-500">*</span></label>
+                            <input type="text" id="prodi" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                        </div>
+                        <div>
+                            <label for="noHp" class="block mb-2 text-sm font-medium text-gray-900">No. HP/WhatsApp <span class="text-red-500">*</span></label>
+                            <input type="tel" id="noHp" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                        </div>
+                        <div>
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email</label>
+                            <input type="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        </div>
+                    </div>
+                    
+                    <!-- Data Peminjaman -->
+                    <div class="space-y-4">
+                        <h2 class="text-xl font-semibold border-b pb-2 text-blue-700">Data Peminjaman</h2>
+                        <div>
+                            <label for="tanggalPinjam" class="block mb-2 text-sm font-medium text-gray-900">Tanggal Peminjaman <span class="text-red-500">*</span></label>
+                            <input type="date" id="tanggalPinjam" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                        </div>
+                        <div>
+                            <label for="jamPinjam" class="block mb-2 text-sm font-medium text-gray-900">Jam Peminjaman <span class="text-red-500">*</span></label>
+                            <input type="time" id="jamPinjam" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                        </div>
+                        <div>
+                            <label for="tanggalKembali" class="block mb-2 text-sm font-medium text-gray-900">Tanggal Pengembalian <span class="text-red-500">*</span></label>
+                            <input type="date" id="tanggalKembali" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                        </div>
+                        <div>
+                            <label for="jamKembali" class="block mb-2 text-sm font-medium text-gray-900">Jam Pengembalian <span class="text-red-500">*</span></label>
+                            <input type="time" id="jamKembali" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                        </div>
+                        <div>
+                            <label for="keperluan" class="block mb-2 text-sm font-medium text-gray-900">Keperluan <span class="text-red-500">*</span></label>
+                            <select id="keperluan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                <option value="" disabled selected>Pilih keperluan</option>
+                                <option value="Praktikum">Praktikum</option>
+                                <option value="Penelitian">Penelitian</option>
+                                <option value="Tugas Akhir">Tugas Akhir</option>
+                                <option value="Proyek Kuliah">Proyek Kuliah</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        <div id="detailKeperluanContainer" class="hidden">
+                            <label for="detailKeperluan" class="block mb-2 text-sm font-medium text-gray-900">Detail Keperluan</label>
+                            <input type="text" id="detailKeperluan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Daftar Barang -->
+                <div class="mt-6">
+                    <h2 class="text-xl font-semibold border-b pb-2 mb-4 text-blue-700">Barang yang Dipinjam <span class="text-red-500">*</span></h2>
+                    <div id="barangContainer">
+                        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4 barang-item">
+                            <div>
+                                <label for="barang1" class="block mb-2 text-sm font-medium text-gray-900">Nama Barang</label>
+                                <select id="barang1" class="barang-select bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                    <option value="" disabled selected>Pilih barang</option>
+                                    <option value="Laptop">Laptop</option>
+                                    <option value="Proyektor">Proyektor</option>
+                                    <option value="Mouse">Mouse</option>
+                                    <option value="Keyboard">Keyboard</option>
+                                    <option value="Monitor">Monitor</option>
+                                    <option value="Kabel HDMI">Kabel HDMI</option>
+                                    <option value="Kabel VGA">Kabel VGA</option>
+                                    <option value="Flashdisk">Flashdisk</option>
+                                    <option value="Harddisk Eksternal">Harddisk Eksternal</option>
+                                    <option value="Router">Router</option>
+                                    <option value="Switch">Switch</option>
+                                    <option value="Lainnya">Lainnya</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="jumlah1" class="block mb-2 text-sm font-medium text-gray-900">Jumlah</label>
+                                <input type="number" id="jumlah1" min="1" value="1" class="jumlah-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                            </div>
+                            <div>
+                                <label for="kondisi1" class="block mb-2 text-sm font-medium text-gray-900">Kondisi</label>
+                                <select id="kondisi1" class="kondisi-select bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                    <option value="Baik">Baik</option>
+                                    <option value="Rusak Ringan">Rusak Ringan</option>
+                                    <option value="Rusak Berat">Rusak Berat</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="keterangan1" class="block mb-2 text-sm font-medium text-gray-900">Keterangan</label>
+                                <input type="text" id="keterangan1" class="keterangan-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Opsional">
+                            </div>
+                            <div class="flex items-end">
+                                <button type="button" class="hapus-barang text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-2.5 focus:outline-none hidden">
+                                    Hapus
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" id="tambahBarang" class="mt-2 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 focus:outline-none">
+                        <i class="mr-1">+</i> Tambah Barang
+                    </button>
+                </div>
+                
+                <!-- Persetujuan -->
+                <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                    <div class="flex items-start">
+                        <div class="flex items-center h-5">
+                            <input id="persetujuan" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" required>
+                        </div>
+                        <label for="persetujuan" class="ms-2 text-sm font-medium text-gray-900">
+                            Saya menyatakan bahwa data yang saya isi adalah benar dan saya bertanggung jawab penuh atas barang yang dipinjam. Saya akan mengganti barang tersebut jika terjadi kerusakan atau kehilangan selama dalam peminjaman.
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Tombol Submit -->
+                <div class="flex justify-between mt-8">
+                    <button type="reset" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5">Reset Form</button>
+                    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none">
+                        <i class="mr-1">✓</i> Submit Peminjaman
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Bukti Peminjaman (Awalnya Tersembunyi) -->
+        <div id="buktiSection" class="bg-white rounded-lg shadow-md p-6 hidden">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-blue-700">BUKTI PEMINJAMAN BARANG</h2>
+                    <p class="text-gray-600">Laboratorium Komputer</p>
+                </div>
+                <div class="flex gap-2">
+                    <button id="cetakPNG" class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2.5 focus:outline-none flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Cetak PNG
+                    </button>
+                    <button id="cetakPDF" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2.5 focus:outline-none flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Cetak PDF
+                    </button>
+                    <button id="kembaliKeForm" class="text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 focus:outline-none">
+                        Kembali
+                    </button>
+                </div>
+            </div>
+            
+            <div id="buktiContent" class="space-y-6">
+                <!-- Kop Surat -->
+                <div class="text-center border-b pb-4 mb-6">
+                    <h3 class="text-xl font-bold">UNIVERSITAS EXAMPLE</h3>
+                    <p class="text-sm">Jl. Contoh No. 123, Kota Example - Telp. (021) 1234567</p>
+                    <p class="text-sm">Email: labkomputer@example.ac.id - Website: www.example.ac.id</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2 border-b pb-2">Data Peminjam</h3>
+                        <div class="space-y-2">
+                            <p><span class="font-medium">Nama:</span> <span id="buktiNama"></span></p>
+                            <p><span class="font-medium">NIM/NIDN:</span> <span id="buktiNim"></span></p>
+                            <p><span class="font-medium">Program Studi/Fakultas:</span> <span id="buktiProdi"></span></p>
+                            <p><span class="font-medium">No. HP:</span> <span id="buktiNoHp"></span></p>
+                            <p><span class="font-medium">Email:</span> <span id="buktiEmail"></span></p>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2 border-b pb-2">Data Peminjaman</h3>
+                        <div class="space-y-2">
+                            <p><span class="font-medium">Tanggal/Jam Pinjam:</span> <span id="buktiTanggalPinjam"></span> <span id="buktiJamPinjam"></span></p>
+                            <p><span class="font-medium">Tanggal/Jam Kembali:</span> <span id="buktiTanggalKembali"></span> <span id="buktiJamKembali"></span></p>
+                            <p><span class="font-medium">Keperluan:</span> <span id="buktiKeperluan"></span></p>
+                            <p id="buktiDetailKeperluanContainer"><span class="font-medium">Detail Keperluan:</span> <span id="buktiDetailKeperluan"></span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-2 border-b pb-2">Barang yang Dipinjam</h3>
+                    <div class="relative overflow-x-auto">
+                        <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">No</th>
+                                    <th scope="col" class="px-6 py-3">Nama Barang</th>
+                                    <th scope="col" class="px-6 py-3">Jumlah</th>
+                                    <th scope="col" class="px-6 py-3">Kondisi</th>
+                                    <th scope="col" class="px-6 py-3">Keterangan</th>
+                                </tr>
+                            </thead>
+                            <tbody id="buktiBarang">
+                                <!-- Data barang akan diisi oleh JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                    <div class="space-y-8">
+                        <div>
+                            <p class="mb-12">Yang Meminjam,</p>
+                            <p class="border-t pt-2 text-center" id="ttdPeminjam"></p>
+                            <p class="text-center text-sm mt-1">(Nama Terang)</p>
+                        </div>
+                    </div>
+                    <div class="space-y-8">
+                        <div>
+                            <p class="mb-12">Petugas Lab,</p>
+                            <p class="border-t pt-2 text-center">(___________________)</p>
+                            <p class="text-center text-sm mt-1">NIP/NIK: .....................</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center text-sm text-gray-500 mt-8">
+                    <p class="font-medium">PERHATIAN:</p>
+                    <p>1. Barang harus dikembalikan tepat waktu sesuai jadwal</p>
+                    <p>2. Peminjam bertanggung jawab penuh atas barang yang dipinjam</p>
+                    <p>3. Kerusakan atau kehilangan menjadi tanggung jawab peminjam</p>
+                    <p class="mt-4">Terima kasih telah menggunakan layanan peminjaman barang lab komputer.</p>
+                </div>
+                
+                <!-- Nomor Bukti -->
+                <div class="text-right mt-4 text-sm">
+                    <p>Nomor: <span id="nomorBukti">-</span></p>
+                    <p>Tanggal: <span id="tanggalBukti"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inisialisasi jsPDF
+            const { jsPDF } = window.jspdf;
+            
+            // Generate nomor bukti acak untuk contoh
+            function generateNomorBukti() {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const randomNum = Math.floor(1000 + Math.random() * 9000);
+                return `LAB/${year}${month}${day}/${randomNum}`;
+            }
+            
+            // Format tanggal untuk nomor bukti
+            function formatTanggalNomor(tanggal) {
+                if (!tanggal) return '';
+                
+                const options = { day: 'numeric', month: 'long', year: 'numeric' };
+                return new Date(tanggal).toLocaleDateString('id-ID', options);
+            }
+            
+            // Tampilkan detail keperluan jika dipilih "Lainnya"
+            document.getElementById('keperluan').addEventListener('change', function() {
+                const detailContainer = document.getElementById('detailKeperluanContainer');
+                if (this.value === 'Lainnya') {
+                    detailContainer.classList.remove('hidden');
+                    document.getElementById('detailKeperluan').setAttribute('required', 'required');
+                } else {
+                    detailContainer.classList.add('hidden');
+                    document.getElementById('detailKeperluan').removeAttribute('required');
+                }
+            });
+            
+            // Tambah barang
+            let barangCounter = 1;
+            document.getElementById('tambahBarang').addEventListener('click', function() {
+                barangCounter++;
+                const newBarangItem = `
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4 barang-item">
+                        <div>
+                            <label for="barang${barangCounter}" class="block mb-2 text-sm font-medium text-gray-900">Nama Barang</label>
+                            <select id="barang${barangCounter}" class="barang-select bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                <option value="" disabled selected>Pilih barang</option>
+                                <option value="Laptop">Laptop</option>
+                                <option value="Proyektor">Proyektor</option>
+                                <option value="Mouse">Mouse</option>
+                                <option value="Keyboard">Keyboard</option>
+                                <option value="Monitor">Monitor</option>
+                                <option value="Kabel HDMI">Kabel HDMI</option>
+                                <option value="Kabel VGA">Kabel VGA</option>
+                                <option value="Flashdisk">Flashdisk</option>
+                                <option value="Harddisk Eksternal">Harddisk Eksternal</option>
+                                <option value="Router">Router</option>
+                                <option value="Switch">Switch</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="jumlah${barangCounter}" class="block mb-2 text-sm font-medium text-gray-900">Jumlah</label>
+                            <input type="number" id="jumlah${barangCounter}" min="1" value="1" class="jumlah-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                        </div>
+                        <div>
+                            <label for="kondisi${barangCounter}" class="block mb-2 text-sm font-medium text-gray-900">Kondisi</label>
+                            <select id="kondisi${barangCounter}" class="kondisi-select bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                <option value="Baik">Baik</option>
+                                <option value="Rusak Ringan">Rusak Ringan</option>
+                                <option value="Rusak Berat">Rusak Berat</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="keterangan${barangCounter}" class="block mb-2 text-sm font-medium text-gray-900">Keterangan</label>
+                            <input type="text" id="keterangan${barangCounter}" class="keterangan-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Opsional">
+                        </div>
+                        <div class="flex items-end">
+                            <button type="button" class="hapus-barang text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-2.5 focus:outline-none">
+                                Hapus
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('barangContainer').insertAdjacentHTML('beforeend', newBarangItem);
+                
+                // Tambahkan event listener untuk tombol hapus
+                const hapusButtons = document.querySelectorAll('.hapus-barang');
+                hapusButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        if (document.querySelectorAll('.barang-item').length > 1) {
+                            this.closest('.barang-item').remove();
+                        }
+                    });
+                });
+            });
+            
+            // Sembunyikan tombol hapus untuk barang pertama
+            document.querySelector('.hapus-barang').classList.add('hidden');
+            
+            // Form submission
+            document.getElementById('peminjamanForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validasi tanggal
+                const tanggalPinjam = document.getElementById('tanggalPinjam').value;
+                const tanggalKembali = document.getElementById('tanggalKembali').value;
+                
+                if (new Date(tanggalKembali) < new Date(tanggalPinjam)) {
+                    alert('Tanggal pengembalian tidak boleh sebelum tanggal peminjaman');
+                    return;
+                }
+                
+                // Ambil data dari form
+                const nama = document.getElementById('nama').value;
+                const nim = document.getElementById('nim').value;
+                const prodi = document.getElementById('prodi').value;
+                const noHp = document.getElementById('noHp').value;
+                const email = document.getElementById('email').value;
+                const jamPinjam = document.getElementById('jamPinjam').value;
+                const jamKembali = document.getElementById('jamKembali').value;
+                const keperluan = document.getElementById('keperluan').value;
+                const detailKeperluan = document.getElementById('detailKeperluan').value;
+                
+                // Isi data ke bukti peminjaman
+                document.getElementById('buktiNama').textContent = nama;
+                document.getElementById('buktiNim').textContent = nim;
+                document.getElementById('buktiProdi').textContent = prodi;
+                document.getElementById('buktiNoHp').textContent = noHp;
+                document.getElementById('buktiEmail').textContent = email || '-';
+                document.getElementById('buktiTanggalPinjam').textContent = formatTanggal(tanggalPinjam);
+                document.getElementById('buktiJamPinjam').textContent = jamPinjam ? `, Jam: ${formatJam(jamPinjam)}` : '';
+                document.getElementById('buktiTanggalKembali').textContent = formatTanggal(tanggalKembali);
+                document.getElementById('buktiJamKembali').textContent = jamKembali ? `, Jam: ${formatJam(jamKembali)}` : '';
+                document.getElementById('buktiKeperluan').textContent = keperluan;
+                document.getElementById('ttdPeminjam').textContent = nama;
+                document.getElementById('nomorBukti').textContent = generateNomorBukti();
+                document.getElementById('tanggalBukti').textContent = formatTanggalNomor(new Date());
+                
+                // Detail keperluan
+                if (keperluan === 'Lainnya' && detailKeperluan) {
+                    document.getElementById('buktiDetailKeperluan').textContent = detailKeperluan;
+                    document.getElementById('buktiDetailKeperluanContainer').classList.remove('hidden');
+                } else {
+                    document.getElementById('buktiDetailKeperluanContainer').classList.add('hidden');
+                }
+                
+                // Ambil data barang
+                const barangItems = document.querySelectorAll('.barang-item');
+                const buktiBarang = document.getElementById('buktiBarang');
+                buktiBarang.innerHTML = '';
+                
+                barangItems.forEach((item, index) => {
+                    const barang = item.querySelector('.barang-select').value;
+                    const jumlah = item.querySelector('.jumlah-input').value;
+                    const kondisi = item.querySelector('.kondisi-select').value;
+                    const keterangan = item.querySelector('.keterangan-input').value;
+                    
+                    const row = document.createElement('tr');
+                    row.className = 'bg-white border-b';
+                    row.innerHTML = `
+                        <td class="px-6 py-4">${index + 1}</td>
+                        <td class="px-6 py-4">${barang}</td>
+                        <td class="px-6 py-4">${jumlah}</td>
+                        <td class="px-6 py-4">${kondisi}</td>
+                        <td class="px-6 py-4">${keterangan || '-'}</td>
+                    `;
+                    buktiBarang.appendChild(row);
+                });
+                
+                // Tampilkan bukti dan sembunyikan form
+                document.getElementById('formSection').classList.add('hidden');
+                document.getElementById('buktiSection').classList.remove('hidden');
+                
+                // Scroll ke atas
+                window.scrollTo(0, 0);
+            });
+            
+            // Cetak PNG
+            document.getElementById('cetakPNG').addEventListener('click', function() {
+                const buktiContent = document.getElementById('buktiContent');
+                
+                html2canvas(buktiContent, {
+                    scale: 2,
+                    logging: false,
+                    useCORS: true,
+                    allowTaint: true
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = `bukti-peminjaman-${document.getElementById('buktiNim').textContent}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                });
+            });
+            
+            // Cetak PDF
+            document.getElementById('cetakPDF').addEventListener('click', function() {
+                const doc = new jsPDF('p', 'mm', 'a4');
+                const margin = 15;
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const contentWidth = pageWidth - 2 * margin;
+                
+                // Judul
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.setTextColor(26, 54, 93); // Dark blue color
+                doc.text('UNIVERSITAS TEKNOLOGI INDONESIA', pageWidth / 2, margin + 10, { align: 'center' });
+                
+                // Kop surat
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'normal');
+                doc.text('LABORATORIUM KOMPUTER', pageWidth / 2, margin + 16, { align: 'center' });  
+
+                doc.setFontSize(16);
+                doc.setFont('helvetica', 'bold');
+                doc.text('BUKTI PEMINJAMAN BARANG', pageWidth / 2, margin + 26, { align: 'center' });
+
+                
+                
+                // Nomor bukti
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+                doc.text(`Nomor: ${document.getElementById('nomorBukti').textContent}`, pageWidth - margin, margin + 32, { align: 'right' });
+                doc.text(`Tanggal: ${document.getElementById('tanggalBukti').textContent}`, pageWidth - margin, margin + 37, { align: 'right' });
+                
+                // Data peminjam dan peminjaman
+                                // Horizontal line
+                                doc.setDrawColor(26, 54, 93);
+                doc.setLineWidth(0.5);
+                doc.line(margin, margin + 42, pageWidth - margin, margin + 42);
+                
+                // Borrower Information
+                let yPos = margin + 50;
+                
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'bold');
+                doc.text('DATA PEMINJAM', margin, yPos);
+                
+                yPos += 8;
+                doc.setFont('helvetica', 'normal');
+                doc.text(`Nama Lengkap    : ${document.getElementById('buktiNama').textContent}`, margin, yPos);
+                yPos += 7;
+                doc.text(`NIM/NIDN             : ${document.getElementById('buktiNim').textContent}`, margin, yPos);
+                yPos += 7;
+                doc.text(`Program Studi      : ${document.getElementById('buktiProdi').textContent}`, margin, yPos);
+                yPos += 7;
+                doc.text(`No. Telepon        : ${document.getElementById('buktiNoHp').textContent}`, margin, yPos);
+                yPos += 7;
+                doc.text(`Email                    : ${document.getElementById('buktiEmail').textContent || '-'}`, margin, yPos);
+                
+                // Loan Information
+                yPos += 12;
+                doc.setFont('helvetica', 'bold');
+                doc.text('DATA PEMINJAMAN', margin, yPos);
+                
+                yPos += 8;
+                doc.setFont('helvetica', 'normal');
+                doc.text(`Tanggal Pinjam     : ${document.getElementById('buktiTanggalPinjam').textContent} ${document.getElementById('buktiJamPinjam').textContent}`, margin, yPos);
+                yPos += 7;
+                doc.text(`Tanggal Kembali : ${document.getElementById('buktiTanggalKembali').textContent} ${document.getElementById('buktiJamKembali').textContent}`, margin, yPos);
+                yPos += 7;
+                doc.text(`Keperluan             : ${document.getElementById('buktiKeperluan').textContent}`, margin, yPos);
+                
+                if (!document.getElementById('buktiDetailKeperluanContainer').classList.contains('hidden')) {
+                    yPos += 7;
+                    doc.text(`Detail Keperluan  : ${document.getElementById('buktiDetailKeperluan').textContent}`, margin, yPos);
+                }
+                
+                // Borrowed Items Table
+                yPos += 15;
+                doc.setFont('helvetica', 'bold');
+                doc.text('BARANG YANG DIPINJAM', margin, yPos);
+                
+                const headers = [
+                    [
+                        { content: 'No', styles: { halign: 'center', fillColor: [26, 54, 93], textColor: [255, 255, 255], fontStyle: 'bold' } },
+                        { content: 'Nama Barang', styles: { halign: 'center', fillColor: [26, 54, 93], textColor: [255, 255, 255], fontStyle: 'bold' } },
+                        { content: 'Jumlah', styles: { halign: 'center', fillColor: [26, 54, 93], textColor: [255, 255, 255], fontStyle: 'bold' } },
+                        { content: 'Kondisi', styles: { halign: 'center', fillColor: [26, 54, 93], textColor: [255, 255, 255], fontStyle: 'bold' } },
+                        { content: 'Keterangan', styles: { halign: 'center', fillColor: [26, 54, 93], textColor: [255, 255, 255], fontStyle: 'bold' } }
+                    ]
+                ];
+                
+                const dataBarang = [];
+                document.querySelectorAll('#buktiBarang tr').forEach((row, index) => {
+                    const cols = row.querySelectorAll('td');
+                    dataBarang.push([
+                        { content: index + 1, styles: { halign: 'center' } },
+                        cols[1].textContent,
+                        { content: cols[2].textContent, styles: { halign: 'center' } },
+                        { content: cols[3].textContent, styles: { halign: 'center' } },
+                        cols[4].textContent || '-'
+                    ]);
+                });
+                
+                doc.autoTable({
+                    startY: yPos + 5,
+                    head: headers,
+                    body: dataBarang,
+                    margin: { left: margin, right: margin },
+                    styles: { 
+                        fontSize: 10,
+                        cellPadding: 3,
+                        overflow: 'linebreak'
+                    },
+                    headStyles: {
+                        fillColor: [26, 54, 93],
+                        textColor: [255, 255, 255],
+                        fontStyle: 'bold',
+                        halign: 'center'
+                    },
+                    alternateRowStyles: {
+                        fillColor: [240, 240, 240]
+                    },
+                    columnStyles: {
+                        0: { cellWidth: 10, halign: 'center' },
+                        1: { cellWidth: 'auto' },
+                        2: { cellWidth: 15, halign: 'center' },
+                        3: { cellWidth: 25, halign: 'center' },
+                        4: { cellWidth: 'auto' }
+                    },
+                    didDrawPage: function(data) {
+                        // Footer on each page
+                        doc.setFontSize(10);
+                        doc.setTextColor(100);
+                        doc.text(`Halaman ${doc.internal.getNumberOfPages()}`, pageWidth / 2, doc.internal.pageSize.getHeight() - 10, { align: 'center' });
+                    }
+                });
+                
+                // Tanda tangan
+                const finalY = doc.lastAutoTable.finalY + 15;
+                
+                // Check if we need a new page for signatures
+                if (finalY > doc.internal.pageSize.getHeight() - 40) {
+                    doc.addPage();
+                    yPos = margin;
+                } else {
+                    yPos = finalY;
+                }
+                
+                // Signature columns
+                const sigCol1 = margin + 30;
+                const sigCol2 = pageWidth / 2 + 30;
+                
+                doc.setFontSize(12);
+                doc.text('Yang Meminjam,', sigCol1, yPos);
+                doc.text('Petugas Lab,', sigCol2, yPos);
+                
+                // Signature lines
+                doc.setLineWidth(0.5);
+                doc.line(sigCol1, yPos + 20, sigCol1 + 60, yPos + 20);
+                doc.line(sigCol2, yPos + 20, sigCol2 + 60, yPos + 20);
+                
+                doc.text(`(${document.getElementById('buktiNama').textContent})`, sigCol1, yPos + 25);
+                doc.text('(_______________________)', sigCol2, yPos + 25);
+                
+                doc.setFontSize(10);
+                doc.text('Nama Terang & Cap', sigCol1, yPos + 30);
+                doc.text('NIP/NIK: ......................', sigCol2, yPos + 30);
+                
+                // Footer Note
+                yPos += 45;
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'bold');
+                doc.text('PERHATIAN:', margin, yPos);
+                doc.setFont('helvetica', 'normal');
+                doc.text('1. Barang harus dikembalikan tepat waktu sesuai dengan jadwal yang telah ditentukan.', margin, yPos + 5);
+                doc.text('2. Peminjam bertanggung jawab penuh atas barang yang dipinjam selama masa peminjaman.', margin, yPos + 10);
+                doc.text('3. Kerusakan atau kehilangan barang menjadi tanggung jawab peminjam dan wajib mengganti.', margin, yPos + 15);
+                doc.text('4. Bukti ini wajib dibawa saat pengembalian barang.', margin, yPos + 20);
+                
+                // Final border
+                doc.setDrawColor(26, 54, 93);
+                doc.setLineWidth(0.3);
+                doc.rect(margin, margin, pageWidth - 2 * margin, doc.internal.pageSize.getHeight() - 2 * margin);
+                
+                // Simpan PDF
+                doc.save(`bukti-peminjaman-${document.getElementById('buktiNim').textContent}.pdf`);
+            });
+            
+            // Kembali ke form
+            document.getElementById('kembaliKeForm').addEventListener('click', function() {
+                document.getElementById('formSection').classList.remove('hidden');
+                document.getElementById('buktiSection').classList.add('hidden');
+                window.scrollTo(0, 0);
+            });
+            
+            // Fungsi format tanggal
+            function formatTanggal(tanggal) {
+                if (!tanggal) return '';
+                
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                return new Date(tanggal).toLocaleDateString('id-ID', options);
+            }
+            
+            // Fungsi format jam
+            function formatJam(jam) {
+                if (!jam) return '';
+                return jam.substring(0, 5);
+            }
+        });
+    </script>
+</body>
+</html>

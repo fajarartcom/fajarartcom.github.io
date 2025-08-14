@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Pengembalian Barang Lab Komputer</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printable-area, #printable-area * {
+                visibility: visible;
+            }
+            #printable-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                box-shadow: none;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">FORMULIR PENGEMBALIAN BARANG</h1>
+            <h2 class="text-xl text-gray-600 mt-2">Laboratorium Komputer - Universitas Teknologi</h2>
+            <div class="border-b-2 border-blue-500 w-24 mx-auto mt-4"></div>
+        </div>
+
+        <!-- Form Card -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <form id="pengembalianForm">
+                <!-- Informasi Peminjam -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-4 flex items-center">
+                        <i class="fas fa-user-circle mr-2 text-blue-500"></i> Informasi Peminjam
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="nama" class="block mb-2 text-sm font-medium text-gray-700">Nama Lengkap</label>
+                            <input type="text" id="nama" class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan nama lengkap" required>
+                        </div>
+                        <div>
+                            <label for="nim" class="block mb-2 text-sm font-medium text-gray-700">NIM/NIP</label>
+                            <input type="text" id="nim" class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan NIM/NIP" required>
+                        </div>
+                        <div>
+                            <label for="prodi" class="block mb-2 text-sm font-medium text-gray-700">Program Studi/Unit</label>
+                            <input type="text" id="prodi" class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan program studi/unit" required>
+                        </div>
+                        <div>
+                            <label for="no-hp" class="block mb-2 text-sm font-medium text-gray-700">No. HP</label>
+                            <input type="tel" id="no-hp" class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Masukkan nomor handphone" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Informasi Barang -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-4 flex items-center">
+                        <i class="fas fa-laptop mr-2 text-blue-500"></i> Informasi Barang
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="kode-barang" class="block mb-2 text-sm font-medium text-gray-700">Kode Barang</label>
+                            <input type="text" id="kode-barang" class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Kode inventaris barang" required>
+                        </div>
+                        <div>
+                            <label for="jenis-barang" class="block mb-2 text-sm font-medium text-gray-700">Jenis Barang</label>
+                            <select id="jenis-barang" class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                <option value="" disabled selected>Pilih jenis barang</option>
+                                <option value="laptop">Laptop</option>
+                                <option value="proyektor">Proyektor</option>
+                                <option value="kamera">Kamera</option>
+                                <option value="peripheral">Peripheral Komputer</option>
+                                <option value="lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="merk" class="block mb-2 text-sm font-medium text-gray-700">Merk & Model</label>
+                            <input type="text" id="merk" class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Contoh: Dell Latitude 3420" required>
+                        </div>
+                        <div>
+                            <label for="tgl-pinjam" class="block mb-2 text-sm font-medium text-gray-700">Tanggal Pinjam</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <i class="fas fa-calendar text-gray-500"></i>
+                                </div>
+                                <input datepicker datepicker-format="dd/mm/yyyy" type="text" id="tgl-pinjam" class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Pilih tanggal" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="tgl-kembali" class="block mb-2 text-sm font-medium text-gray-700">Tanggal Kembali</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <i class="fas fa-calendar text-gray-500"></i>
+                                </div>
+                                <input datepicker datepicker-format="dd/mm/yyyy" type="text" id="tgl-kembali" class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Pilih tanggal" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="tujuan" class="block mb-2 text-sm font-medium text-gray-700">Tujuan Peminjaman</label>
+                            <input type="text" id="tujuan" class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Kegiatan/perkuliahan" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kondisi Barang -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-4 flex items-center">
+                        <i class="fas fa-clipboard-check mr-2 text-blue-500"></i> Kondisi Barang Kembali
+                    </h3>
+                    <div class="grid grid-cols-1 gap-6">
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-700">Kondisi Fisik</label>
+                            <div class="flex flex-wrap gap-4">
+                                <div class="flex items-center">
+                                    <input id="kondisi-baik" type="radio" value="baik" name="kondisi-fisik" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500" checked>
+                                    <label for="kondisi-baik" class="ml-2 text-sm font-medium text-gray-700">Baik</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="kondisi-rusak-ringan" type="radio" value="rusak-ringan" name="kondisi-fisik" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
+                                    <label for="kondisi-rusak-ringan" class="ml-2 text-sm font-medium text-gray-700">Rusak Ringan</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="kondisi-rusak-berat" type="radio" value="rusak-berat" name="kondisi-fisik" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
+                                    <label for="kondisi-rusak-berat" class="ml-2 text-sm font-medium text-gray-700">Rusak Berat</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="kelengkapan" class="block mb-2 text-sm font-medium text-gray-700">Kelengkapan</label>
+                            <div class="flex flex-wrap gap-4">
+                                <div class="flex items-center">
+                                    <input id="lengkap" type="radio" value="lengkap" name="kelengkapan" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500" checked>
+                                    <label for="lengkap" class="ml-2 text-sm font-medium text-gray-700">Lengkap</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="tidak-lengkap" type="radio" value="tidak-lengkap" name="kelengkapan" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
+                                    <label for="tidak-lengkap" class="ml-2 text-sm font-medium text-gray-700">Tidak Lengkap</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="kelengkapan-detail" class="hidden">
+                            <label for="detail-kelengkapan" class="block mb-2 text-sm font-medium text-gray-700">Detail Kelengkapan</label>
+                            <textarea id="detail-kelengkapan" rows="2" class="block p-2.5 w-full text-sm text-gray-700 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Tuliskan bagian yang tidak lengkap..."></textarea>
+                        </div>
+                        <div>
+                            <label for="catatan" class="block mb-2 text-sm font-medium text-gray-700">Catatan Tambahan</label>
+                            <textarea id="catatan" rows="3" class="block p-2.5 w-full text-sm text-gray-700 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Masukkan catatan tambahan jika ada..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Persetujuan -->
+                <div class="mb-6">
+                    <div class="flex items-center">
+                        <input id="persetujuan" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" required>
+                        <label for="persetujuan" class="ml-2 text-sm font-medium text-gray-700">Saya menyatakan bahwa informasi yang saya berikan benar dan bertanggung jawab penuh atas barang yang dipinjam</label>
+                    </div>
+                </div>
+
+                <!-- Tombol Aksi -->
+                <div class="flex justify-between no-print">
+                    <button type="button" id="resetBtn" class="text-gray-700 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                        <i class="fas fa-redo mr-2"></i> Reset Form
+                    </button>
+                    <div class="flex gap-4">
+                        <button type="button" id="previewBtn" class="text-gray-700 bg-yellow-100 hover:bg-yellow-200 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                            <i class="fas fa-eye mr-2"></i> Preview PDF
+                        </button>
+                        <button type="submit" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                            <i class="fas fa-paper-plane mr-2"></i> Submit Pengembalian
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Printable Area (Hidden) -->
+        <div id="printable-area" class="bg-white rounded-lg shadow-md p-6 mb-6 hidden">
+            <div class="text-center mb-6">
+                <h1 class="text-2xl font-bold text-gray-800">FORMULIR PENGEMBALIAN BARANG</h1>
+                <h2 class="text-lg text-gray-600 mt-1">Laboratorium Komputer - Universitas Teknologi</h2>
+                <div class="border-b-2 border-blue-500 w-20 mx-auto mt-2"></div>
+            </div>
+
+            <!-- Informasi Peminjam -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-700 mb-3 border-b pb-1">Informasi Peminjam</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Nama Lengkap</p>
+                        <p id="print-nama" class="text-sm text-gray-800 border-b pb-1">-</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">NIM/NIP</p>
+                        <p id="print-nim" class="text-sm text-gray-800 border-b pb-1">-</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Program Studi/Unit</p>
+                        <p id="print-prodi" class="text-sm text-gray-800 border-b pb-1">-</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">No. HP</p>
+                        <p id="print-no-hp" class="text-sm text-gray-800 border-b pb-1">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informasi Barang -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-700 mb-3 border-b pb-1">Informasi Barang</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Kode Barang</p>
+                        <p id="print-kode-barang" class="text-sm text-gray-800 border-b pb-1">-</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Jenis Barang</p>
+                        <p id="print-jenis-barang" class="text-sm text-gray-800 border-b pb-1">-</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Merk & Model</p>
+                        <p id="print-merk" class="text-sm text-gray-800 border-b pb-1">-</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Tujuan Peminjaman</p>
+                        <p id="print-tujuan" class="text-sm text-gray-800 border-b pb-1">-</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Tanggal Pinjam</p>
+                        <p id="print-tgl-pinjam" class="text-sm text-gray-800 border-b pb-1">-</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Tanggal Kembali</p>
+                        <p id="print-tgl-kembali" class="text-sm text-gray-800 border-b pb-1">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kondisi Barang -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-700 mb-3 border-b pb-1">Kondisi Barang Kembali</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Kondisi Fisik</p>
+                        <p id="print-kondisi" class="text-sm text-gray-800 border-b pb-1">-</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-600">Kelengkapan</p>
+                        <p id="print-kelengkapan" class="text-sm text-gray-800 border-b pb-1">-</p>
+                    </div>
+                    <div id="print-kelengkapan-detail-container" class="hidden md:col-span-2">
+                        <p class="text-sm font-medium text-gray-600">Detail Kelengkapan</p>
+                        <p id="print-detail-kelengkapan" class="text-sm text-gray-800 border-b pb-1">-</p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <p class="text-sm font-medium text-gray-600">Catatan Tambahan</p>
+                        <p id="print-catatan" class="text-sm text-gray-800 border-b pb-1">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tanda Tangan -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                <div class="text-center">
+                    <div class="h-16 border-t border-gray-300 mt-8 mb-2"></div>
+                    <p class="text-sm text-gray-700">Peminjam</p>
+                    <p id="print-nama-ttd" class="text-sm font-medium text-gray-800">(___________________)</p>
+                </div>
+                <div class="text-center">
+                    <div class="h-16 border-t border-gray-300 mt-8 mb-2"></div>
+                    <p class="text-sm text-gray-700">Petugas Lab</p>
+                    <p class="text-sm font-medium text-gray-800">(___________________)</p>
+                </div>
+            </div>
+
+            <div class="text-center text-xs text-gray-500 mt-8">
+                <p>Dokumen ini dicetak secara elektronik, tanda tangan asli diperlukan untuk validasi</p>
+                <p id="print-timestamp" class="text-xs text-gray-400 mt-1">-</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center text-sm text-gray-500">
+            <p>Laboratorium Komputer - Universitas Teknologi</p>
+            <p>Jl. Teknologi No. 123, Kota Pendidikan | Telp: (021) 12345678</p>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div id="preview-modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative w-full max-w-4xl max-h-full">
+            <div class="relative bg-white rounded-lg shadow">
+                <div class="flex items-center justify-between p-4 border-b">
+                    <h3 class="text-xl font-semibold text-gray-900">
+                        Preview Dokumen Pengembalian
+                    </h3>
+                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-hide="preview-modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="p-4 overflow-y-auto max-h-[80vh]">
+                    <div id="pdf-preview-content" class="bg-white p-4 border border-gray-200"></div>
+                </div>
+                <div class="flex items-center justify-end p-4 space-x-2 border-t border-gray-200">
+                    <button type="button" id="printBtn" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                        <i class="fas fa-file-pdf mr-2"></i> Cetak PDF
+                    </button>
+                    <button type="button" class="text-gray-700 bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center" data-modal-hide="preview-modal">
+                        <i class="fas fa-times mr-2"></i> Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
+    <script>
+        // Inisialisasi datepicker
+        const datepickers = [].slice.call(document.querySelectorAll('[datepicker]'));
+        datepickers.map(function (datepicker) {
+            new Datepicker(datepicker, {
+                format: 'dd/mm/yyyy',
+                autohide: true
+            });
+        });
+
+        // Script untuk menampilkan detail kelengkapan jika tidak lengkap
+        document.getElementById('tidak-lengkap').addEventListener('change', function() {
+            if(this.checked) {
+                document.getElementById('kelengkapan-detail').classList.remove('hidden');
+            }
+        });
+        
+        document.getElementById('lengkap').addEventListener('change', function() {
+            if(this.checked) {
+                document.getElementById('kelengkapan-detail').classList.add('hidden');
+            }
+        });
+
+        // Reset form
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            document.getElementById('pengembalianForm').reset();
+            document.getElementById('kelengkapan-detail').classList.add('hidden');
+        });
+
+        // Fungsi untuk mengisi data preview
+        function fillPreviewData() {
+            // Data peminjam
+            document.getElementById('print-nama').textContent = document.getElementById('nama').value || '-';
+            document.getElementById('print-nim').textContent = document.getElementById('nim').value || '-';
+            document.getElementById('print-prodi').textContent = document.getElementById('prodi').value || '-';
+            document.getElementById('print-no-hp').textContent = document.getElementById('no-hp').value || '-';
+            document.getElementById('print-nama-ttd').textContent = `(${document.getElementById('nama').value || 'Nama Peminjam'})`;
+
+            // Data barang
+            document.getElementById('print-kode-barang').textContent = document.getElementById('kode-barang').value || '-';
+            document.getElementById('print-jenis-barang').textContent = document.getElementById('jenis-barang').options[document.getElementById('jenis-barang').selectedIndex].text || '-';
+            document.getElementById('print-merk').textContent = document.getElementById('merk').value || '-';
+            document.getElementById('print-tujuan').textContent = document.getElementById('tujuan').value || '-';
+            document.getElementById('print-tgl-pinjam').textContent = document.getElementById('tgl-pinjam').value || '-';
+            document.getElementById('print-tgl-kembali').textContent = document.getElementById('tgl-kembali').value || '-';
+
+            // Kondisi barang
+            const kondisiFisik = document.querySelector('input[name="kondisi-fisik"]:checked').value;
+            let kondisiText = '';
+            if (kondisiFisik === 'baik') kondisiText = 'Baik';
+            else if (kondisiFisik === 'rusak-ringan') kondisiText = 'Rusak Ringan';
+            else if (kondisiFisik === 'rusak-berat') kondisiText = 'Rusak Berat';
+            document.getElementById('print-kondisi').textContent = kondisiText;
+
+            const kelengkapan = document.querySelector('input[name="kelengkapan"]:checked').value;
+            let kelengkapanText = '';
+            if (kelengkapan === 'lengkap') {
+                kelengkapanText = 'Lengkap';
+                document.getElementById('print-kelengkapan-detail-container').classList.add('hidden');
+            } else {
+                kelengkapanText = 'Tidak Lengkap';
+                document.getElementById('print-kelengkapan-detail-container').classList.remove('hidden');
+                document.getElementById('print-detail-kelengkapan').textContent = document.getElementById('detail-kelengkapan').value || '-';
+            }
+            document.getElementById('print-kelengkapan').textContent = kelengkapanText;
+
+            document.getElementById('print-catatan').textContent = document.getElementById('catatan').value || '-';
+
+            // Timestamp
+            const now = new Date();
+            document.getElementById('print-timestamp').textContent = `Dicetak pada: ${now.toLocaleDateString('id-ID')} ${now.toLocaleTimeString('id-ID')}`;
+        }
+
+        // Preview PDF
+        document.getElementById('previewBtn').addEventListener('click', function() {
+            // Validasi form sebelum preview
+            const form = document.getElementById('pengembalianForm');
+            const requiredInputs = form.querySelectorAll('[required]');
+            let isValid = true;
+
+            requiredInputs.forEach(input => {
+                if (!input.value) {
+                    input.classList.add('border-red-500');
+                    isValid = false;
+                } else {
+                    input.classList.remove('border-red-500');
+                }
+            });
+
+            if (!isValid) {
+                alert('Harap lengkapi semua field yang wajib diisi!');
+                return;
+            }
+
+            // Isi data preview
+            fillPreviewData();
+
+            // Clone printable area untuk preview
+            const printableArea = document.getElementById('printable-area');
+            const previewContent = document.getElementById('pdf-preview-content');
+            previewContent.innerHTML = '';
+            previewContent.appendChild(printableArea.cloneNode(true));
+            previewContent.querySelector('#printable-area').classList.remove('hidden');
+
+            // Tampilkan modal preview
+            const previewModal = new Flowbite.Modal(document.getElementById('preview-modal'));
+            previewModal.show();
+        });
+
+        // Cetak PDF
+        document.getElementById('printBtn').addEventListener('click', function() {
+            fillPreviewData();
+            
+            const element = document.getElementById('printable-area');
+            element.classList.remove('hidden');
+            
+            const opt = {
+                margin: 10,
+                filename: `Pengembalian_${document.getElementById('kode-barang').value || 'barang'}_${document.getElementById('nama').value || 'peminjam'}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            
+            // Generate PDF
+            html2pdf().set(opt).from(element).save().then(() => {
+                element.classList.add('hidden');
+            });
+        });
+
+        // Script untuk form submission
+        document.getElementById('pengembalianForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Simulasi pengiriman data
+            const modalHtml = `
+                <div id="success-modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                    <div class="relative w-full max-w-md max-h-full">
+                        <div class="relative bg-white rounded-lg shadow">
+                            <div class="p-6 text-center">
+                                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+                                    <i class="fas fa-check text-green-600 text-xl"></i>
+                                </div>
+                                <h3 class="text-lg font-medium text-gray-900 mb-2">Pengembalian Berhasil!</h3>
+                                <p class="text-sm text-gray-500 mb-4">Formulir pengembalian barang telah berhasil dikirim. Terima kasih.</p>
+                                <button type="button" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center" data-modal-hide="success-modal">
+                                    Tutup
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Tambahkan modal ke body
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            
+            // Tampilkan modal
+            const modal = new Flowbite.Modal(document.getElementById('success-modal'));
+            modal.show();
+            
+            // Reset form setelah modal ditutup
+            document.querySelector('[data-modal-hide="success-modal"]').addEventListener('click', function() {
+                modal.hide();
+                document.getElementById('pengembalianForm').reset();
+                document.getElementById('kelengkapan-detail').classList.add('hidden');
+                document.getElementById('success-modal').remove();
+            });
+        });
+
+        // Validasi real-time
+        const requiredInputs = document.querySelectorAll('[required]');
+        requiredInputs.forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.value) {
+                    this.classList.remove('border-red-500');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
