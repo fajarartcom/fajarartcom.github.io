@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulir Pengadaan Lab Komputer</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #form-container, #form-container * {
+                visibility: visible;
+            }
+            #form-container {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                box-shadow: none;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .page-break {
+                page-break-after: always;
+            }
+        }
+        .signature-placeholder {
+            height: 80px;
+            border-bottom: 1px dashed #ccc;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <div id="form-container" class="bg-white shadow-md rounded-lg overflow-hidden">
+            <!-- Header Form -->
+            <div class="bg-blue-600 py-4 px-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h1 class="text-2xl font-bold text-white">FORMULIR PENGAJUAN PENGAADAAN</h1>
+                        <p class="text-blue-100">Fasilitas Sarana dan Prasarana Lab Komputer</p>
+                    </div>
+                    <div class="no-print">
+                        <button id="print-btn" class="text-white bg-blue-800 hover:bg-blue-900 px-4 py-2 rounded-lg flex items-center">
+                            <i class="fas fa-file-pdf mr-2"></i> Cetak PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <form id="pengadaan-form" class="p-6">
+                <!-- Informasi Pengaju -->
+                <div class="mb-8">
+                    <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">A. DATA PENGAJU</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="nama" class="block mb-2 text-sm font-medium text-gray-700">Nama Lengkap</label>
+                            <input type="text" id="nama" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                        </div>
+                        <div>
+                            <label for="jabatan" class="block mb-2 text-sm font-medium text-gray-700">Jabatan</label>
+                            <input type="text" id="jabatan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                        </div>
+                        <div>
+                            <label for="departemen" class="block mb-2 text-sm font-medium text-gray-700">Departemen/Unit</label>
+                            <input type="text" id="departemen" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                        </div>
+                        <div>
+                            <label for="tanggal" class="block mb-2 text-sm font-medium text-gray-700">Tanggal Pengajuan</label>
+                            <input type="date" id="tanggal" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Data Pengadaan -->
+                <div class="mb-8">
+                    <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">B. DATA PENGAADAAN</h2>
+                    
+                    <div class="mb-4">
+                        <label for="tujuan" class="block mb-2 text-sm font-medium text-gray-700">Tujuan Pengadaan</label>
+                        <textarea id="tujuan" rows="3" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Jelaskan tujuan pengadaan fasilitas lab komputer ini..." required></textarea>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="manfaat" class="block mb-2 text-sm font-medium text-gray-700">Manfaat yang Diharapkan</label>
+                        <textarea id="manfaat" rows="3" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Jelaskan manfaat yang diharapkan dari pengadaan ini..." required></textarea>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="prioritas" class="block mb-2 text-sm font-medium text-gray-700">Tingkat Prioritas</label>
+                        <select id="prioritas" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                            <option value="">Pilih prioritas</option>
+                            <option value="tinggi">Tinggi (Segera dibutuhkan)</option>
+                            <option value="sedang">Sedang (Dibutuhkan dalam 3 bulan)</option>
+                            <option value="rendah">Rendah (Perencanaan masa depan)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Daftar Barang -->
+                <div class="mb-8">
+                    <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">C. DAFTAR BARANG YANG DIAJUKAN</h2>
+                    
+                    <div class="overflow-x-auto">
+                        <table id="barang-table" class="w-full text-sm text-left text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-4 py-3">No</th>
+                                    <th scope="col" class="px-4 py-3">Nama Barang</th>
+                                    <th scope="col" class="px-4 py-3">Spesifikasi</th>
+                                    <th scope="col" class="px-4 py-3">Jumlah</th>
+                                    <th scope="col" class="px-4 py-3">Satuan</th>
+                                    <th scope="col" class="px-4 py-3">Harga Satuan (Rp)</th>
+                                    <th scope="col" class="px-4 py-3">Subtotal (Rp)</th>
+                                    <th scope="col" class="px-4 py-3 no-print">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-white border-b">
+                                    <td class="px-4 py-4">1</td>
+                                    <td class="px-4 py-4"><input type="text" name="nama_barang" class="bg-gray-50 border border-gray-300 rounded px-2 py-1 w-full" required></td>
+                                    <td class="px-4 py-4"><input type="text" name="spesifikasi" class="bg-gray-50 border border-gray-300 rounded px-2 py-1 w-full"></td>
+                                    <td class="px-4 py-4"><input type="number" name="jumlah" class="bg-gray-50 border border-gray-300 rounded px-2 py-1 w-16" min="1" value="1" required></td>
+                                    <td class="px-4 py-4">
+                                        <select name="satuan" class="bg-gray-50 border border-gray-300 rounded px-2 py-1 w-full">
+                                            <option value="unit">Unit</option>
+                                            <option value="set">Set</option>
+                                            <option value="buah">Buah</option>
+                                            <option value="paket">Paket</option>
+                                        </select>
+                                    </td>
+                                    <td class="px-4 py-4"><input type="number" name="harga" class="bg-gray-50 border border-gray-300 rounded px-2 py-1 w-full harga" min="0" value="0" required></td>
+                                    <td class="px-4 py-4 subtotal">0</td>
+                                    <td class="px-4 py-4 no-print">
+                                        <button type="button" class="text-red-600 hover:text-red-800 remove-row">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr class="font-semibold text-gray-900">
+                                    <td colspan="6" class="px-4 py-3 text-right">Total</td>
+                                    <td id="total-harga" class="px-4 py-3">0</td>
+                                    <td class="no-print"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    
+                    <button type="button" id="add-row" class="mt-4 text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center no-print">
+                        <i class="fas fa-plus-circle mr-2"></i> Tambah Barang
+                    </button>
+                </div>
+                
+                <!-- Rencana Anggaran -->
+                <div class="mb-8">
+                    <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">D. RENCANA ANGGARAN</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label for="total-anggaran" class="block mb-2 text-sm font-medium text-gray-700">Total Perkiraan Biaya</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <span class="text-gray-500">Rp</span>
+                                </div>
+                                <input type="text" id="total-anggaran" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" readonly>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="sumber" class="block mb-2 text-sm font-medium text-gray-700">Sumber Anggaran</label>
+                            <select id="sumber" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                                <option value="">Pilih sumber</option>
+                                <option value="apbn">APBN</option>
+                                <option value="apbd">APBD</option>
+                                <option value="dana-bos">Dana BOS</option>
+                                <option value="swadaya">Swadaya</option>
+                                <option value="hibah">Hibah</option>
+                                <option value="lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="tahun" class="block mb-2 text-sm font-medium text-gray-700">Tahun Anggaran</label>
+                            <input type="number" id="tahun" min="2023" max="2030" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" value="2023" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <label for="catatan" class="block mb-2 text-sm font-medium text-gray-700">Catatan Tambahan</label>
+                        <textarea id="catatan" rows="2" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                    </div>
+                </div>
+                
+                <!-- Persetujuan -->
+                <div class="mb-8">
+                    <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 mb-4">E. PERSETUJUAN</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-700">Pengaju</label>
+                            <div class="mt-12 text-center">
+                                <div class="signature-placeholder mb-2"></div>
+                                <p id="nama-pengaju" class="font-medium"></p>
+                                <p class="text-sm text-gray-500">Nama Lengkap & Tanda Tangan</p>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-700">Mengetahui/Menyetujui</label>
+                            <div class="mt-12 text-center">
+                                <div class="signature-placeholder mb-2"></div>
+                                <p class="text-sm text-gray-500">Nama Lengkap & Tanda Tangan</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tombol Submit -->
+                <div class="flex justify-end space-x-4 no-print">
+                    <button type="reset" id="reset-btn" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5">Reset Form</button>
+                    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none">Kirim Pengajuan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Inisialisasi jsPDF
+        const { jsPDF } = window.jspdf;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Format Rupiah
+            function formatRupiah(angka) {
+                return new Intl.NumberFormat('id-ID', { 
+                    style: 'currency', 
+                    currency: 'IDR',
+                    minimumFractionDigits: 0
+                }).format(angka).replace('Rp', 'Rp ');
+            }
+            
+            // Hitung total dan update form
+            function hitungTotal() {
+                let total = 0;
+                document.querySelectorAll('#barang-table tbody tr').forEach(row => {
+                    const jumlah = parseFloat(row.querySelector('[name="jumlah"]').value) || 0;
+                    const harga = parseFloat(row.querySelector('[name="harga"]').value) || 0;
+                    const subtotal = jumlah * harga;
+                    row.querySelector('.subtotal').textContent = formatRupiah(subtotal);
+                    total += subtotal;
+                });
+                
+                document.getElementById('total-harga').textContent = formatRupiah(total);
+                document.getElementById('total-anggaran').value = formatRupiah(total);
+            }
+            
+            // Tambah baris barang
+            document.getElementById('add-row').addEventListener('click', function() {
+                const tbody = document.querySelector('#barang-table tbody');
+                const rows = tbody.querySelectorAll('tr');
+                const newRow = rows[rows.length - 1].cloneNode(true);
+                const newNo = rows.length + 1;
+                
+                newRow.querySelector('td:first-child').textContent = newNo;
+                newRow.querySelectorAll('input').forEach(input => input.value = '');
+                newRow.querySelector('[name="jumlah"]').value = 1;
+                newRow.querySelector('[name="harga"]').value = 0;
+                newRow.querySelector('.subtotal').textContent = '0';
+                
+                tbody.appendChild(newRow);
+                addRowEvents(newRow);
+            });
+            
+            // Hapus baris barang
+            function addRowEvents(row) {
+                row.querySelector('.remove-row').addEventListener('click', function() {
+                    if (document.querySelectorAll('#barang-table tbody tr').length > 1) {
+                        row.remove();
+                        updateRowNumbers();
+                        hitungTotal();
+                    } else {
+                        alert('Minimal harus ada satu barang');
+                    }
+                });
+                
+                row.querySelector('[name="jumlah"]').addEventListener('change', hitungTotal);
+                row.querySelector('[name="harga"]').addEventListener('change', hitungTotal);
+            }
+            
+            // Update nomor urut
+            function updateRowNumbers() {
+                document.querySelectorAll('#barang-table tbody tr').forEach((row, index) => {
+                    row.querySelector('td:first-child').textContent = index + 1;
+                });
+            }
+            
+            // Inisialisasi event untuk baris pertama
+            addRowEvents(document.querySelector('#barang-table tbody tr'));
+            
+            // Event untuk form submit
+            document.getElementById('pengadaan-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validasi form
+                const requiredInputs = this.querySelectorAll('[required]');
+                let isValid = true;
+                
+                requiredInputs.forEach(input => {
+                    if (!input.value) {
+                        input.classList.add('border-red-500');
+                        isValid = false;
+                    } else {
+                        input.classList.remove('border-red-500');
+                    }
+                });
+                
+                if (!isValid) {
+                    alert('Harap lengkapi semua field yang wajib diisi!');
+                    return;
+                }
+                
+                // Tampilkan nama pengaju di bagian tanda tangan
+                document.getElementById('nama-pengaju').textContent = document.getElementById('nama').value;
+                
+                alert('Formulir berhasil disubmit! Silakan cetak PDF untuk dokumen resmi.');
+            });
+            
+            // Event untuk reset form
+            document.getElementById('reset-btn').addEventListener('click', function() {
+                document.querySelectorAll('#barang-table tbody tr').forEach((row, index) => {
+                    if (index > 0) {
+                        row.remove();
+                    } else {
+                        row.querySelectorAll('input').forEach(input => {
+                            if (input.nam
