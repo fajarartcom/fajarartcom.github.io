@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kasir Fajar Artcom</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Form Input -->
+            <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow">
+                <h2 class="text-2xl font-bold text-blue-600 mb-6">FAJAR ARTCOM - Kasir</h2>
+                
+                <!-- Form Pelanggan -->
+                <div class="mb-6">
+                    <label class="block mb-2 text-sm font-medium text-gray-900">Data Pelanggan</label>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <input type="text" id="customer-name" placeholder="Nama Pelanggan" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        </div>
+                        <div>
+                            <input type="text" id="customer-phone" placeholder="No. HP" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        </div>
+                        <div>
+                            <input type="text" id="customer-address" placeholder="Alamat (opsional)" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Form Produk -->
+                <div class="mb-4">
+                    <label class="block mb-2 text-sm font-medium text-gray-900">Tambah Produk</label>
+                    <div class="flex gap-4">
+                        <div class="flex-1">
+                            <select id="product-select" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <option value="">Pilih Produk</option>
+                                <!-- Produk akan diisi oleh JavaScript -->
+                            </select>
+                        </div>
+                        <div class="w-24">
+                            <input type="number" id="product-qty" value="1" min="1" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        </div>
+                        <button id="add-product" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none">
+                            <i class="fas fa-plus"></i> Tambah
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Daftar Produk Terpilih -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left text-gray-500">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3">Produk</th>
+                                <th class="px-6 py-3 text-right">Harga</th>
+                                <th class="px-6 py-3 text-center">Qty</th>
+                                <th class="px-6 py-3 text-right">Subtotal</th>
+                                <th class="px-6 py-3 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="selected-products">
+                            <!-- Produk yang dipilih akan muncul di sini -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Ringkasan Pembayaran -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-xl font-bold mb-4">Ringkasan Pembayaran</h3>
+                
+                <div class="space-y-3 mb-4">
+                    <div class="flex justify-between">
+                        <span>Subtotal</span>
+                        <span id="subtotal">Rp 0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Diskon</span>
+                        <span id="discount">Rp 0</span>
+                    </div>
+                    <div class="flex justify-between font-bold text-lg border-t pt-2">
+                        <span>Total</span>
+                        <span id="total">Rp 0</span>
+                    </div>
+                </div>
+                
+                <!-- Metode Pembayaran -->
+                <div class="mb-4">
+                    <label class="block mb-2 text-sm font-medium text-gray-900">Metode Pembayaran</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <input type="radio" id="payment-cash" name="payment" value="cash" checked class="hidden peer">
+                            <label for="payment-cash" class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 peer-checked:text-blue-600">
+                                <div class="block">
+                                    <div class="font-semibold">Tunai</div>
+                                </div>
+                                <i class="fas fa-money-bill-wave"></i>
+                            </label>
+                        </div>
+                        <div>
+                            <input type="radio" id="payment-transfer" name="payment" value="transfer" class="hidden peer">
+                            <label for="payment-transfer" class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 peer-checked:text-blue-600">
+                                <div class="block">
+                                    <div class="font-semibold">Transfer</div>
+                                </div>
+                                <i class="fas fa-university"></i>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Input Pembayaran -->
+                <div class="mb-4">
+                    <label for="amount-paid" class="block mb-2 text-sm font-medium text-gray-900">Dibayar</label>
+                    <input type="number" id="amount-paid" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                </div>
+                
+                <!-- Kembalian -->
+                <div class="mb-6 p-3 bg-gray-50 rounded-lg">
+                    <div class="flex justify-between font-bold">
+                        <span>Kembalian</span>
+                        <span id="change">Rp 0</span>
+                    </div>
+                </div>
+                
+                <!-- Tombol Aksi -->
+                <div class="space-y-2">
+                    <button id="process-payment" class="w-full text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-3 focus:outline-none">
+                        <i class="fas fa-check-circle"></i> Proses Pembayaran
+                    </button>
+                    <button id="reset-transaction" class="w-full text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-3 focus:outline-none">
+                        <i class="fas fa-redo"></i> Transaksi Baru
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Struk Pembelian (akan dicetak) -->
+    <div id="receipt" class="hidden max-w-md mx-auto bg-white p-6">
+        <!-- Isi struk akan di-generate oleh JavaScript -->
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+    <script>
+        // Database Produk
+        const products = [
+            { id: 1, name: "Processor Intel i5 12400F", price: 2450000, stock: 10 },
+            { id: 2, name: "Motherboard B660M", price: 1750000, stock: 8 },
+            { id: 3, name: "RAM DDR4 16GB", price: 650000, stock: 15 },
+            { id: 4, name: "SSD NVMe 512GB", price: 800000, stock: 12 },
+            { id: 5, name: "VGA RTX 3060 12GB", price: 4500000, stock: 5 },
+            { id: 6, name: "PSU 650W 80+ Gold", price: 1200000, stock: 7 },
+            { id: 7, name: "Casing PC ATX", price: 750000, stock: 9 },
+            { id: 8, name: "Monitor 24\" FHD", price: 1800000, stock: 6 }
+        ];
+
+        // Data Transaksi
+        let transaction = {
+            customer: {},
+            items: [],
+            subtotal: 0,
+            discount: 0,
+            total: 0,
+            payment: "cash",
+            paid: 0,
+            change: 0,
+            date: new Date()
+        };
+
+        // DOM Elements
+        const productSelect = document.getElementById('product-select');
+        const productQty = document.getElementById('product-qty');
+        const addProductBtn = document.getElementById('add-product');
+        const selectedProducts = document.getElementById('selected-products');
+        const subtotalEl = document.getElementById('subtotal');
+        const discountEl = document.getElementById('discount');
+        const totalEl = document.getElementById('total');
+        const amountPaid = document.getElementById('amount-paid');
+        const changeEl = document.getElementById('change');
+        const processPaymentBtn = document.getElementById('process-payment');
+        const resetTransactionBtn = document.getElementById('reset-transaction');
+        const receiptEl = document.getElementById('receipt');
+
+        // Initialize
+        function init() {
+            // Populate product dropdown
+            products.forEach(product => {
+                const option = document.createElement('option');
+                option.value = product.id;
+                option.textContent = `${product.name} - Rp ${formatCurrency(product.price)} (Stok: ${product.stock})`;
+                productSelect.appendChild(option);
+            });
+
+            // Event Listeners
+            addProductBtn.addEventListener('click', addProduct);
+            processPaymentBtn.addEventListener('click', processPayment);
+            resetTransactionBtn.addEventListener('click', resetTransaction);
+            amountPaid.addEventListener('input', calculateChange);
+
+            // Load transaction from localStorage if exists
+            const savedTransaction = localStorage.getItem('currentTransaction');
+            if (savedTransaction) {
+                transaction = JSON.parse(savedTransaction);
+                renderTransaction();
+            }
+        }
+
+        // Add Product to Transaction
+        function addProduct() {
+            const productId = parseInt(productSelect.value);
+            const qty = parseInt(productQty.value);
+
+            if (!productId || qty < 1) {
+                alert('Silakan pilih produk dan masukkan jumlah yang valid');
+                return;
+            }
+
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            // Check if product already in transaction
+            const existingItem = transaction.items.find(item => item.id === productId);
+            if (existingItem) {
+                existingItem.qty += qty;
+                existingItem.subtotal = existingItem.qty * existingItem.price;
+            } else {
+                transaction.items.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    qty: qty,
+                    subtotal: product.price * qty
+                });
+            }
+
+            // Update transaction totals
+            updateTotals();
+            renderTransaction();
+            saveTransaction();
+
+            // Reset product input
+            productSelect.value = '';
+            productQty.value = 1;
+        }
+
+        // Remove Product from Transaction
+        function removeProduct(productId) {
+            transaction.items = transaction.items.filter(item => item.id !== productId);
+            updateTotals();
+            renderTransaction();
+            saveTransaction();
+        }
+
+        // Update Product Quantity
+        function updateProductQty(productId, newQty) {
+            const item = transaction.items.find(item => item.id === productId);
+            if (item && newQty > 0) {
+                item.qty = newQty;
+                item.subtotal = item.price * item.qty;
+                updateTotals();
+                renderTransaction();
+                saveTransaction();
+            }
+        }
+
+        // Update Transaction Totals
+        function updateTotals() {
+            transaction.subtotal = transaction.items.reduce((sum, item) => sum + item.subtotal, 0);
+            transaction.total = transaction.subtotal - transaction.discount;
+            calculateChange();
+        }
+
+        // Calculate Change
+        function calculateChange() {
+            transaction.paid = parseFloat(amountPaid.value) || 0;
+            transaction.change = transaction.paid - transaction.total;
+            changeEl.textContent = `Rp ${formatCurrency(transaction.change >= 0 ? transaction.change : 0)}`;
+        }
+
+        // Process Payment
+        function processPayment() {
+            // Validate customer data
+            transaction.customer = {
+                name: document.getElementById('customer-name').value.trim(),
+                phone: document.getElementById('customer-phone').value.trim(),
+                address: document.getElementById('customer-address').value.trim()
+            };
+
+            if (!transaction.customer.name) {
+                alert('Silakan masukkan nama pelanggan');
+                return;
+            }
+
+            if (transaction.items.length === 0) {
+                alert('Tidak ada produk dalam transaksi');
+                return;
+            }
+
+            if (transaction.paid < transaction.total) {
+                alert('Jumlah pembayaran kurang');
+                return;
+            }
+
+            // Set transaction date
+            transaction.date = new Date();
+
+            // Generate receipt
+            generateReceipt();
+
+            // Print receipt
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Struk Fajar Artcom</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 0; padding: 10px; }
+                        .receipt { width: 80mm; margin: 0 auto; }
+                        .text-center { text-align: center; }
+                        .text-right { text-align: right; }
+                        .font-bold { font-weight: bold; }
+                        .border-b { border-bottom: 1px dashed #000; }
+                        .mt-2 { margin-top: 8px; }
+                        .mt-4 { margin-top: 16px; }
+                        table { width: 100%; border-collapse: collapse; }
+                        th, td { padding: 4px 0; }
+                    </style>
+                </head>
+                <body onload="window.print(); window.close();">
+                    ${receiptEl.innerHTML}
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+
+            // Reset transaction after printing
+            setTimeout(resetTransaction, 1000);
+        }
+
+        // Generate Receipt HTML
+        function generateReceipt() {
+            const now = new Date();
+            const formattedDate = `${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()} ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+            
+            let itemsHtml = '';
+            transaction.items.forEach(item => {
+                itemsHtml += `
+                    <tr class="border-b">
+                        <td class="py-1">${item.name}</td>
+                        <td class="text-right py-1">${item.qty}</td>
+                        <td class="text-right py-1">${formatCurrency(item.price)}</td>
+                        <td class="text-right py-1">${formatCurrency(item.subtotal)}</td>
+                    </tr>
+                `;
+            });
+
+            receiptEl.innerHTML = `
+                <div class="receipt">
+                    <!-- Header -->
+                    <div class="text-center mb-2">
+                        <h1 class="font-bold text-xl">FAJAR ARTCOM</h1>
+                        <p class="text-sm">Komputer & Accessories</p>
+                        <p class="text-xs">Jl. Contoh No. 123, Kota</p>
+                        <p class="text-xs">Telp: 0812-3456-7890</p>
+                    </div>
+                    
+                    <!-- Info Transaksi -->
+                    <div class="border-b pb-2 mb-2">
+                        <div class="flex justify-between text-sm">
+                            <span>No. Transaksi:</span>
+                            <span>INV/${now.getFullYear()}/${now.getMonth()+1}${now.getDate()}${now.getHours()}${now.getMinutes()}</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>Tanggal:</span>
+                            <span>${formattedDate}</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>Pelanggan:</span>
+                            <span>${transaction.customer.name}</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>Kasir:</span>
+                            <span>Fajar</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Daftar Produk -->
+                    <table class="w-full text-xs mb-2">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left py-1">Item</th>
+                                <th class="text-right py-1">Qty</th>
+                                <th class="text-right py-1">Harga</th>
+                                <th class="text-right py-1">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${itemsHtml}
+                        </tbody>
+                    </table>
+                    
+                    <!-- Ringkasan -->
+                    <div class="border-t pt-2 text-sm">
+                        <div class="flex justify-between">
+                            <span>Subtotal</span>
+                            <span>${formatCurrency(transaction.subtotal)}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Diskon</span>
+                            <span>${formatCurrency(transaction.discount)}</span>
+                        </div>
+                        <div class="flex justify-between font-bold mt-2">
+                            <span>TOTAL</span>
+                            <span>${formatCurrency(transaction.total)}</span>
+                        </div>
+                        <div class="flex justify-between mt-2">
+                            <span>Pembayaran (${transaction.payment === 'cash' ? 'Tunai' : 'Transfer'})</span>
+                            <span>${formatCurrency(transaction.paid)}</span>
+                        </div>
+                        <div class="flex justify-between font-bold mt-2">
+                            <span>Kembalian</span>
+                            <span>${formatCurrency(transaction.change)}</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Footer -->
+                    <div class="text-center text-xs mt-4">
+                        <p>Terima kasih telah berbelanja</p>
+                        <p>Barang yang sudah dibeli tidak dapat ditukar/dikembalikan</p>
+                        <p class="mt-2">~ www.fajarartcom.com ~</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Reset Transaction
+        function resetTransaction() {
+            transaction = {
+                customer: {},
+                items: [],
+                subtotal: 0,
+                discount: 0,
+                total: 0,
+                payment: "cash",
+                paid: 0,
+                change: 0,
+                date: new Date()
+            };
+
+            // Reset form
+            document.getElementById('customer-name').value = '';
+            document.getElementById('customer-phone').value = '';
+            document.getElementById('customer-address').value = '';
+            amountPaid.value = '';
+            document.getElementById('payment-cash').checked = true;
+
+            renderTransaction();
+            localStorage.removeItem('currentTransaction');
+        }
+
+        // Render Transaction
+        function renderTransaction() {
+            // Render selected products
+            selectedProducts.innerHTML = '';
+            transaction.items.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = 'border-b';
+                tr.innerHTML = `
+                    <td class="px-6 py-2">${item.name}</td>
+                    <td class="px-6 py-2 text-right">Rp ${formatCurrency(item.price)}</td>
+                    <td class="px-6 py-2 text-center">
+                        <input type="number" value="${item.qty}" min="1" class="w-16 text-center border rounded py-1 product-qty" data-id="${item.id}">
+                    </td>
+                    <td class="px-6 py-2 text-right">Rp ${formatCurrency(item.subtotal)}</td>
+                    <td class="px-6 py-2 text-center">
+                        <button class="text-red-500 remove-product" data-id="${item.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                selectedProducts.appendChild(tr);
+            });
+
+            // Add event listeners to quantity inputs and remove buttons
+            document.querySelectorAll('.product-qty').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const productId = parseInt(e.target.dataset.id);
+                    const newQty = parseInt(e.target.value);
+                    updateProductQty(productId, newQty);
+                });
+            });
+
+            document.querySelectorAll('.remove-product').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productId = parseInt(e.target.closest('button').dataset.id);
+                    removeProduct(productId);
+                });
+            });
+
+            // Update summary
+            subtotalEl.textContent = `Rp ${formatCurrency(transaction.subtotal)}`;
+            discountEl.textContent = `Rp ${formatCurrency(transaction.discount)}`;
+            totalEl.textContent = `Rp ${formatCurrency(transaction.total)}`;
+            changeEl.textContent = `Rp ${formatCurrency(transaction.change >= 0 ? transaction.change : 0)}`;
+        }
+
+        // Save Transaction to Local Storage
+        function saveTransaction() {
+            localStorage.setItem('currentTransaction', JSON.stringify(transaction));
+        }
+
+        // Format Currency
+        function formatCurrency(amount) {
+            return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
