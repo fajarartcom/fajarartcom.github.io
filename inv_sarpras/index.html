@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Inventaris Sarpras - SMK NU 1 Kedungpring</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body{background:#f1f5f9}
+  @media print { .no-print{display:none!important} }
+</style>
+</head>
+<body class="font-sans">
+
+<!-- HEADER -->
+<header class="bg-blue-700 text-white p-4 flex items-center gap-4">
+  <img src="1723829801820.jpeg" alt="logo" class="w-14 h-14 object-contain bg-white p-1 rounded"/>
+  <div>
+    <h1 class="text-xl font-bold">Inventaris Sarpras - SMK NU 1 Kedungpring</h1>
+    <div class="text-sm opacity-90">Manajemen semua ruang & aset sekolah</div>
+  </div>
+  <div class="ml-auto flex items-center gap-3 no-print">
+    <div id="userLabel" class="text-sm opacity-90">Belum login</div>
+    <button id="btnLogin" class="bg-white text-blue-700 px-3 py-1 rounded">Login</button>
+    <button id="btnLogout" class="bg-red-600 text-white px-3 py-1 rounded hidden">Logout</button>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="max-w-6xl mx-auto p-4">
+
+  <!-- CONTROLS -->
+  <section class="bg-white p-4 rounded shadow-sm mb-4 no-print">
+    <div class="flex flex-wrap gap-3 items-center">
+      <select id="roomFilter" class="border rounded p-2">
+        <option value="">Semua Ruangan</option>
+      </select>
+      <select id="condFilter" class="border rounded p-2">
+        <option value="">Semua Kondisi</option>
+        <option>Baik</option>
+        <option>Rusak Ringan</option>
+        <option>Rusak Berat</option>
+      </select>
+      <input id="q" placeholder="Cari nama atau kode..." class="border rounded p-2 flex-1"/>
+      <button id="btnAddItem" class="bg-blue-600 text-white px-3 py-1 rounded">Tambah Barang</button>
+      <button id="btnRooms" class="bg-sky-600 text-white px-3 py-1 rounded">Kelola Ruangan</button>
+      <button id="btnExport" class="bg-green-600 text-white px-3 py-1 rounded">Export JSON</button>
+      <button id="btnImport" class="bg-white border px-3 py-1 rounded">Import JSON</button>
+      <input id="fileImport" type="file" accept=".json" class="hidden"/>
+      <button id="btnReport" class="bg-indigo-600 text-white px-3 py-1 rounded">Cetak Laporan</button>
+    </div>
+  </section>
+
+  <!-- TABLE -->
+  <section class="bg-white p-4 rounded shadow-sm">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-gray-100 text-left">
+          <tr>
+            <th class="p-2">No</th>
+            <th class="p-2">Nama Barang</th>
+            <th class="p-2">Kode</th>
+            <th class="p-2">Jumlah</th>
+            <th class="p-2">Kondisi</th>
+            <th class="p-2">Ruangan</th>
+            <th class="p-2">Tanggal</th>
+            <th class="p-2">Keterangan</th>
+            <th class="p-2 no-print">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer class="text-center text-xs text-gray-600 py-4">© 2025 SMK NU 1 Kedungpring — Sistem Inventaris Lokal</footer>
+
+<!-- LOGIN MODAL -->
+<div id="modalLogin" class="fixed inset-0 bg-black/40 hidden items-center justify-center no-print">
+  <div class="bg-white p-6 rounded w-96">
+    <h3 class="font-semibold mb-2">Login</h3>
+    <div class="text-xs text-gray-600 mb-3">Akun bawaan: kepala/kepala123 (Kepala Sarpras), petugas/petugas123 (Petugas)</div>
+    <input id="u" placeholder="Username" class="w-full border p-2 rounded mb-2"/>
+    <input id="p" type="password" placeholder="Password" class="w-full border p-2 rounded mb-3"/>
+    <div class="flex justify-end gap-2">
+      <button id="loginCancel" class="px-3 py-1 rounded border">Batal</button>
+      <button id="loginSubmit" class="px-3 py-1 rounded bg-blue-600 text-white">Masuk</button>
+    </div>
+  </div>
+</div>
+
+<!-- ITEM MODAL (Tambah/Edit) -->
+<div id="modalItem" class="fixed inset-0 bg-black/40 hidden items-center justify-center no-print">
+  <div class="bg-white p-6 rounded w-96">
+    <h3 id="itemTitle" class="font-semibold mb-2">Tambah Barang</h3>
+    <form id="formItem">
+      <input id="itemId" type="hidden"/>
+      <label class="block text-sm">Nama Barang <input id="itemNama" class="w-full border p-2 rounded" required/></label>
+      <label class="block text-sm mt-2">Kode (opsional) <input id="itemKode" class="w-full border p-2 rounded"/></label>
+      <label class="block text-sm mt-2">Jumlah <input id="itemJumlah" type="number" min="1" class="w-full border p-2 rounded" required/></label>
+      <label class="block text-sm mt-2">Kondisi 
+        <select id="itemKondisi" class="w-full border p-2 rounded">
+          <option>Baik</option><option>Rusak Ringan</option><option>Rusak Berat</option>
+        </select>
+      </label>
+      <label class="block text-sm mt-2">Ruangan 
+        <select id="itemRuangan" class="w-full border p-2 rounded"></select>
+      </label>
+      <label class="block text-sm mt-2">Keterangan <input id="itemKet" class="w-full border p-2 rounded"/></label>
+      <div class="mt-3 flex justify-end gap-2">
+        <button type="button" id="itemCancel" class="px-3 py-1 rounded border">Batal</button>
+        <button type="submit" class="px-3 py-1 rounded bg-blue-600 text-white">Simpan</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ROOMS MODAL -->
+<div id="modalRooms" class="fixed inset-0 bg-black/40 hidden items-center justify-center no-print">
+  <div class="bg-white p-6 rounded w-96">
+    <h3 class="font-semibold mb-2">Kelola Ruangan</h3>
+    <div class="mb-3">
+      <input id="newRoom" placeholder="Nama Ruangan baru (contoh: Ruang Guru)" class="w-full border p-2 rounded"/>
+      <div class="flex justify-end mt-2">
+        <button id="addRoomBtn" class="px-3 py-1 rounded bg-sky-600 text-white">Tambah Ruangan</button>
+      </div>
+    </div>
+    <div>
+      <ul id="roomsList" class="space-y-2 text-sm"></ul>
+    </div>
+    <div class="mt-3 flex justify-end">
+      <button id="roomsClose" class="px-3 py-1 rounded border">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<!-- IMPORT helper input (hidden) -->
+<input id="hiddenImport" type="file" accept=".json" class="hidden"/>
+
+<script>
+// App data keys
+const KEY_ITEMS = "inventaris_sekolah_items_v1";
+const KEY_ROOMS = "inventaris_sekolah_rooms_v1";
+const KEY_SIG = "inventaris_sekolah_sig_v1";
+const KEY_USERS = "inventaris_sekolah_users_v1";
+
+// Default users (stored locally) - offline simple auth
+let users = JSON.parse(localStorage.getItem(KEY_USERS) || "null");
+if(!users){
+  users = [
+    {username:"kepala", password:"kepala123", role:"kepala", name:"Kepala Sarpras"},
+    {username:"petugas", password:"petugas123", role:"petugas", name:"Petugas Ruangan"}
+  ];
+  localStorage.setItem(KEY_USERS, JSON.stringify(users));
+}
+
+// Load data arrays
+let items = JSON.parse(localStorage.getItem(KEY_ITEMS) || "[]");
+let rooms = JSON.parse(localStorage.getItem(KEY_ROOMS) || "[]");
+let signatureData = localStorage.getItem(KEY_SIG) || null;
+
+// If no rooms yet, add some defaults
+if(rooms.length === 0){
+  rooms = ["Laboratorium Komputer","Ruang Guru","Perpustakaan","Kantor Tata Usaha","Aula"];
+  localStorage.setItem(KEY_ROOMS, JSON.stringify(rooms));
+}
+
+// Current logged user
+let currentUser = null;
+
+// UI refs
+const roomFilter = document.getElementById("roomFilter");
+const condFilter = document.getElementById("condFilter");
+const qInput = document.getElementById("q");
+const tableBody = document.getElementById("tableBody");
+const userLabel = document.getElementById("userLabel");
+const btnLogin = document.getElementById("btnLogin");
+const btnLogout = document.getElementById("btnLogout");
+
+const modalLogin = document.getElementById("modalLogin");
+const loginSubmit = document.getElementById("loginSubmit");
+const loginCancel = document.getElementById("loginCancel");
+
+const modalItem = document.getElementById("modalItem");
+const btnAddItem = document.getElementById("btnAddItem");
+const itemCancel = document.getElementById("itemCancel");
+const formItem = document.getElementById("formItem");
+const itemRuangan = document.getElementById("itemRuangan");
+
+const modalRooms = document.getElementById("modalRooms");
+const btnRooms = document.getElementById("btnRooms");
+const addRoomBtn = document.getElementById("addRoomBtn");
+const newRoom = document.getElementById("newRoom");
+const roomsList = document.getElementById("roomsList");
+
+const btnExport = document.getElementById("btnExport");
+const btnImport = document.getElementById("btnImport");
+const fileImport = document.getElementById("fileImport");
+const btnReport = document.getElementById("btnReport");
+
+// init UI
+refreshRoomOptions();
+renderRoomsList();
+renderTable();
+updateUserUI();
+
+// Event bindings
+btnLogin.onclick = ()=> showLogin();
+btnLogout.onclick = ()=> doLogout();
+loginCancel.onclick = ()=> hideLogin();
+loginSubmit.onclick = doLogin;
+btnAddItem.onclick = ()=> showItemModal();
+itemCancel.onclick = ()=> hideItemModal();
+btnRooms.onclick = ()=> showRooms();
+roomsClose.onclick = ()=> hideRooms();
+addRoomBtn.onclick = addRoom;
+btnExport.onclick = exportJSON;
+btnImport.onclick = ()=> fileImport.click();
+fileImport.onchange = handleImportFile;
+btnReport.onclick = ()=> openReportDialog();
+
+// Search/filter events
+qInput.oninput = renderTable;
+roomFilter.onchange = renderTable;
+condFilter.onchange = renderTable;
+
+// --- Auth functions ---
+function showLogin(){ modalLogin.classList.remove("hidden"); modalLogin.classList.add("flex"); }
+function hideLogin(){ modalLogin.classList.add("hidden"); modalLogin.classList.remove("flex"); }
+function doLogin(){
+  const u = document.getElementById("u").value.trim();
+  const p = document.getElementById("p").value;
+  const user = users.find(x=>x.username===u && x.password===p);
+  if(!user){ alert("Login gagal: username/password salah"); return; }
+  currentUser = user;
+  hideLogin();
+  updateUserUI();
+}
+function doLogout(){
+  if(!confirm("Logout?")) return;
+  currentUser = null;
+  updateUserUI();
+}
+function updateUserUI(){
+  if(currentUser){
+    userLabel.textContent = `${currentUser.name} (${currentUser.username})`;
+    btnLogin.classList.add("hidden");
+    btnLogout.classList.remove("hidden");
+    // show/hide room management only for kepala
+    btnRooms.style.display = currentUser.role === "kepala" ? "inline-block" : "none";
+  } else {
+    userLabel.textContent = "Belum login";
+    btnLogin.classList.remove("hidden");
+    btnLogout.classList.add("hidden");
+    btnRooms.style.display = "none";
+  }
+}
+
+// --- Rooms management ---
+function refreshRoomOptions(){
+  // filters and item form select
+  roomFilter.innerHTML = `<option value="">Semua Ruangan</option>`;
+  itemRuangan.innerHTML = "";
+  rooms.forEach(r=> {
+    const o = document.createElement("option"); o.value = r; o.textContent = r; roomFilter.appendChild(o);
+    const o2 = document.createElement("option"); o2.value = r; o2.textContent = r; itemRuangan.appendChild(o2);
+  });
+}
+function showRooms(){ 
+  if(!currentUser || currentUser.role!=="kepala"){ alert("Hanya Kepala Sarpras yang dapat mengelola ruangan."); return; }
+  modalRooms.classList.remove("hidden"); modalRooms.classList.add("flex"); 
+}
+function hideRooms(){ modalRooms.classList.add("hidden"); modalRooms.classList.remove("flex"); }
+function addRoom(){
+  const v = newRoom.value.trim();
+  if(!v) return alert("Masukkan nama ruangan.");
+  if(rooms.includes(v)) return alert("Ruangan sudah ada.");
+  rooms.push(v);
+  localStorage.setItem(KEY_ROOMS, JSON.stringify(rooms));
+  newRoom.value = "";
+  refreshRoomOptions();
+  renderRoomsList();
+}
+function renderRoomsList(){
+  roomsList.innerHTML = "";
+  rooms.forEach((r, idx) => {
+    const li = document.createElement("li");
+    li.innerHTML = `<div class="flex justify-between items-center"><div>${r}</div>
+      <div><button data-i="${idx}" class="delRoomBtn px-2 py-1 rounded bg-rose-500 text-white text-xs">Hapus</button></div></div>`;
+    roomsList.appendChild(li);
+  });
+  // bind delete (only kepala)
+  document.querySelectorAll(".delRoomBtn").forEach(b=> b.onclick = (e)=>{
+    if(!currentUser || currentUser.role!=="kepala"){ alert("Hanya Kepala Sarpras dapat menghapus ruangan."); return; }
+    const i = Number(b.dataset.i);
+    if(!confirm("Hapus ruangan ini? Semua barang di ruangan ini TIDAK akan dihapus, hanya nama ruangan akan dihapus.")) return;
+    rooms.splice(i,1);
+    localStorage.setItem(KEY_ROOMS, JSON.stringify(rooms));
+    refreshRoomOptions(); renderRoomsList();
+  });
+}
+
+// --- Item modal ---
+function showItemModal(editId=null){
+  if(!currentUser){ alert("Silakan login terlebih dahulu."); return; }
+  document.getElementById("itemTitle").textContent = editId ? "Edit Barang" : "Tambah Barang";
+  document.getElementById("itemId").value = editId || "";
+  if(editId){
+    const it = items.find(x=>x.id===editId);
+    if(!it) return alert("Data tidak ditemukan.");
+    document.getElementById("itemNama").value = it.nama;
+    document.getElementById("itemKode").value = it.kode || "";
+    document.getElementById("itemJumlah").value = it.jumlah;
+    document.getElementById("itemKondisi").value = it.kondisi;
+    document.getElementById("itemRuangan").value = it.ruangan;
+    document.getElementById("itemKet").value = it.keterangan || "";
+  } else {
+    formItem.reset();
+    // default ruangan for petugas: if petugas, try to set first room (petugas should select)
+    if(currentUser.role === "petugas") itemRuangan.selectedIndex = 0;
+  }
+  modalItem.classList.remove("hidden"); modalItem.classList.add("flex");
+}
+function hideItemModal(){ modalItem.classList.add("hidden"); modalItem.classList.remove("flex"); }
+
+// handle item save
+formItem.onsubmit = function(e){
+  e.preventDefault();
+  if(!currentUser){ alert("Silakan login."); hideItemModal(); return; }
+  const id = document.getElementById("itemId").value || generateId();
+  const nama = document.getElementById("itemNama").value.trim();
+  const kode = document.getElementById("itemKode").value.trim();
+  const jumlah = Number(document.getElementById("itemJumlah").value) || 0;
+  const kondisi = document.getElementById("itemKondisi").value;
+  const ruangan = document.getElementById("itemRuangan").value;
+  const keterangan = document.getElementById("itemKet").value.trim();
+  const tanggal = new Date().toISOString().slice(0,10);
+
+  // Petugas may only add/edit items (no restrictions in this simple offline app) — but we can restrict deletion to kepala
+  const existing = items.find(x=>x.id===id);
+  const obj = { id, nama, kode, jumlah, kondisi, ruangan, keterangan, tanggal };
+  if(existing){
+    Object.assign(existing, obj);
+  } else {
+    items.push(obj);
+  }
+  saveItems();
+  hideItemModal();
+  renderTable();
+};
+
+function generateId(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+// --- Table render ---
+function renderTable(){
+  tableBody.innerHTML = "";
+  const q = (qInput.value || "").toLowerCase();
+  const rf = roomFilter.value;
+  const cf = condFilter.value;
+  const filtered = items.filter(it => {
+    if(rf && it.ruangan !== rf) return false;
+    if(cf && it.kondisi !== cf) return false;
+    if(!q) return true;
+    return (it.nama||"").toLowerCase().includes(q) || (it.kode||"").toLowerCase().includes(q);
+  });
+  if(filtered.length === 0){
+    tableBody.innerHTML = `<tr><td colspan="9" class="p-4 text-center text-gray-500">Belum ada data.</td></tr>`;
+    return;
+  }
+  filtered.forEach((it, idx) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td class="p-2">${idx+1}</td>
+      <td class="p-2">${escapeHTML(it.nama)}</td>
+      <td class="p-2">${escapeHTML(it.kode||"")}</td>
+      <td class="p-2 text-center">${it.jumlah}</td>
+      <td class="p-2">${escapeHTML(it.kondisi)}</td>
+      <td class="p-2">${escapeHTML(it.ruangan)}</td>
+      <td class="p-2">${it.tanggal}</td>
+      <td class="p-2">${escapeHTML(it.keterangan||"")}</td>
+      <td class="p-2 no-print">
+        <button class="editBtn px-2 py-1 bg-yellow-400 rounded text-xs" data-id="${it.id}">Edit</button>
+        <button class="delBtn px-2 py-1 bg-rose-500 text-white rounded text-xs" data-id="${it.id}">Hapus</button>
+      </td>`;
+    tableBody.appendChild(tr);
+  });
+  // bind edit/delete
+  document.querySelectorAll(".editBtn").forEach(b=> b.onclick = ()=> {
+    const id = b.dataset.id; showItemModal(id);
+  });
+  document.querySelectorAll(".delBtn").forEach(b=> b.onclick = ()=> {
+    const id = b.dataset.id;
+    if(!currentUser || currentUser.role !== "kepala"){ return alert("Hanya Kepala Sarpras yang dapat menghapus item."); }
+    if(!confirm("Hapus item ini?")) return;
+    items = items.filter(x=>x.id !== id);
+    saveItems(); renderTable();
+  });
+}
+
+// --- Export / Import ---
+function exportJSON(){
+  const payload = { meta:{ namaSekolah:"SMK NU 1 Kedungpring", exportedAt: new Date().toISOString(), exportedBy: currentUser?currentUser.username:"-"}, rooms, items, signature: signatureData };
+  const blob = new Blob([JSON.stringify(payload, null,2)], {type:"application/json"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `inventaris_sarpras_${new Date().toISOString().slice(0,10)}.json`; a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+async function handleImportFile(e){
+  const f = e.target.files[0]; if(!f) return;
+  const txt = await f.text();
+  try{
+    const j = JSON.parse(txt);
+    if(Array.isArray(j.rooms)) rooms = j.rooms;
+    if(Array.isArray(j.items)) items = j.items;
+    if(j.signature) { signatureData = j.signature; localStorage.setItem(KEY_SIG, signatureData); }
+    localStorage.setItem(KEY_ROOMS, JSON.stringify(rooms));
+    saveItems();
+    refreshRoomOptions();
+    renderTable();
+    alert("Import berhasil.");
+  } catch(err){ alert("File JSON tidak valid."); }
+  e.target.value = "";
+}
+
+// --- Report / Print ---
+function openReportDialog(){
+  // simple prompt: per-ruangan or semua
+  const mode = prompt("Cetak laporan: ketik nama ruangan untuk cetak per-ruangan, atau biarkan kosong untuk seluruh sekolah.");
+  let filtered = items;
+  if(mode && mode.trim() !== ""){
+    filtered = items.filter(i => i.ruangan === mode.trim());
+    if(filtered.length === 0){ if(!confirm("Tidak ada data untuk ruangan ini. Cetak semua?")) return; filtered = items; }
+  }
+  generateReport(filtered);
+}
+
+function generateReport(list){
+  // build printable HTML
+  const w = window.open("","_blank");
+  const logo = "1723829801820.jpeg";
+  const html = `
+  <html><head><title>Laporan Inventaris</title>
+  <style>
+    body{font-family:Times New Roman, serif; margin:28px; color:#111}
+    .kop{display:flex;gap:12px;align-items:center}
+    .kop img{width:80px;height:80px}
+    .kop .t{text-align:center;flex:1}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{border:1px solid #333;padding:6px;font-size:12px}
+    th{background:#eee}
+    .sig{margin-top:40px;width:100%}
+    .sig .right{float:right;text-align:center;width:40%}
+    .sig img{max-width:220px;max-height:110px}
+  </style>
+  </head><body>
+    <div class="kop">
+      <img src="${logo}" alt="logo"/>
+      <div class="t">
+        <div style="font-weight:700">YAYASAN PENDIDIKAN MA'ARIF</div>
+        <div style="font-weight:700;font-size:18px">SMK NU 1 KEDUNGPRING</div>
+        <div style="font-size:12px">Alamat: Kedungpring, Lamongan</div>
+      </div>
+    </div>
+    <h3 style="text-align:center;margin-top:8px">DAFTAR INVENTARIS SARPRAS</h3>
+    <div style="text-align:center;font-size:12px;margin-bottom:6px">Dicetak: ${new Date().toLocaleString()}</div>
+    <table><thead><tr><th>No</th><th>Nama Barang</th><th>Kode</th><th>Jumlah</th><th>Kondisi</th><th>Ruangan</th><th>Tanggal</th><th>Keterangan</th></tr></thead>
+    <tbody>
+    ${list.map((it, i) => `<tr><td>${i+1}</td><td>${escapeHTML(it.nama)}</td><td>${escapeHTML(it.kode||"")}</td><td>${it.jumlah}</td><td>${escapeHTML(it.kondisi)}</td><td>${escapeHTML(it.ruangan)}</td><td>${it.tanggal}</td><td>${escapeHTML(it.keterangan||"")}</td></tr>`).join("")}
+    </tbody></table>
+    <div class="sig">
+      <div class="right">
+        <div>Mengetahui,</div>
+        <div>Kepala Sarana & Prasarana</div>
+        <div style="margin-top:20px" id="sigArea">
+          ${ signatureData ? `<img src="${signatureData}" alt="ttd"/>` : "<div style='height:80px'></div>" }
+        </div>
+        <div style="margin-top:6px">(FAJAR NUR FAIDZIN)</div>
+      </div>
+    </div>
+  </body></html>`;
+  w.document.write(html); w.document.close();
+  setTimeout(()=> w.print(), 500);
+}
+
+// --- Save/load items ---
+function saveItems(){ localStorage.setItem(KEY_ITEMS, JSON.stringify(items)); }
+function loadAll(){ items = JSON.parse(localStorage.getItem(KEY_ITEMS) || "[]"); rooms = JSON.parse(localStorage.getItem(KEY_ROOMS) || "[]"); signatureData = localStorage.getItem(KEY_SIG) || null; refreshRoomOptions(); renderTable(); }
+
+// helpers
+function escapeHTML(s){ if(!s) return ""; return (""+s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c])); }
+
+// init render functions
+function saveAndRender(){ saveItems(); refreshRoomOptions(); renderTable(); renderRoomsList(); }
+
+// -- load initial --
+refreshRoomOptions(); renderTable(); renderRoomsList();
+
+// quick bindings for rooms modal close
+document.getElementById("roomsClose").onclick = ()=> hideRooms();
+
+// allow adding new room by Enter key
+newRoom.addEventListener("keypress", (e)=>{ if(e.key==="Enter"){ e.preventDefault(); addRoom(); } });
+
+// load signature UI (simple: Kepala can upload signature by importing JSON or later we can add UI)
+if(signatureData){
+  // nothing to show in main; signature used in report
+}
+
+// expose showItemModal for edit buttons (global)
+window.showItemModal = function(id){
+  showItemModal(id);
+};
+
+// quick demo: allow Kepala to upload signature via browser prompt (optional)
+window.addEventListener("keydown", (e)=> {
+  if(e.ctrlKey && e.key === "k"){ // ctrl+k opens a prompt to set signature image data URL (advanced)
+    const d = prompt("Masukkan data URL gambar tanda tangan (atau kosong untuk batal). Jika ingin upload file, impor JSON backup yang berisi 'signature'.");
+    if(d){ signatureData = d; localStorage.setItem(KEY_SIG, signatureData); alert("Tanda tangan tersimpan."); }
+  }
+});
+
+</script>
+</body>
+</html>
