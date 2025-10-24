@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inventaris Laboratorium Komputer - SMK NU 1 Kedungpring</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @media print {
+      #app, #header, #footer, #modal { display: none !important; }
+      #print-area { display: block !important; }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen">
+
+  <!-- Header -->
+  <header id="header" class="bg-blue-700 text-white py-4 shadow-md">
+    <div class="max-w-5xl mx-auto text-center">
+      <h1 class="text-2xl font-bold">Inventaris Laboratorium Komputer</h1>
+      <p class="text-sm">SMK NU 1 Kedungpring</p>
+    </div>
+  </header>
+
+  <!-- Konten Utama -->
+  <main id="app" class="max-w-5xl mx-auto p-4">
+    <div class="flex justify-between items-center mb-4">
+      <button id="addItemBtn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">+ Tambah Barang</button>
+      <button id="printBtn" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Cetak Laporan</button>
+    </div>
+
+    <div class="bg-white rounded shadow overflow-hidden">
+      <table class="w-full text-sm">
+        <thead class="bg-blue-600 text-white">
+          <tr>
+            <th class="p-2">No</th>
+            <th class="p-2">Nama Barang</th>
+            <th class="p-2">Jumlah</th>
+            <th class="p-2">Kondisi</th>
+            <th class="p-2">Lokasi</th>
+            <th class="p-2">Tahun</th>
+            <th class="p-2">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody" class="text-center"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Modal Input -->
+  <div id="modal" class="fixed inset-0 bg-black bg-opacity-40 hidden justify-center items-center">
+    <div class="bg-white p-6 rounded-lg shadow-md w-80">
+      <h2 id="modalTitle" class="text-lg font-semibold mb-3 text-center text-blue-700">Tambah Barang</h2>
+      <form id="itemForm" class="space-y-3">
+        <input type="hidden" id="editIndex" />
+        <input type="text" id="nama" placeholder="Nama Barang" class="w-full border p-2 rounded" required />
+        <input type="number" id="jumlah" placeholder="Jumlah" class="w-full border p-2 rounded" required />
+        <select id="kondisi" class="w-full border p-2 rounded" required>
+          <option value="">-- Pilih Kondisi --</option>
+          <option>Baik</option>
+          <option>Rusak Ringan</option>
+          <option>Rusak Berat</option>
+        </select>
+        <input type="text" id="lokasi" placeholder="Lokasi/Meja" class="w-full border p-2 rounded" required />
+        <input type="number" id="tahun" placeholder="Tahun Perolehan" class="w-full border p-2 rounded" required />
+        <div class="flex justify-end space-x-2 pt-2">
+          <button type="button" id="cancelBtn" class="px-3 py-1 bg-gray-400 text-white rounded">Batal</button>
+          <button type="submit" class="px-3 py-1 bg-blue-600 text-white rounded">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Area Cetak -->
+  <div id="print-area" class="hidden p-8">
+    <div class="text-center mb-6">
+      <h2 class="text-lg font-bold">DAFTAR INVENTARIS LABORATORIUM KOMPUTER</h2>
+      <p class="text-sm">SMK NU 1 Kedungpring</p>
+      <hr class="border-gray-400 my-3" />
+    </div>
+    <table class="w-full border text-sm border-collapse">
+      <thead class="bg-gray-200">
+        <tr>
+          <th class="border p-1">No</th>
+          <th class="border p-1">Nama Barang</th>
+          <th class="border p-1">Jumlah</th>
+          <th class="border p-1">Kondisi</th>
+          <th class="border p-1">Lokasi</th>
+          <th class="border p-1">Tahun</th>
+        </tr>
+      </thead>
+      <tbody id="printTable" class="text-center"></tbody>
+    </table>
+
+    <div class="flex justify-between mt-8 text-sm">
+      <div></div>
+      <div class="text-center">
+        <p>Kedungpring, <span id="tanggalCetak"></span></p>
+        <p class="mb-12">Kepala Laboratorium</p>
+        <p><strong><u>Fajar Nur Faidzin</u></strong></p>
+      </div>
+    </div>
+  </div>
+
+  <footer id="footer" class="text-center text-xs text-gray-600 py-3">
+    &copy; 2025 Laboratorium Komputer SMK NU 1 Kedungpring
+  </footer>
+
+  <script>
+    let inventaris = JSON.parse(localStorage.getItem("inventarisLabSimple")) || [];
+
+    const tableBody = document.getElementById("tableBody");
+    const modal = document.getElementById("modal");
+    const itemForm = document.getElementById("itemForm");
+    const addItemBtn = document.getElementById("addItemBtn");
+    const cancelBtn = document.getElementById("cancelBtn");
+    const printBtn = document.getElementById("printBtn");
+    const printTable = document.getElementById("printTable");
+
+    // Render tabel utama
+    function renderTable() {
+      tableBody.innerHTML = "";
+      inventaris.forEach((item, i) => {
+        tableBody.innerHTML += `
+          <tr class="border-b hover:bg-gray-50">
+            <td class="p-2">${i + 1}</td>
+            <td class="p-2">${item.nama}</td>
+            <td class="p-2">${item.jumlah}</td>
+            <td class="p-2">${item.kondisi}</td>
+            <td class="p-2">${item.lokasi}</td>
+            <td class="p-2">${item.tahun}</td>
+            <td class="p-2 space-x-1">
+              <button onclick="editItem(${i})" class="bg-yellow-400 px-2 py-1 rounded">Edit</button>
+              <button onclick="deleteItem(${i})" class="bg-red-500 text-white px-2 py-1 rounded">Hapus</button>
+            </td>
+          </tr>
+        `;
+      });
+      localStorage.setItem("inventarisLabSimple", JSON.stringify(inventaris));
+    }
+
+    function openModal(index = null) {
+      document.getElementById("editIndex").value = index ?? "";
+      document.getElementById("modalTitle").textContent = index !== null ? "Edit Barang" : "Tambah Barang";
+      if (index !== null) {
+        const item = inventaris[index];
+        document.getElementById("nama").value = item.nama;
+        document.getElementById("jumlah").value = item.jumlah;
+        document.getElementById("kondisi").value = item.kondisi;
+        document.getElementById("lokasi").value = item.lokasi;
+        document.getElementById("tahun").value = item.tahun;
+      } else {
+        itemForm.reset();
+      }
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    function closeModal() {
+      modal.classList.add("hidden");
+    }
+
+    addItemBtn.onclick = () => openModal();
+    cancelBtn.onclick = closeModal;
+
+    itemForm.onsubmit = (e) => {
+      e.preventDefault();
+      const data = {
+        nama: document.getElementById("nama").value,
+        jumlah: document.getElementById("jumlah").value,
+        kondisi: document.getElementById("kondisi").value,
+        lokasi: document.getElementById("lokasi").value,
+        tahun: document.getElementById("tahun").value,
+      };
+      const editIndex = document.getElementById("editIndex").value;
+      if (editIndex) inventaris[editIndex] = data;
+      else inventaris.push(data);
+      localStorage.setItem("inventarisLabSimple", JSON.stringify(inventaris));
+      renderTable();
+      closeModal();
+    };
+
+    function editItem(i) {
+      openModal(i);
+    }
+
+    function deleteItem(i) {
+      if (confirm("Yakin ingin menghapus data ini?")) {
+        inventaris.splice(i, 1);
+        localStorage.setItem("inventarisLabSimple", JSON.stringify(inventaris));
+        renderTable();
+      }
+    }
+
+    // Cetak laporan
+    printBtn.onclick = () => {
+      printTable.innerHTML = "";
+      inventaris.forEach((item, i) => {
+        printTable.innerHTML += `
+          <tr>
+            <td class="border p-1">${i + 1}</td>
+            <td class="border p-1">${item.nama}</td>
+            <td class="border p-1">${item.jumlah}</td>
+            <td class="border p-1">${item.kondisi}</td>
+            <td class="border p-1">${item.lokasi}</td>
+            <td class="border p-1">${item.tahun}</td>
+          </tr>
+        `;
+      });
+      const tgl = new Date();
+      document.getElementById("tanggalCetak").textContent = `${tgl.getDate()}-${tgl.getMonth()+1}-${tgl.getFullYear()}`;
+      window.print();
+    };
+
+    renderTable();
+  </script>
+</body>
+</html>
