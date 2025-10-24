@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventaris Laboratorium Komputer - SMK NU 1 Kedungpring</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-blue-50 text-gray-800 font-sans">
+
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-4 flex items-center justify-center gap-3 shadow">
+    <img src="1723829801820.jpeg" alt="Logo Sekolah" class="w-14 h-14 rounded bg-white p-1">
+    <div class="text-center">
+      <h1 class="text-2xl font-bold">Inventaris Laboratorium Komputer</h1>
+      <p class="text-sm">SMK NU 1 Kedungpring</p>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="max-w-5xl mx-auto mt-6 bg-white p-6 rounded-2xl shadow">
+
+    <h2 class="text-xl font-semibold mb-4 text-blue-700">Tambah Data Barang</h2>
+
+    <!-- Form Input -->
+    <form id="inventarisForm" class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-6">
+      <input type="text" id="nama" placeholder="Nama Barang" class="border p-2 rounded" required>
+      <input type="number" id="jumlah" placeholder="Jumlah" class="border p-2 rounded" required>
+      <select id="kondisi" class="border p-2 rounded">
+        <option value="Baik">Baik</option>
+        <option value="Rusak">Rusak</option>
+        <option value="Hilang">Hilang</option>
+      </select>
+      <input type="text" id="lokasi" placeholder="Lokasi" class="border p-2 rounded" required>
+      <input type="number" id="tahun" placeholder="Tahun" class="border p-2 rounded" required>
+    </form>
+
+    <!-- Tombol Aksi -->
+    <div class="flex justify-end mb-4 gap-2">
+      <button onclick="tambahBarang()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Tambah</button>
+      <button onclick="cetakLaporan()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Cetak Laporan</button>
+      <button onclick="resetData()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Hapus Semua</button>
+    </div>
+
+    <!-- Tabel Data -->
+    <table class="w-full border border-gray-300 text-sm">
+      <thead class="bg-blue-100">
+        <tr>
+          <th class="border p-2">No</th>
+          <th class="border p-2">Nama Barang</th>
+          <th class="border p-2">Jumlah</th>
+          <th class="border p-2">Kondisi</th>
+          <th class="border p-2">Lokasi</th>
+          <th class="border p-2">Tahun</th>
+          <th class="border p-2">Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="tabelData"></tbody>
+    </table>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center mt-6 text-sm text-gray-600 pb-4">
+    <p>&copy; 2025 Laboratorium Komputer SMK NU 1 Kedungpring</p>
+  </footer>
+
+  <!-- Script -->
+  <script>
+    let dataBarang = JSON.parse(localStorage.getItem("inventarisLab")) || [];
+
+    function simpanData() {
+      localStorage.setItem("inventarisLab", JSON.stringify(dataBarang));
+      tampilkanData();
+    }
+
+    function tambahBarang() {
+      const nama = document.getElementById("nama").value;
+      const jumlah = document.getElementById("jumlah").value;
+      const kondisi = document.getElementById("kondisi").value;
+      const lokasi = document.getElementById("lokasi").value;
+      const tahun = document.getElementById("tahun").value;
+
+      if (!nama || !jumlah || !lokasi || !tahun) return alert("Lengkapi semua data!");
+
+      dataBarang.push({ nama, jumlah, kondisi, lokasi, tahun });
+      simpanData();
+      document.getElementById("inventarisForm").reset();
+    }
+
+    function hapusBarang(i) {
+      if (confirm("Yakin ingin menghapus barang ini?")) {
+        dataBarang.splice(i, 1);
+        simpanData();
+      }
+    }
+
+    function resetData() {
+      if (confirm("Hapus semua data inventaris?")) {
+        dataBarang = [];
+        simpanData();
+      }
+    }
+
+    function tampilkanData() {
+      const tabel = document.getElementById("tabelData");
+      tabel.innerHTML = "";
+      dataBarang.forEach((b, i) => {
+        tabel.innerHTML += `
+          <tr class="hover:bg-blue-50">
+            <td class="border p-2 text-center">${i + 1}</td>
+            <td class="border p-2">${b.nama}</td>
+            <td class="border p-2 text-center">${b.jumlah}</td>
+            <td class="border p-2 text-center">${b.kondisi}</td>
+            <td class="border p-2">${b.lokasi}</td>
+            <td class="border p-2 text-center">${b.tahun}</td>
+            <td class="border p-2 text-center">
+              <button onclick="hapusBarang(${i})" class="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600">Hapus</button>
+            </td>
+          </tr>`;
+      });
+    }
+
+    function cetakLaporan() {
+      let html = `
+        <html>
+        <head>
+          <title>Laporan Inventaris</title>
+          <style>
+            body { font-family: sans-serif; margin: 40px; }
+            h2, h3 { text-align: center; margin: 0; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { border: 1px solid #000; padding: 6px; text-align: center; }
+            th { background: #e0f2fe; }
+            .kop { display: flex; align-items: center; justify-content: center; gap: 15px; }
+            .kop img { width: 80px; height: 80px; }
+            .ttd { margin-top: 40px; text-align: right; margin-right: 60px; }
+          </style>
+        </head>
+        <body>
+          <div class="kop">
+            <img src="1723829801820.jpeg" alt="Logo Sekolah">
+            <div>
+              <h2>YAYASAN PENDIDIKAN MA'ARIF EMPAT LIMA KALEN</h2>
+              <h3>SMK NU 1 Kedungpring</h3>
+              <p><small>Alamat: Desa Kalen, Kedungpring, Lamongan, jawa Timur | Email: smknusakdp@gmail.com</small></p>
+            </div>
+          </div>
+          <hr>
+          <h3 style="margin-top:20px;">LAPORAN INVENTARIS LABORATORIUM KOMPUTER</h3>
+          <table>
+            <tr><th>No</th><th>Nama Barang</th><th>Jumlah</th><th>Kondisi</th><th>Lokasi</th><th>Tahun</th></tr>
+            ${dataBarang.map((b, i) => `<tr><td>${i+1}</td><td>${b.nama}</td><td>${b.jumlah}</td><td>${b.kondisi}</td><td>${b.lokasi}</td><td>${b.tahun}</td></tr>`).join("")}
+          </table>
+          <div class="ttd">
+            <p>Kedungpring, ${new Date().toLocaleDateString("id-ID")}</p>
+            <p>Kepala Laboratorium</p><br><br>
+            <p><b><u>FAJAR NUR FAIDZIN</u></b></p>
+          </div>
+        </body>
+        </html>`;
+      const w = window.open("", "_blank");
+      w.document.write(html);
+      w.document.close();
+      w.print();
+    }
+
+    tampilkanData();
+  </script>
+</body>
+</html>
