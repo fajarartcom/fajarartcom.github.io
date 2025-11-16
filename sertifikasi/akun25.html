@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Akun Uji Sertifikasi MikroTik - SMK NU 1 Kedungpring 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a73e8, #6c8ef5);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .info-box {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #1a73e8;
+        }
+        
+        .info-box h2 {
+            color: #1a73e8;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-box input {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 300px;
+            font-size: 1rem;
+        }
+        
+        .password-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .toggle-label {
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #1a73e8;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        button {
+            padding: 10px 15px;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #0d62d9;
+        }
+        
+        .table-container {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background-color: #1a73e8;
+            color: white;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        tbody tr:nth-child(even):hover {
+            background-color: #eef2f7;
+        }
+        
+        .password-cell {
+            font-family: monospace;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .password-mask {
+            color: #666;
+        }
+        
+        .keterangan {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .keterangan.update {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .signature {
+            margin-top: 30px;
+            text-align: right;
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            th, td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+            
+            .search-box input {
+                width: 100%;
+            }
+            
+            .password-toggle {
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>DAFTAR AKUN UJI SERTIFIKASI MIKROTIK</h1>
+            <p>SMK NU 1 KEDUNGPRING TAHUN 2025</p>
+        </header>
+        
+        <div class="info-box">
+            <h2>Informasi Uji Sertifikasi</h2>
+            <p>Berikut adalah daftar akun peserta uji sertifikasi MikroTik yang akan dilaksanakan pada tahun 2025. Setiap peserta telah mendapatkan akun dengan password yang sama untuk keperluan ujian.</p>
+        </div>
+        
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Cari berdasarkan nama atau email...">
+                <button id="searchButton">Cari</button>
+            </div>
+            
+            <div class="password-toggle">
+                <span class="toggle-label">Sembunyikan Password:</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="passwordToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table id="accountTable">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Email</th>
+                        <th>Password</th>
+                        <th>Keterangan</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Data akan diisi oleh JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="signature">
+            <p>Kedungpring, 9 Oktober 2025</p>
+            <p>Kepala Konsentrasi Keahlian</p>
+            <p>Teknik Komputer dan Jaringan</p>
+            <p><strong>FAJAR NUR FAIDZIN</strong></p>
+        </div>
+        
+        <footer>
+            <p>&copy; 2025 SMK NU 1 Kedungpring - Teknik Komputer dan Jaringan</p>
+        </footer>
+    </div>
+
+    <script>
+        // Data peserta uji sertifikasi
+        const pesertaData = [
+            { no: 1, nama: "Aditya Pratama", email: "adityapaditya33@gmail.com", password: "KALEN2025", keterangan: "" },
+            { no: 2, nama: "Afsarudin Nadlor", email: "afsarudinnadlorafsa@gmail.com", password: "KALEN2025", keterangan: "" },
+            { no: 3, nama: "Aina Nur Sakinah", email: "nursakinah20068@gmail.com", password: "KALEN2025", keterangan: "" },
+            { no: 4, nama: "Aisyah Fatmawati", email: "Fatmawatia323@gmail.com", password: "KALEN2025", keterangan: "" },
+            { no: 5, nama: "Akhmad Alfito Deanova", email: "artcomfajar@gmail.com", password: "KALEN2025", keterangan: "" },
+            { no: 6, nama: "Arya", email: "saputraaryakamanraka734@gmail.com", password: "KALEN2025", keterangan: "" },
+            { no: 7, nama: "Aulia Rita Rosida", email: "ritaoksmyg@gmail.com", password: "KALEN2025", keterangan: "" },
+            { no: 8, nama: "dava putra alifiansyah", email: "galaxydafa@gmail.com", password: "KALEN2025", keterangan: "" },
+            { no: 9, nama: "Devin Andika pratama", email: "davinpratamaaa8@gmail.com", password: "KALEN2025", keterangan: "" },
+            { no: 10, nama: "Diki Maulana", email: "dicky.maulana0605@gmail.com", password: "KALEN2025", keterangan: "" },
+            { no: 11, nama: "Duwi Mei", email: "duwimei20086@gmail.com", password: "KALEN2025", keterangan: "" },
+            { no: 12, nama: "Faisal Akbar", email: "faisalakbariawa12@gmail.com", password: "KALEN2025", keterangan: "" },
+            { no: 13, nama: "Ilham Syahru Ramadhani", email: "dhanztki@gmail.com", password: "KALEN2025", keterangan: "" },
+            { no: 14, nama: "Iryan Agus", email: "Agusirvan71@gmail.com", password: "KALEN2025", keterangan: "" },
+            { no: 15, nama: "M. KHABIBBUR ROCHMAN", email: "rochmankhabibbur@gmail.com", password: "KALEN2025", keterangan: "" },
+            { no: 16, nama: "M.Junizar Nuril Qomari", email: "nizarnya54@gmail.com", password: "KALEN2025", keterangan: "" },
+            { no: 17, nama: "Nadhira Dewi Cinta", email: "kumalasariee29@gmail.com", password: "KALEN2025", keterangan: "" },
+            { no: 18, nama: "Restu Fathi", email: "rfaldyansah07@gmail.com", password: "KALEN2025", keterangan: "" },
+            { no: 19, nama: "Rezal Antoni", email: "moh.rijall.67@gmail.com", password: "KALEN2025", keterangan: "update" },
+            { no: 20, nama: "Saftiri", email: "sf632412@gmail.com", password: "KALEN2025", keterangan: "" }
+        ];
+
+        // Status tampilan password
+        let isPasswordHidden = true;
+
+        // Fungsi untuk menampilkan data ke tabel
+        function displayData(data) {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+            
+            data.forEach(peserta => {
+                const row = document.createElement('tr');
+                
+                // Menambahkan kelas untuk baris genap
+                if (peserta.no % 2 === 0) {
+                    row.classList.add('even-row');
+                }
+                
+                // Format password (sembunyikan atau tampilkan)
+                let passwordHTML = '';
+                if (isPasswordHidden) {
+                    passwordHTML = `<div class="password-cell"><span class="password-mask">••••••••</span></div>`;
+                } else {
+                    passwordHTML = `<div class="password-cell">${peserta.password}</div>`;
+                }
+                
+                // Format keterangan
+                let keteranganHTML = '';
+                if (peserta.keterangan) {
+                    keteranganHTML = `<span class="keterangan update">${peserta.keterangan}</span>`;
+                }
+                
+                row.innerHTML = `
+                    <td>${peserta.no}</td>
+                    <td>${peserta.nama}</td>
+                    <td>${peserta.email}</td>
+                    <td>${passwordHTML}</td>
+                    <td>${keteranganHTML}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Fungsi untuk mencari data
+        function searchData() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (searchTerm === '') {
+                displayData(pesertaData);
+                return;
+            }
+            
+            const filteredData = pesertaData.filter(peserta => 
+                peserta.nama.toLowerCase().includes(searchTerm) || 
+                peserta.email.toLowerCase().includes(searchTerm)
+            );
+            
+            displayData(filteredData);
+        }
+
+        // Fungsi untuk toggle tampilan password
+        function togglePassword() {
+            isPasswordHidden = !isPasswordHidden;
+            displayData(pesertaData);
+        }
+
+        // Event listener untuk tombol pencarian
+        document.getElementById('searchButton').addEventListener('click', searchData);
+
+        // Event listener untuk input pencarian (saat menekan enter)
+        document.getElementById('searchInput').addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                searchData();
+            }
+        });
+
+        // Event listener untuk toggle password
+        document.getElementById('passwordToggle').addEventListener('change', togglePassword);
+
+        // Menampilkan data saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            displayData(pesertaData);
+        });
+    </script>
+</body>
+</html>
