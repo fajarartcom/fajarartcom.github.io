@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis MTCNA MikroTik - SMK NU 1 KEDUNGPRING</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow: hidden;
+        }
+
+        .quiz-header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .quiz-header h1 {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .student-info {
+            background: #34495e;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .student-info input {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            margin: 0 5px;
+            width: 200px;
+        }
+
+        .progress-bar {
+            background: #34495e;
+            height: 8px;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress {
+            background: #3498db;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-container {
+            padding: 25px;
+            overflow-y: auto;
+            max-height: calc(90vh - 200px);
+        }
+
+        .question-number {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            color: #2c3e50;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .option {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+            font-size: 14px;
+        }
+
+        .option:hover {
+            background: #e9ecef;
+            border-color: #3498db;
+        }
+
+        .option.selected {
+            background: #3498db;
+            color: white;
+            border-color: #2980b9;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            border-top: 1px solid #e0e0e0;
+            background: white;
+            position: sticky;
+            bottom: 0;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .btn-prev {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-prev:hover {
+            background: #7f8c8d;
+        }
+
+        .btn-next {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-next:hover {
+            background: #2980b9;
+        }
+
+        .btn-submit {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background: #219a52;
+        }
+
+        .btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .result-container {
+            padding: 30px;
+            text-align: center;
+            display: none;
+        }
+
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #3498db;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            font-size: 12px;
+        }
+
+        .score-value {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .score-text {
+            font-size: 14px;
+            margin-bottom: 15px;
+            color: #7f8c8d;
+        }
+
+        .result-details {
+            text-align: left;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .result-item {
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .timer {
+            background: #34495e;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+            font-size: 14px;
+        }
+
+        .question-counter {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="quiz-header">
+            <h1>🎯 KUIS MTCNA MIKROTIK - 50 SOAL RANDOM</h1>
+            <div class="student-info">
+                <input type="text" id="studentName" placeholder="Nama Siswa">
+                <input type="text" id="studentClass" placeholder="Kelas">
+                <button class="btn btn-submit" onclick="startQuiz()">🚀 Mulai Kuis</button>
+            </div>
+            <div class="timer">⏱️ Waktu: <span id="timer">90:00</span></div>
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div class="question-counter" id="questionCounter">Soal: 0/50</div>
+        </div>
+
+        <div id="quiz-content">
+            <div style="padding: 40px; text-align: center; color: #7f8c8d;">
+                <h2>Selamat Datang di Kuis MTCNA</h2>
+                <p>Masukkan nama dan kelas Anda, lalu klik "Mulai Kuis"</p>
+            </div>
+        </div>
+
+        <div class="result-container" id="result-container">
+            <h2>📊 HASIL KUIS MTCNA</h2>
+            <div class="score-circle" id="score-circle">
+                <div class="score-value" id="score-value">0</div>
+                <div>Nilai</div>
+            </div>
+            <div class="score-text" id="score-text"></div>
+            <div class="feedback" id="feedback"></div>
+            
+            <div class="result-details">
+                <h3>Detail Jawaban:</h3>
+                <div id="result-details"></div>
+            </div>
+            
+            <button class="btn btn-submit" onclick="restartQuiz()" style="margin-top: 20px;">
+                🔄 Ulangi Kuis
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Database 50 Soal MTCNA
+        const questionBank = [
+            // Fundamental RouterOS & WinBox (10 soal)
+            {
+                category: "Fundamental RouterOS & WinBox",
+                question: "Apa fungsi utama dari perintah `/system reboot` di MikroTik RouterOS?",
+                options: [
+                    "Mematikan router secara permanen",
+                    "Merestart sistem router",
+                    "Menghentikan semua layanan jaringan",
+                    "Memuat ulang konfigurasi default",
+                    "Mereset password admin"
+                ],
+                correct: 1,
+                explanation: "Perintah `/system reboot` digunakan untuk merestart sistem router."
+            },
+            {
+                category: "Fundamental RouterOS & WinBox",
+                question: "Port default yang digunakan untuk mengakses WinBox adalah?",
+                options: [
+                    "80 (HTTP)",
+                    "22 (SSH)", 
+                    "443 (HTTPS)",
+                    "8291 (WinBox)",
+                    "23 (Telnet)"
+                ],
+                correct: 3,
+                explanation: "Port 8291 adalah port default untuk koneksi WinBox."
+            },
+            {
+                category: "Fundamental RouterOS & WinBox",
+                question: "Dari mana Anda bisa melihat versi RouterOS dan model perangkat keras?",
+                options: [
+                    "/system license",
+                    "/system resource",
+                    "/system routerboard",
+                    "/system history",
+                    "/system package"
+                ],
+                correct: 2,
+                explanation: "/system routerboard menampilkan info hardware dan firmware."
+            },
+            {
+                category: "Fundamental RouterOS & WinBox", 
+                question: "Fitur 'Safe Mode' di WinBox berguna untuk?",
+                options: [
+                    "Meningkatkan kecepatan koneksi",
+                    "Mencegah terkunci dari router saat konfigurasi jarak jauh",
+                    "Mengenkripsi semua trafik WinBox",
+                    "Menonaktifkan firewall sementara",
+                    "Backup konfigurasi otomatis"
+                ],
+                correct: 1,
+                explanation: "Safe Mode mencegah terkunci saat konfigurasi remote."
+            },
+            {
+                category: "Fundamental RouterOS & WinBox",
+                question: "Perintah untuk melihat semua interface yang tersedia adalah?",
+                options: [
+                    "/interface show",
+                    "/interface list", 
+                    "/interface print",
+                    "/interface display",
+                    "/interface status"
+                ],
+                correct: 2,
+                explanation: "/interface print menampilkan semua interface."
+            },
+            {
+                category: "Fundamental RouterOS & WinBox",
+                question: "Apa fungsi perintah `/system backup save name=config-backup`?",
+                options: [
+                    "Membackup license saja",
+                    "Membackup konfigurasi router ke file",
+                    "Mereset ke konfigurasi backup",
+                    "Membackup file log saja",
+                    "Membackup user database"
+                ],
+                correct: 1,
+                explanation: "Perintah ini membuat backup file konfigurasi."
+            },
+            {
+                category: "Fundamental RouterOS & WinBox",
+                question: "Dimana Anda mengatur NTP Client untuk sinkronisasi waktu?",
+                options: [
+                    "/system clock",
+                    "/system ntp client", 
+                    "/system scheduler",
+                    "/system timezone",
+                    "/system calendar"
+                ],
+                correct: 1,
+                explanation: "/system ntp client untuk konfigurasi NTP."
+            },
+            {
+                category: "Fundamental RouterOS & WinBox",
+                question: "Perintah untuk melihat resource system (CPU, Memory) adalah?",
+                options: [
+                    "/system monitor",
+                    "/system resource print",
+                    "/system performance",
+                    "/system status",
+                    "/system health"
+                ],
+                correct: 1,
+                explanation: "/system resource print menampilkan usage CPU dan memory."
+            },
+            {
+                category: "Fundamental RouterOS & WinBox",
+                question: "Apa yang dilakukan `/system reset-configuration`?",
+                options: [
+                    "Restart router saja",
+                    "Reset konfigurasi ke factory default",
+                    "Hapus file log saja",
+                    "Reset password admin",
+                    "Update firmware"
+                ],
+                correct: 1,
+                explanation: "Perintah ini mereset ke konfigurasi pabrik."
+            },
+            {
+                category: "Fundamental RouterOS & WinBox",
+                question: "File extension untuk backup configuration MikroTik adalah?",
+                options: [
+                    ".cfg",
+                    ".txt", 
+                    ".backup",
+                    ".rsc",
+                    ".bin"
+                ],
+                correct: 3,
+                explanation: ".rsc adalah extension file backup MikroTik."
+            },
+
+            // IP Address & Interface (10 soal)
+            {
+                category: "IP Address & Interface",
+                question: "Anda ingin memberi IP 192.168.1.1/24 pada interface ether1. Perintah yang benar?",
+                options: [
+                    "ip address add address=192.168.1.1/24 interface=ether1",
+                    "/ip address add address=192.168.1.1/24 interface=ether1",
+                    "set ip address 192.168.1.1 255.255.255.0 interface ether1", 
+                    "interface ether1 ip address 192.168.1.1/24",
+                    "/interface ether1 set ip-address=192.168.1.1/24"
+                ],
+                correct: 1,
+                explanation: "Syntax yang benar adalah /ip address add address=..."
+            },
+            {
+                category: "IP Address & Interface",
+                question: "Subnet mask 255.255.255.224 setara dengan:",
+                options: [
+                    "/26",
+                    "/28", 
+                    "/27",
+                    "/25",
+                    "/29"
+                ],
+                correct: 2,
+                explanation: "255.255.255.224 = 11111111.11111111.11111111.11100000 = /27"
+            },
+            {
+                category: "IP Address & Interface",
+                question: "Apa tujuan 'admin-disable=yes' pada interface?",
+                options: [
+                    "Menghemat daya port",
+                    "Mencegah user non-admin mengaktifkan interface via WinBox",
+                    "Memutus koneksi fisik port",
+                    "Menyembunyikan interface dari list",
+                    "Mengisolasi interface dari network"
+                ],
+                correct: 1,
+                explanation: "admin-disable mencegah aktivasi oleh non-admin."
+            },
+            {
+                category: "IP Address & Interface",
+                question: "Network address dari IP 172.16.25.30/20 adalah?",
+                options: [
+                    "172.16.0.0",
+                    "172.16.16.0", 
+                    "172.16.20.0",
+                    "172.16.24.0",
+                    "172.16.25.0"
+                ],
+                correct: 1,
+                explanation: "/20 = subnet 16, network 172.16.16.0"
+            },
+            {
+                category: "IP Address & Interface",
+                question: "Berapa banyak host yang tersedia di network 192.168.10.0/27?",
+                options: [
+                    "14 host",
+                    "30 host",
+                    "62 host", 
+                    "126 host",
+                    "254 host"
+                ],
+                correct: 1,
+                explanation: "/27 = 32 IP - 2 (network+broadcast) = 30 host"
+            },
+            {
+                category: "IP Address & Interface", 
+                question: "Perintah untuk melihat ARP table adalah?",
+                options: [
+                    "/ip arp scan",
+                    "/ip arp print",
+                    "/ip neighbor discover",
+                    "/ip mac-scan",
+                    "/interface arp show"
+                ],
+                correct: 1,
+                explanation: "/ip arp print menampilkan ARP table."
+            },
+            {
+                category: "IP Address & Interface",
+                question: "Apa fungsi dari interface 'bridge'?",
+                options: [
+                    "Routing antar network",
+                    "Menggabungkan beberapa interface menjadi satu segment layer2",
+                    "Filter trafik berdasarkan MAC address", 
+                    "Management VLAN saja",
+                    "Koneksi ke internet"
+                ],
+                correct: 1,
+                explanation: "Bridge membuat multiple interface seperti switch."
+            },
+            {
+                category: "IP Address & Interface",
+                question: "Port mana yang biasanya digunakan untuk management router?",
+                options: [
+                    "Ether1",
+                    "Ether2",
+                    "Ether5", 
+                    "Bergantung konfigurasi",
+                    "Semua port sama"
+                ],
+                correct: 3,
+                explanation: "Bergantung konfigurasi user, tidak ada port khusus."
+            },
+            {
+                category: "IP Address & Interface",
+                question: "Apa perbedaan antara static IP dan DHCP client pada interface?",
+                options: [
+                    "Static IP untuk LAN, DHCP untuk WAN",
+                    "Static IP manual, DHCP dapat IP otomatis dari server",
+                    "Static IP lebih cepat dari DHCP",
+                    "DHCP hanya untuk wireless",
+                    "Tidak ada perbedaan"
+                ],
+                correct: 1,
+                explanation: "Static IP manual configuration, DHCP automatic."
+            },
+            {
+                category: "IP Address & Interface",
+                question: "Broadcast address untuk 10.10.5.0/24 adalah?",
+                options: [
+                    "10.10.5.1",
+                    "10.10.5.254", 
+                    "10.10.5.255",
+                    "10.10.5.0",
+                    "10.255.255.255"
+                ],
+                correct: 2,
+                explanation: "Broadcast address untuk /24 adalah .255"
+            },
+
+            // Routing (10 soal)
+            {
+                category: "Routing",
+                question: "Untuk membuat rute default ke IP 10.0.0.1, perintah yang digunakan?",
+                options: [
+                    "/ip route add gateway=10.0.0.1",
+                    "/ip route add dst-address=0.0.0.0/0 gateway=10.0.0.1",
+                    "/ip route add dst-address=10.0.0.1/32 gateway=0.0.0.0", 
+                    "/ip route set default gateway=10.0.0.1",
+                    "/ip route default-gateway 10.0.0.1"
+                ],
+                correct: 1,
+                explanation: "Default route menggunakan dst-address 0.0.0.0/0."
+            },
+            {
+                category: "Routing",
+                question: "Protokol routing yang mendukung VLSM dan termasuk IGP adalah?",
+                options: [
+                    "BGP",
+                    "RIP",
+                    "OSPF", 
+                    "Static Route",
+                    "EIGRP"
+                ],
+                correct: 2,
+                explanation: "OSPF adalah IGP yang mendukung VLSM."
+            },
+            {
+                category: "Routing",
+                question: "Fitur 'Distance' pada rute statis digunakan untuk?",
+                options: [
+                    "Mengukur jarak fisik ke gateway",
+                    "Menentukan prioritas rute jika ada multiple route",
+                    "Membatasi jumlah hop", 
+                    "Mengatur bandwidth rute",
+                    "Mengukur latency"
+                ],
+                correct: 1,
+                explanation: "Distance menentukan administrative distance/prioritas."
+            },
+            {
+                category: "Routing",
+                question: "Apa fungsi dari ECMP (Equal Cost Multi Path)?",
+                options: [
+                    "Load balancing melalui multiple gateway",
+                    "Error correction",
+                    "Memory management", 
+                    "CPU optimization",
+                    "Power saving"
+                ],
+                correct: 0,
+                explanation: "ECMP untuk load balancing multiple path."
+            },
+            {
+                category: "Routing",
+                question: "Route mana yang paling diutamakan jika distance sama?",
+                options: [
+                    "Route dengan gateway terjauh",
+                    "Route dengan gateway terdekat",
+                    "Route dengan prefix terpanjang", 
+                    "Route dengan prefix terpendek",
+                    "Route yang dibuat pertama"
+                ],
+                correct: 2,
+                explanation: "Longest prefix match memiliki prioritas lebih tinggi."
+            },
+            {
+                category: "Routing",
+                question: "Perintah untuk melihat routing table adalah?",
+                options: [
+                    "/ip route show",
+                    "/ip route list", 
+                    "/ip route print",
+                    "/ip route display",
+                    "/ip route table"
+                ],
+                correct: 2,
+                explanation: "/ip route print menampilkan routing table."
+            },
+            {
+                category: "Routing",
+                question: "Apa tujuan dari static route dengan gateway 0.0.0.0?",
+                options: [
+                    "Route ke internet",
+                    "Route ke local network", 
+                    "Blackhole route",
+                    "Default route",
+                    "Route ke VPN"
+                ],
+                correct: 2,
+                explanation: "Gateway 0.0.0.0 untuk blackhole route."
+            },
+            {
+                category: "Routing",
+                question: "Kapan kita perlu menggunakan policy routing?",
+                options: [
+                    "Ketika butuh routing berdasarkan source address",
+                    "Untuk routing dasar saja",
+                    "Hanya untuk OSPF", 
+                    "Hanya untuk BGP",
+                    "Tidak pernah perlu"
+                ],
+                correct: 0,
+                explanation: "Policy routing untuk routing berdasarkan kriteria tertentu."
+            },
+            {
+                category: "Routing",
+                question: "Apa keuntungan routing dinamis vs static?",
+                options: [
+                    "Konfigurasi lebih sederhana",
+                    "Otomatis beradaptasi dengan perubahan network",
+                    "Lebih aman", 
+                    "Lebih cepat",
+                    "Menggunakan lebih sedikit memory"
+                ],
+                correct: 1,
+                explanation: "Routing dinamis adaptif terhadap perubahan topology."
+            },
+            {
+                category: "Routing",
+                question: "Protocol mana yang termasuk Distance Vector?",
+                options: [
+                    "OSPF",
+                    "BGP", 
+                    "RIP",
+                    "IS-IS",
+                    "EIGRP"
+                ],
+                correct: 2,
+                explanation: "RIP adalah Distance Vector protocol."
+            },
+
+            // Firewall & NAT (10 soal)
+            {
+                category: "Firewall & NAT",
+                question: "Chain 'forward' dalam firewall filter digunakan untuk?",
+                options: [
+                    "Paket yang destinasi router sendiri",
+                    "Paket yang sumbernya router sendiri", 
+                    "Paket yang melalui router (routing)",
+                    "Paket broadcast",
+                    "Paket multicast"
+                ],
+                correct: 2,
+                explanation: "Chain forward untuk paket yang melalui router."
+            },
+            {
+                category: "Firewall & NAT", 
+                question: "Aturan NAT untuk menyembunyikan IP privat di belakang IP publik adalah?",
+                options: [
+                    "dst-nat",
+                    "src-nat (masquerade)",
+                    "filter rule",
+                    "mangle rule", 
+                    "raw rule"
+                ],
+                correct: 1,
+                explanation: "src-nat/masquerade untuk hide NAT."
+            },
+            {
+                category: "Firewall & NAT",
+                question: "Dimana mengaktifkan Connection Tracking?",
+                options: [
+                    "/ip firewall service-port",
+                    "/ip firewall filter", 
+                    "/ip firewall connection tracking",
+                    "/system firewall",
+                    "/ip service"
+                ],
+                correct: 2,
+                explanation: "Connection tracking di /ip firewall connection tracking."
+            },
+            {
+                category: "Firewall & NAT",
+                question: "Tabel 'mangle' terutama digunakan untuk?",
+                options: [
+                    "Memblokir akses internet",
+                    "Menandai paket untuk QoS dan Policy Routing", 
+                    "Translasi alamat IP",
+                    "Menyembunyikan port layanan",
+                    "Filter content"
+                ],
+                correct: 1,
+                explanation: "Mangle untuk marking packets."
+            },
+            {
+                category: "Firewall & NAT",
+                question: "Action 'accept' dalam firewall berarti?",
+                options: [
+                    "Memblokir paket",
+                    "Meneruskan paket", 
+                    "Menolak paket dengan response",
+                    "Mengabaikan paket",
+                    "Log paket saja"
+                ],
+                correct: 1,
+                explanation: "Accept berarti menerima/meneruskan paket."
+            },
+            {
+                category: "Firewall & NAT",
+                question: "Port forwarding menggunakan aturan firewall jenis?",
+                options: [
+                    "src-nat",
+                    "dst-nat", 
+                    "masquerade",
+                    "filter input",
+                    "mangle forward"
+                ],
+                correct: 1,
+                explanation: "Port forwarding menggunakan dst-nat."
+            },
+            {
+                category: "Firewall & NAT",
+                question: "Apa fungsi connection state 'established'?",
+                options: [
+                    "Koneksi baru",
+                    "Koneksi yang sudah terbentuk", 
+                    "Koneksi terkait",
+                    "Koneksi invalid",
+                    "Koneksi expired"
+                ],
+                correct: 1,
+                explanation: "Established untuk koneksi yang sudah terbentuk."
+            },
+            {
+                category: "Firewall & NAT",
+                question: "Rule firewall dieksekusi secara?",
+                options: [
+                    "Parallel",
+                    "Random", 
+                    "Sequential dari atas ke bawah",
+                    "Dari bawah ke atas",
+                    "Berdasar priority"
+                ],
+                correct: 2,
+                explanation: "Firewall rules sequential dari atas ke bawah."
+            },
+            {
+                category: "Firewall & NAT",
+                question: "Apa tujuan aturan dengan action 'log'?",
+                options: [
+                    "Memblokir paket",
+                    "Mencatat paket ke log", 
+                    "Meneruskan paket",
+                    "Mengubah paket",
+                    "Mengabaikan paket"
+                ],
+                correct: 1,
+                explanation: "Action log untuk logging packets."
+            },
+            {
+                category: "Firewall & NAT",
+                question: "Protokol mana yang menggunakan port 53?",
+                options: [
+                    "HTTP",
+                    "SSH", 
+                    "DNS",
+                    "FTP",
+                    "SMTP"
+                ],
+                correct: 2,
+                explanation: "Port 53 untuk DNS."
+            },
+
+            // Wireless (5 soal)
+            {
+                category: "Wireless",
+                question: "Mode 'station pseudobridge' digunakan untuk?",
+                options: [
+                    "Menjadi access point",
+                    "Connect ke AP sambil melewatkan MAC client asli", 
+                    "Memperkuat sinyal",
+                    "Mengisolasi client",
+                    "Management VLAN"
+                ],
+                correct: 1,
+                explanation: "Station pseudobridge untuk bridge dengan MAC preservation."
+            },
+            {
+                category: "Wireless",
+                question: "Fitur 'Access List' pada wireless digunakan untuk?",
+                options: [
+                    "Membatasi bandwidth",
+                    "Allow/deny client berdasarkan MAC address", 
+                    "Mengenkripsi sinyal",
+                    "Mengatur channel",
+                    "Power management"
+                ],
+                correct: 1,
+                explanation: "Access List untuk MAC filtering."
+            },
+            {
+                category: "Wireless",
+                question: "Protokol keamanan wireless terkuat saat ini?",
+                options: [
+                    "WEP",
+                    "WPA", 
+                    "WPA2-PSK",
+                    "WPA2 dengan 802.1X atau WPA3",
+                    "Tanpa security"
+                ],
+                correct: 3,
+                explanation: "WPA2 dengan 802.1X atau WPA3 paling secure."
+            },
+            {
+                category: "Wireless",
+                question: "Frekuensi 2.4 GHz memiliki channel non-overlapping?",
+                options: [
+                    "3 channel",
+                    "5 channel", 
+                    "11 channel",
+                    "13 channel",
+                    "15 channel"
+                ],
+                correct: 0,
+                explanation: "2.4GHz memiliki 3 channel non-overlapping: 1,6,11."
+            },
+            {
+                category: "Wireless",
+                question: "Apa fungsi 'scan-list' pada wireless?",
+                options: [
+                    "Daftar client connected",
+                    "Daftar channel yang boleh digunakan", 
+                    "Daftar SSID available",
+                    "Daftar MAC address blocked",
+                    "Daftar frequency allowed"
+                ],
+                correct: 1,
+                explanation: "Scan-list menentukan channel yang bisa digunakan."
+            },
+
+            // DHCP (5 soal)
+            {
+                category: "DHCP",
+                question: "Server DHCP berjalan pada port?",
+                options: [
+                    "TCP 80",
+                    "TCP 53", 
+                    "UDP 67 dan UDP 68",
+                    "UDP 69",
+                    "TCP 443"
+                ],
+                correct: 2,
+                explanation: "DHCP menggunakan UDP port 67 (server) dan 68 (client)."
+            },
+            {
+                category: "DHCP",
+                question: "Apa fungsi 'DHCP Relay'?",
+                options: [
+                    "Menyediakan IP untuk jaringan lokal",
+                    "Meneruskan DHCP request ke server di subnet lain", 
+                    "Memperpanjang lease time",
+                    "Monitoring IP usage",
+                    "Backup DHCP server"
+                ],
+                correct: 1,
+                explanation: "DHCP Relay meneruskan request across subnet."
+            },
+            {
+                category: "DHCP",
+                question: "Lease time default DHCP server MikroTik adalah?",
+                options: [
+                    "30 menit",
+                    "1 jam", 
+                    "10 menit",
+                    "1 hari",
+                    "3 hari"
+                ],
+                correct: 2,
+                explanation: "Default lease time adalah 10 menit."
+            },
+            {
+                category: "DHCP",
+                question: "Perintah untuk melihat DHCP leases adalah?",
+                options: [
+                    "/ip dhcp-server lease show",
+                    "/ip dhcp-server lease print", 
+                    "/ip dhcp-client lease list",
+                    "/ip dhcp lease display",
+                    "/ip dhcp lease status"
+                ],
+                correct: 1,
+                explanation: "/ip dhcp-server lease print untuk melihat leases."
+            },
+            {
+                category: "DHCP",
+                question: "Apa yang dilakukan 'DHCP Option'?",
+                options: [
+                    "Menentukan IP pool saja",
+                    "Mengirim informasi tambahan ke client", 
+                    "Membatasi jumlah client",
+                    "Mengatur bandwidth",
+                    "Filter MAC address"
+                ],
+                correct: 1,
+                explanation: "DHCP Option mengirim info seperti DNS, gateway, dll."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let userAnswers = [];
+        let score = 0;
+        let timeLeft = 90 * 60; // 90 menit
+        let timerInterval;
+        let selectedQuestions = [];
+        let studentName = "";
+        let studentClass = "";
+
+        // Start quiz dengan random questions
+        function startQuiz() {
+            studentName = document.getElementById('studentName').value || "Anonim";
+            studentClass = document.getElementById('studentClass').value || "-";
+            
+            if (!studentName.trim()) {
+                alert("Masukkan nama siswa terlebih dahulu!");
+                return;
+            }
+
+            // Random select 50 questions from bank
+            selectedQuestions = [...questionBank]
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 50);
+
+            userAnswers = new Array(50).fill(-1);
+            currentQuestion = 0;
+            score = 0;
+            timeLeft = 90 * 60;
+
+            displayQuestion();
+            startTimer();
+        }
+
+        // Display current question
+        function displayQuestion() {
+            const quizContent = document.getElementById('quiz-content');
+            const progress = ((currentQuestion + 1) / 50) * 100;
+            document.getElementById('progress').style.width = `${progress}%`;
+            document.getElementById('questionCounter').textContent = `Soal: ${currentQuestion + 1}/50`;
+
+            quizContent.innerHTML = `
+                <div class="question-container">
+                    <div class="question-number">
+                        Pertanyaan ${currentQuestion + 1} dari 50 | 
+                        Kategori: ${selectedQuestions[currentQuestion].category}
+                    </div>
+                    <div class="question-text">${selectedQuestions[currentQuestion].question}</div>
+                    
+                    <div class="options-container">
+                        ${selectedQuestions[currentQuestion].options.map((option, index) => `
+                            <div class="option ${userAnswers[currentQuestion] === index ? 'selected' : ''}" 
+                                 onclick="selectOption(${index})">
+                                ${String.fromCharCode(65 + index)}. ${option}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div class="navigation">
+                    <button class="btn btn-prev" ${currentQuestion === 0 ? 'disabled' : ''} onclick="prevQuestion()">
+                        ⬅️ Sebelumnya
+                    </button>
+                    
+                    ${currentQuestion === 49 
+                        ? `<button class="btn btn-submit" onclick="submitQuiz()">✅ Submit Jawaban</button>`
+                        : `<button class="btn btn-next" onclick="nextQuestion()">Selanjutnya ➡️</button>`
+                    }
+                </div>
+            `;
+        }
+
+        // Select option
+        function selectOption(optionIndex) {
+            userAnswers[currentQuestion] = optionIndex;
+            displayQuestion();
+        }
+
+        // Navigate questions
+        function nextQuestion() {
+            if (currentQuestion < 49) {
+                currentQuestion++;
+                displayQuestion();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                displayQuestion();
+            }
+        }
+
+        // Timer functions
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitQuiz();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Submit quiz
+        function submitQuiz() {
+            clearInterval(timerInterval);
+            
+            // Calculate score
+            score = 0;
+            selectedQuestions.forEach((question, index) => {
+                if (userAnswers[index] === question.correct) {
+                    score++;
+                }
+            });
+
+            const percentage = (score / 50) * 100;
+            
+            // Display results
+            document.getElementById('quiz-content').style.display = 'none';
+            document.getElementById('result-container').style.display = 'block';
+            
+            document.getElementById('score-value').textContent = `${score}/50`;
+            document.getElementById('score-text').textContent = 
+                `Siswa: ${studentName} | Kelas: ${studentClass} | Nilai: ${percentage.toFixed(1)}% - ${getGrade(percentage)}`;
+            
+            // Set score circle color
+            const scoreCircle = document.getElementById('score-circle');
+            if (percentage >= 85) scoreCircle.style.background = '#27ae60';
+            else if (percentage >= 70) scoreCircle.style.background = '#3498db';
+            else if (percentage >= 55) scoreCircle.style.background = '#f39c12';
+            else scoreCircle.style.background = '#e74c3c';
+            
+            // Set feedback
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = getFeedback(percentage);
+            feedback.className = `feedback ${getFeedbackClass(percentage)}`;
+            
+            // Display result details
+            const resultDetails = document.getElementById('result-details');
+            resultDetails.innerHTML = selectedQuestions.map((question, index) => `
+                <div class="result-item">
+                    <div>
+                        <strong>Soal ${index + 1}:</strong> 
+                        ${userAnswers[index] === question.correct ? '✅' : '❌'} |
+                        ${userAnswers[index] === -1 ? 'Tidak diisi' : 
+                        String.fromCharCode(65 + userAnswers[index])} | 
+                        Benar: ${String.fromCharCode(65 + question.correct)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Grading functions
+        function getGrade(percentage) {
+            if (percentage >= 85) return 'A (Excellent)';
+            if (percentage >= 70) return 'B (Very Good)';
+            if (percentage >= 55) return 'C (Good)';
+            if (percentage >= 40) return 'D (Average)';
+            return 'E (Need Improvement)';
+        }
+
+        function getFeedback(percentage) {
+            if (percentage >= 85) return '🎉 Excellent! Anda sangat menguasai materi MTCNA!';
+            if (percentage >= 70) return '👍 Very Good! Pemahaman Anda baik, siap untuk sertifikasi!';
+            if (percentage >= 55) return '💪 Good! Perlu sedikit penguatan pada beberapa topik.';
+            if (percentage >= 40) return '📚 Average! Perlu belajar lebih giat lagi.';
+            return '🔥 Keep Learning! Jangan menyerah, review materi dan coba lagi!';
+        }
+
+        function getFeedbackClass(percentage) {
+            if (percentage >= 85) return 'excellent';
+            if (percentage >= 70) return 'good';
+            if (percentage >= 55) return 'average';
+            return 'poor';
+        }
+
+        // Restart quiz
+        function restartQuiz() {
+            document.getElementById('quiz-content').style.display = 'block';
+            document.getElementById('result-container').style.display = 'none';
+            
+            document.getElementById('quiz-content').innerHTML = `
+                <div style="padding: 40px; text-align: center; color: #7f8c8d;">
+                    <h2>Selamat Datang di Kuis MTCNA</h2>
+                    <p>Masukkan nama dan kelas Anda, lalu klik "Mulai Kuis"</p>
+                </div>
+            `;
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            document.getElementById('studentName').focus();
+        };
+    </script>
+</body>
+</html>
