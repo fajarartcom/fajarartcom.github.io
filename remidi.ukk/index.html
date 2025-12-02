@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informasi Remidi UKK TKJ 2025</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #0f172a;
+            --accent: #10b981;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --purple: #8b5cf6;
+            --border-radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            color: var(--secondary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 2rem 0;
+            box-shadow: var(--shadow);
+            border-bottom-left-radius: var(--border-radius);
+            border-bottom-right-radius: var(--border-radius);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 50%;
+        }
+
+        .header-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .header-text p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .announcement {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: var(--border-radius);
+            padding: 12px 20px;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .announcement i {
+            color: var(--accent);
+        }
+
+        nav {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: var(--shadow);
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+        }
+
+        main {
+            padding: 1rem 0 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .card-icon {
+            font-size: 1.8rem;
+            color: var(--primary);
+            background-color: rgba(37, 99, 235, 0.1);
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        .info-item {
+            display: flex;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .info-icon {
+            color: var(--primary);
+            margin-right: 15px;
+            font-size: 1.2rem;
+            min-width: 24px;
+        }
+
+        .info-content h4 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: var(--secondary);
+        }
+
+        .info-content p {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        .highlight {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--accent);
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .danger {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .warning {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .purple {
+            background-color: rgba(139, 92, 246, 0.1);
+            color: var(--purple);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        thead {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #e2e8f0;
+            transition: background-color 0.2s;
+        }
+
+        tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        td {
+            padding: 1rem;
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-aktif {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--accent);
+        }
+
+        .status-selesai {
+            background-color: rgba(100, 116, 139, 0.1);
+            color: var(--gray);
+        }
+
+        .ruangan-badge {
+            background-color: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        /* Download Section Styles */
+        .download-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 3rem;
+        }
+
+        .download-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            border-left: 4px solid var(--primary);
+        }
+
+        .download-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .download-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 1rem;
+        }
+
+        .download-icon {
+            font-size: 1.8rem;
+            color: var(--primary);
+            background-color: rgba(37, 99, 235, 0.1);
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        .download-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .download-desc {
+            color: var(--gray);
+            margin-bottom: 1.2rem;
+            font-size: 0.95rem;
+        }
+
+        .download-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .download-size {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .download-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .exam-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 3rem;
+        }
+
+        .exam-link-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: all 0.3s;
+            border-top: 4px solid var(--accent);
+        }
+
+        .exam-link-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .exam-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .exam-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+
+        .exam-time {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .access-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--accent);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .access-btn:hover {
+            background-color: #0da271;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-subtitle i {
+            color: var(--primary);
+        }
+
+        .footer {
+            background-color: var(--secondary);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            border-top-left-radius: var(--border-radius);
+            border-top-right-radius: var(--border-radius);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .footer-info p {
+            margin-top: 10px;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .cards-container, .download-grid, .exam-links {
+                grid-template-columns: 1fr;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <div class="header-text">
+                        <h1>INFORMASI REMIDI UKK TKJ 2025</h1>
+                        <p>Kelas 12 Teknik Komputer dan Jaringan - SMK NU 1 Kedungpring</p>
+                    </div>
+                </div>
+                <div class="announcement">
+                    <i class="fas fa-bullhorn"></i>
+                    <p><strong>Penting!</strong> Remidi dilaksanakan tanggal 10-11 Desember 2025 di Laboratorium TKJ</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="#jadwal" class="active"><i class="fas fa-calendar-alt"></i> Jadwal</a></li>
+                <li><a href="#peserta"><i class="fas fa-users"></i> Peserta</a></li>
+                <li><a href="#unduhan"><i class="fas fa-download"></i> Unduhan</a></li>
+                <li><a href="#ujian"><i class="fas fa-link"></i> Link Ujian</a></li>
+                <li><a href="#kontak"><i class="fas fa-info-circle"></i> Kontak</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section id="jadwal" class="info-section">
+            <h2 class="section-title"><i class="fas fa-calendar-alt"></i> Jadwal Remidi</h2>
+            <div class="cards-container">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Rabu, 10 Desember 2025</h3>
+                        <div class="card-icon">
+                            <i class="fas fa-desktop"></i>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-item">
+                            <div class="info-icon"><i class="far fa-clock"></i></div>
+                            <div class="info-content">
+                                <h4>Sesi 1 (08.00 - 09.00)</h4>
+                                <p>Pengenalan komponen PC beserta fungsinya</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="far fa-clock"></i></div>
+                            <div class="info-content">
+                                <h4>Sesi 2 (09.00 - 10.00)</h4>
+                                <p>Membuat Kabel UTP Type Straight dan Cross</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="far fa-clock"></i></div>
+                            <div class="info-content">
+                                <h4>Sesi 3 (10.00 - 11.00)</h4>
+                                <p>Basic Configuration MikroTik and Wireless</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="far fa-clock"></i></div>
+                            <div class="info-content">
+                                <h4>Sesi 4 (11.00 - 12.00)</h4>
+                                <p>MikroTik Hotspot Configuration</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="far fa-clock"></i></div>
+                            <div class="info-content">
+                                <h4>Sesi 5 (12.00 - 13.00)</h4>
+                                <p>Ujian MTCNA Internal</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Kamis, 11 Desember 2025</h3>
+                        <div class="card-icon">
+                            <i class="fas fa-wifi"></i>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-item">
+                            <div class="info-icon"><i class="far fa-clock"></i></div>
+                            <div class="info-content">
+                                <h4>Sesi 1 (08.00 - 09.00)</h4>
+                                <p>MikroTik Hotspot Configuration</p>
+                                <p><span class="highlight warning">Untuk beberapa peserta</span></p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="far fa-clock"></i></div>
+                            <div class="info-content">
+                                <h4>Sesi 2 (09.00 - 10.00)</h4>
+                                <p>Ujian MTCNA Internal</p>
+                                <p><span class="highlight">Penting! Bawa kartu ujian</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Informasi Penting</h3>
+                        <div class="card-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <div class="info-content">
+                                <h4>Tempat Pelaksanaan</h4>
+                                <p>Semua sesi dilaksanakan di <strong>Laboratorium TKJ</strong></p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-user-tie"></i></div>
+                            <div class="info-content">
+                                <h4>Pengawas Ujian</h4>
+                                <p>Fajar Nur Faidzin & Mochamad Dicky Maulana</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                            <div class="info-content">
+                                <h4>Perhatian</h4>
+                                <p>Peserta diharapkan datang 15 menit sebelum sesi dimulai dan membawa peralatan praktikum jika diperlukan.</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-file-signature"></i></div>
+                            <div class="info-content">
+                                <h4>Ketua Konsentrasi Keahlian</h4>
+                                <p>Aditya Pratama (Teknik Komputer dan Jaringan)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="peserta" class="participants-section">
+            <h2 class="section-title"><i class="fas fa-users"></i> Daftar Peserta Remidi</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Peserta</th>
+                        <th>Sesi Remidi</th>
+                        <th>Tanggal</th>
+                        <th>Ruangan</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Aena Nursakinah</td>
+                        <td>Sesi 1, 2, 3</td>
+                        <td>Rabu, 10 Des 2025</td>
+                        <td><span class="ruangan-badge">Lab TKJ</span></td>
+                        <td><span class="status-badge status-aktif">Aktif</span></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Aisyah Fatmawati</td>
+                        <td>Sesi 1, 2, 3, 4</td>
+                        <td>Rabu, 10 Des 2025</td>
+                        <td><span class="ruangan-badge">Lab TKJ</span></td>
+                        <td><span class="status-badge status-aktif">Aktif</span></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Arya Kamandaka Adi Saputra</td>
+                        <td>Sesi 5</td>
+                        <td>Rabu, 10 Des 2025</td>
+                        <td><span class="ruangan-badge">Lab TKJ</span></td>
+                        <td><span class="status-badge status-aktif">Aktif</span></td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Aulia Rita Rosida</td>
+                        <td>Sesi 1, 2, 3</td>
+                        <td>Rabu, 10 Des 2025</td>
+                        <td><span class="ruangan-badge">Lab TKJ</span></td>
+                        <td><span class="status-badge status-aktif">Aktif</span></td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>Defin Andika Pratama</td>
+                        <td>Sesi 1, 2, 3, 4</td>
+                        <td>Rabu, 10 Des 2025</td>
+                        <td><span class="ruangan-badge">Lab TKJ</span></td>
+                        <td><span class="status-badge status-aktif">Aktif</span></td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>Dava Putra Alifiansyah</td>
+                        <td>Sesi 1</td>
+                        <td>Rabu, 10 Des 2025</td>
+                        <td><span class="ruangan-badge">Lab TKJ</span></td>
+                        <td><span class="status-badge status-aktif">Aktif</span></td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>Duwi Mei Lestari</td>
+                        <td>Sesi 1, 2</td>
+                        <td>Rabu, 10 Des 2025</td>
+                        <td><span class="ruangan-badge">Lab TKJ</span></td>
+                        <td><span class="status-badge status-aktif">Aktif</span></td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>Ilham Syahru Ramadhani</td>
+                        <td>Sesi 2</td>
+                        <td>Kamis, 11 Des 2025</td>
+                        <td><span class="ruangan-badge">Lab TKJ</span></td>
+                        <td><span class="status-badge status-aktif">Aktif</span></td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>Irvan Agus Prastiyo</td>
+                        <td>Sesi 1, 2</td>
+                        <td>Kamis, 11 Des 2025</td>
+                        <td><span class="ruangan-badge">Lab TKJ</span></td>
+                        <td><span class="status-badge status-aktif">Aktif</span></td>
+                    </tr>
+                    <tr>
+                        <td>11</td>
+                        <td>M. Junizar Nuril Qomari</td>
+                        <td>Sesi 1, 2, 3, 4, 5</td>
+                        <td>Rabu, 10 Des 2025</td>
+                        <td><span class="ruangan-badge">Lab TKJ</span></td>
+                        <td><span class="status-badge status-aktif">Aktif</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Total Peserta Remidi</h3>
+                    <div class="card-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-male"></i></div>
+                        <div class="info-content">
+                            <h4>Jumlah Peserta</h4>
+                            <p><span class="highlight">20 siswa</span> mengikuti remidi UKK TKJ 2025</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-calendar-day"></i></div>
+                        <div class="info-content">
+                            <h4>Periode Remidi</h4>
+                            <p>10 - 11 Desember 2025 (2 hari pelaksanaan)</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-laptop-house"></i></div>
+                        <div class="info-content">
+                            <h4>Lokasi</h4>
+                            <p>Semua sesi dilaksanakan di <span class="highlight">Laboratorium TKJ</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="unduhan" class="download-section">
+            <h2 class="section-title"><i class="fas fa-download"></i> Unduhan Materi & Soal</h2>
+            <p class="section-subtitle"><i class="fas fa-info-circle"></i> Download materi pembelajaran, soal ujian, dan panduan remidi UKK TKJ 2025</p>
+            
+            <div class="download-grid">
+                <div class="download-card">
+                    <div class="download-header">
+                        <div class="download-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div>
+                            <h3 class="download-title">Soal Remidi PC Hardware</h3>
+                            <div class="download-meta">
+                                <span class="download-type">PDF Document</span>
+                                <span class="download-size"><i class="fas fa-hdd"></i> 2.4 MB</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="download-desc">Kumpulan soal remidi untuk materi Pengenalan Komponen PC beserta Fungsinya. Termasuk kunci jawaban dan penjelasan.</p>
+                    <a href="#" class="download-btn"><i class="fas fa-download"></i> Download Soal</a>
+                </div>
+                
+                <div class="download-card">
+                    <div class="download-header">
+                        <div class="download-icon">
+                            <i class="fas fa-network-wired"></i>
+                        </div>
+                        <div>
+                            <h3 class="download-title">Panduan Kabel UTP</h3>
+                            <div class="download-meta">
+                                <span class="download-type">PDF Guide</span>
+                                <span class="download-size"><i class="fas fa-hdd"></i> 3.1 MB</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="download-desc">Panduan lengkap membuat kabel UTP Straight dan Cross beserta gambar langkah demi langkah.</p>
+                    <a href="#" class="download-btn"><i class="fas fa-download"></i> Download Panduan</a>
+                </div>
+                
+                <div class="download-card">
+                    <div class="download-header">
+                        <div class="download-icon">
+                            <i class="fas fa-wifi"></i>
+                        </div>
+                        <div>
+                            <h3 class="download-title">MikroTik Configuration</h3>
+                            <div class="download-meta">
+                                <span class="download-type">ZIP Archive</span>
+                                <span class="download-size"><i class="fas fa-hdd"></i> 5.2 MB</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="download-desc">File konfigurasi dasar MikroTik, wireless, dan hotspot untuk latihan ujian remidi.</p>
+                    <a href="#" class="download-btn"><i class="fas fa-download"></i> Download Config</a>
+                </div>
+                
+                <div class="download-card">
+                    <div class="download-header">
+                        <div class="download-icon">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <div>
+                            <h3 class="download-title">Jobsheet Praktikum</h3>
+                            <div class="download-meta">
+                                <span class="download-type">DOCX Template</span>
+                                <span class="download-size"><i class="fas fa-hdd"></i> 1.8 MB</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="download-desc">Template jobsheet untuk semua materi remidi. Isi dengan hasil praktikum Anda.</p>
+                    <a href="#" class="download-btn"><i class="fas fa-download"></i> Download Template</a>
+                </div>
+                
+                <div class="download-card">
+                    <div class="download-header">
+                        <div class="download-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div>
+                            <h3 class="download-title">Materi MTCNA Internal</h3>
+                            <div class="download-meta">
+                                <span class="download-type">PDF E-Book</span>
+                                <span class="download-size"><i class="fas fa-hdd"></i> 8.7 MB</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="download-desc">Materi persiapan ujian MTCNA Internal meliputi routing, firewall, dan management.</p>
+                    <a href="#" class="download-btn"><i class="fas fa-download"></i> Download Materi</a>
+                </div>
+                
+                <div class="download-card">
+                    <div class="download-header">
+                        <div class="download-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div>
+                            <h3 class="download-title">Jadwal Lengkap Remidi</h3>
+                            <div class="download-meta">
+                                <span class="download-type">PDF Schedule</span>
+                                <span class="download-size"><i class="fas fa-hdd"></i> 1.2 MB</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="download-desc">Jadwal resmi remidi UKK TKJ 2025 dengan detail waktu, ruang, dan pengawas.</p>
+                    <a href="./jadwal/DAFTAR PESERTA UJI KOMPETENSI REMIDIAL TKJ 2025.pdf" class="download-btn"><i class="fas fa-download"></i> Download Jadwal</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="ujian" class="exam-section">
+            <h2 class="section-title"><i class="fas fa-link"></i> Link Akses Ujian Online</h2>
+            <p class="section-subtitle"><i class="fas fa-external-link-alt"></i> Akses link ujian online remidi UKK TKJ 2025 sesuai dengan sesi yang dijadwalkan</p>
+            
+            <div class="exam-links">
+                <div class="exam-link-card">
+                    <div class="exam-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3 class="exam-title">Remidi PC Hardware</h3>
+                    <p class="exam-time">Sesi 1 | 08.00 - 09.00</p>
+                    <p>Ujian online pengenalan komponen PC dan fungsinya</p>
+                    <a href="#" class="access-btn" target="_blank"><i class="fas fa-external-link-alt"></i> Akses Ujian</a>
+                </div>
+                
+                <div class="exam-link-card">
+                    <div class="exam-icon">
+                        <i class="fas fa-ethernet"></i>
+                    </div>
+                    <h3 class="exam-title">Remidi Kabel UTP</h3>
+                    <p class="exam-time">Sesi 2 | 09.00 - 10.00</p>
+                    <p>Ujian pembuatan kabel UTP straight dan cross</p>
+                    <a href="#" class="access-btn" target="_blank"><i class="fas fa-external-link-alt"></i> Akses Ujian</a>
+                </div>
+                
+                <div class="exam-link-card">
+                    <div class="exam-icon">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <h3 class="exam-title">Remidi MikroTik Basic</h3>
+                    <p class="exam-time">Sesi 3 | 10.00 - 11.00</p>
+                    <p>Konfigurasi dasar MikroTik dan wireless</p>
+                    <a href="#" class="access-btn" target="_blank"><i class="fas fa-external-link-alt"></i> Akses Ujian</a>
+                </div>
+                
+                <div class="exam-link-card">
+                    <div class="exam-icon">
+                        <i class="fas fa-hotspot"></i>
+                    </div>
+                    <h3 class="exam-title">Remidi Hotspot Config</h3>
+                    <p class="exam-time">Sesi 4 | 11.00 - 12.00</p>
+                    <p>Konfigurasi MikroTik hotspot untuk akses internet</p>
+                    <a href="#" class="access-btn" target="_blank"><i class="fas fa-external-link-alt"></i> Akses Ujian</a>
+                </div>
+                
+                <div class="exam-link-card">
+                    <div class="exam-icon">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h3 class="exam-title">Ujian MTCNA Internal</h3>
+                    <p class="exam-time">Sesi 5 | 12.00 - 13.00</p>
+                    <p>Ujian sertifikasi internal MikroTik MTCNA</p>
+                    <a href="#" class="access-btn" target="_blank"><i class="fas fa-external-link-alt"></i> Akses Ujian</a>
+                </div>
+                
+                <div class="exam-link-card">
+                    <div class="exam-icon">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                    <h3 class="exam-title">Portal Hasil Ujian</h3>
+                    <p class="exam-time">Akses 24 Jam</p>
+                    <p>Cek hasil dan nilai remidi UKK TKJ 2025</p>
+                    <a href="#" class="access-btn" target="_blank"><i class="fas fa-external-link-alt"></i> Cek Hasil</a>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Informasi Penting Ujian Online</h3>
+                    <div class="card-icon">
+                        <i class="fas fa-laptop-medical"></i>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-key"></i></div>
+                        <div class="info-content">
+                            <h4>Kredensial Login</h4>
+                            <p>Gunakan NISN sebagai username dan tanggal lahir (DDMMYYYY) sebagai password default.</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-clock"></i></div>
+                        <div class="info-content">
+                            <h4>Waktu Ujian</h4>
+                            <p>Link ujian akan aktif 15 menit sebelum sesi dimulai dan tertutup otomatis setelah waktu habis.</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-exclamation-circle"></i></div>
+                        <div class="info-content">
+                            <h4>Kendala Teknis</h4>
+                            <p>Jika mengalami masalah teknis, segera hubungi pengawas ujian di Laboratorium TKJ.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="kontak" class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-laptop-code"></i>
+                    <span>SMK NU 1 Kedungpring</span>
+                </div>
+                <div class="footer-info">
+                    <p>Jurusan Teknik Komputer dan Jaringan</p>
+                    <p>Informasi Remidi UKK Tahun 2025</p>
+                    <p>© 2025 - Dibuat untuk kepentingan informasi akademik</p>
+                </div>
+                <div class="footer-links">
+                    <a href="#"><i class="fas fa-question-circle"></i> Bantuan</a>
+                    <a href="#"><i class="fas fa-envelope"></i> Kontak</a>
+                    <a href="#unduhan"><i class="fas fa-download"></i> Unduhan</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Menambahkan efek interaktif pada card
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'scale(1.02)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 200);
+            });
+        });
+        
+        // Menambahkan efek pada baris tabel saat dihover
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('mouseenter', function() {
+                this.style.backgroundColor = '#f1f5f9';
+            });
+            
+            row.addEventListener('mouseleave', function() {
+                this.style.backgroundColor = '';
+            });
+        });
+        
+        // Smooth scrolling untuk navigasi
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                // Update active nav link
+                document.querySelectorAll('.nav-links a').forEach(a => {
+                    a.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Scroll ke section
+                if (targetSection) {
+                    window.scrollTo({
+                        top: targetSection.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Update status berdasarkan tanggal
+        function updateRemidiStatus() {
+            const today = new Date();
+            const remidiDate1 = new Date(2025, 11, 10); // 10 Desember 2025
+            const remidiDate2 = new Date(2025, 11, 11); // 11 Desember 2025
+            
+            const statusBadges = document.querySelectorAll('.status-badge');
+            
+            if (today > remidiDate2) {
+                // Jika sudah lewat tanggal remidi
+                statusBadges.forEach(badge => {
+                    badge.textContent = 'Selesai';
+                    badge.className = 'status-badge status-selesai';
+                });
+                
+                // Update announcement
+                const announcement = document.querySelector('.announcement');
+                announcement.innerHTML = '<i class="fas fa-check-circle"></i><p><strong>Remidi Selesai!</strong> Ujian remidi UKK TKJ 2025 telah dilaksanakan</p>';
+                announcement.style.backgroundColor = 'rgba(100, 116, 139, 0.2)';
+            } else if (today >= remidiDate1 && today <= remidiDate2) {
+                // Jika sedang dalam masa remidi
+                statusBadges.forEach(badge => {
+                    badge.textContent = 'Berlangsung';
+                    badge.className = 'status-badge status-aktif';
+                });
+                
+                // Update announcement
+                const announcement = document.querySelector('.announcement');
+                announcement.innerHTML = '<i class="fas fa-exclamation-circle"></i><p><strong>Sedang Berlangsung!</strong> Remidi UKK TKJ 2025 sedang dilaksanakan</p>';
+                announcement.style.backgroundColor = 'rgba(16, 185, 129, 0.2)';
+                
+                // Tampilkan notifikasi untuk link ujian yang aktif
+                const examTimes = [
+                    { start: 8, end: 9, session: 1 },
+                    { start: 9, end: 10, session: 2 },
+                    { start: 10, end: 11, session: 3 },
+                    { start: 11, end: 12, session: 4 },
+                    { start: 12, end: 13, session: 5 }
+                ];
+                
+                const currentHour = today.getHours();
+                let activeSession = null;
+                
+                for (const time of examTimes) {
+                    if (currentHour >= time.start && currentHour < time.end) {
+                        activeSession = time.session;
+                        break;
+                    }
+                }
+                
+                if (activeSession) {
+                    const activeExamMsg = document.createElement('div');
+                    activeExamMsg.className = 'announcement';
+                    activeExamMsg.style.marginTop = '10px';
+                    activeExamMsg.style.backgroundColor = 'rgba(245, 158, 11, 0.2)';
+                    activeExamMsg.innerHTML = `<i class="fas fa-bell"></i><p><strong>Sesi ${activeSession} Aktif!</strong> Link ujian sesi ${activeSession} sedang aktif. Segera akses!</p>`;
+                    
+                    document.querySelector('.header-content').appendChild(activeExamMsg);
+                }
+            }
+        }
+        
+        // Simulasi download dengan progress
+        document.querySelectorAll('.download-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengunduh...';
+                this.style.backgroundColor = 'var(--gray)';
+                
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-check"></i> Terunduh!';
+                    this.style.backgroundColor = 'var(--accent)';
+                    
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                        this.style.backgroundColor = '';
+                    }, 2000);
+                }, 1500);
+            });
+        });
+        
+        // Panggil fungsi update status
+        updateRemidiStatus();
+        
+        // Update nav active berdasarkan scroll
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-links a');
+            
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 150)) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${currentSection}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
