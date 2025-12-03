@@ -1,0 +1,1992 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ujian Remidi UKK TKJ - Pengenalan Komponen PC</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #1e293b;
+            --accent: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #22c55e;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --border-radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            color: var(--secondary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            border-left: 6px solid var(--primary);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            background: rgba(59, 130, 246, 0.1);
+            padding: 15px;
+            border-radius: 50%;
+        }
+
+        .header-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            color: var(--secondary);
+        }
+
+        .header-text p {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        .exam-info {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .info-box {
+            background: #f8fafc;
+            padding: 10px 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .info-box i {
+            color: var(--primary);
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            background: white;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 1.2rem;
+            text-align: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .nav-tab:hover {
+            background: #f8fafc;
+        }
+
+        .nav-tab.active {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Panel */
+        .panel {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.8rem;
+            box-shadow: var(--shadow);
+            height: fit-content;
+        }
+
+        .panel-title {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--secondary);
+        }
+
+        .panel-title i {
+            color: var(--primary);
+        }
+
+        /* Theory Panel */
+        .theory-panel {
+            display: block;
+        }
+
+        .timer-container {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            margin-bottom: 1.8rem;
+        }
+
+        .timer-title {
+            font-size: 1rem;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+
+        .timer {
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+        }
+
+        .timer-warning {
+            color: var(--warning);
+        }
+
+        .timer-danger {
+            color: var(--danger);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .question-container {
+            margin-bottom: 2rem;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .question-number {
+            font-size: 0.9rem;
+            background: var(--primary);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .question-image {
+            width: 100%;
+            max-height: 200px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border: 1px solid #e2e8f0;
+            background: #f8fafc;
+            padding: 10px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .option-card {
+            padding: 1.2rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .option-card:hover {
+            border-color: var(--primary);
+            background: #f8fafc;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .option-card.selected {
+            border-color: var(--primary);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .option-card.correct {
+            border-color: var(--success);
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .option-card.incorrect {
+            border-color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .option-letter {
+            width: 36px;
+            height: 36px;
+            background: #e2e8f0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .option-card.selected .option-letter {
+            background: var(--primary);
+            color: white;
+        }
+
+        .option-card.correct .option-letter {
+            background: var(--success);
+            color: white;
+        }
+
+        .option-card.incorrect .option-letter {
+            background: var(--danger);
+            color: white;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* Interactive Panel */
+        .interactive-panel {
+            display: none;
+        }
+
+        .pc-diagram-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            border: 2px solid #cbd5e1;
+        }
+
+        .pc-case {
+            position: absolute;
+            width: 80%;
+            height: 70%;
+            background: linear-gradient(145deg, #475569, #334155);
+            border-radius: 10px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .pc-component {
+            position: absolute;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+        }
+
+        .pc-component:hover {
+            transform: scale(1.05);
+            z-index: 100;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .pc-component.selected {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+            z-index: 100;
+        }
+
+        /* Component Details */
+        .component-details {
+            background: #f8fafc;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .component-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 1rem;
+        }
+
+        .component-icon {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .component-info h3 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            color: var(--secondary);
+        }
+
+        .component-info p {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        .component-functions {
+            margin-top: 1rem;
+        }
+
+        .function-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .function-item i {
+            color: var(--accent);
+            margin-top: 3px;
+        }
+
+        /* Matching Game */
+        .matching-game {
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .matching-title {
+            font-size: 1.2rem;
+            margin-bottom: 1.2rem;
+            color: var(--secondary);
+        }
+
+        .matching-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .matching-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .matching-column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .matching-item {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 1rem;
+            cursor: move;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .matching-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .matching-item.dragging {
+            opacity: 0.5;
+        }
+
+        .matching-item.matched {
+            border-color: var(--success);
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .matching-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 1.5rem;
+        }
+
+        /* Result Panel */
+        .result-panel {
+            display: none;
+            grid-column: span 2;
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        @media (max-width: 1200px) {
+            .result-panel {
+                grid-column: span 1;
+            }
+        }
+
+        .result-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-icon.success {
+            color: var(--success);
+            animation: bounce 1s;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .result-icon.warning {
+            color: var(--warning);
+        }
+
+        .result-icon.danger {
+            color: var(--danger);
+        }
+
+        .result-title {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+
+        .result-score {
+            font-size: 4rem;
+            font-weight: 800;
+            margin: 1.5rem 0;
+            color: var(--primary);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2.5rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .result-details {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .result-box {
+            background: #f8fafc;
+            padding: 1.8rem;
+            border-radius: var(--border-radius);
+            border-top: 4px solid var(--primary);
+        }
+
+        .result-box h4 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .result-box p {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .result-feedback {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: var(--border-radius);
+            text-align: left;
+        }
+
+        .result-feedback h3 {
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+
+        .result-actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 2.5rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: var(--secondary);
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e1;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #16a34a;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-lg {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1.5rem;
+            color: var(--gray);
+            font-size: 0.9rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            header {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+            
+            .exam-info {
+                width: 100%;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .nav-tab {
+                justify-content: flex-start;
+                padding: 1rem 1.5rem;
+            }
+            
+            .timer {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .info-box {
+                flex: 1 0 100%;
+            }
+            
+            .navigation-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .result-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <i class="fas fa-desktop"></i>
+                </div>
+                <div class="header-text">
+                    <h1>Ujian Remidi UKK TKJ 2025</h1>
+                    <p>Pengenalan Komponen PC dan Fungsinya</p>
+                </div>
+            </div>
+            <div class="exam-info">
+                <div class="info-box">
+                    <i class="far fa-clock"></i>
+                    <span>Sesi 1 (08.00 - 09.00)</span>
+                </div>
+                <div class="info-box">
+                    <i class="fas fa-user-graduate"></i>
+                    <span>Nama: <span id="studentName">Siswa TKJ</span></span>
+                </div>
+                <div class="info-box">
+                    <i class="fas fa-laptop-house"></i>
+                    <span>Laboratorium TKJ</span>
+                </div>
+            </div>
+        </header>
+
+        <nav class="nav-tabs">
+            <div class="nav-tab active" data-tab="theory">
+                <i class="fas fa-file-alt"></i> Ujian Teori
+            </div>
+            <div class="nav-tab" data-tab="interactive">
+                <i class="fas fa-gamepad"></i> Simulasi Interaktif
+            </div>
+            <div class="nav-tab" data-tab="matching">
+                <i class="fas fa-puzzle-piece"></i> Game Mencocokkan
+            </div>
+        </nav>
+
+        <div class="main-content">
+            <!-- Panel Teori -->
+            <div class="panel theory-panel" id="theoryPanel">
+                <h2 class="panel-title"><i class="fas fa-book-open"></i> Ujian Teori Komponen PC</h2>
+                
+                <div class="timer-container">
+                    <div class="timer-title">Sisa Waktu Ujian</div>
+                    <div class="timer" id="timer">20:00</div>
+                </div>
+
+                <div class="question-container" id="question1">
+                    <div class="question-header">
+                        <div class="question-number">Soal 1 dari 8</div>
+                        <div class="question-points">Nilai: 10 poin</div>
+                    </div>
+                    <h3 class="question-text">Komponen PC yang berfungsi sebagai otak komputer, melakukan semua perhitungan dan pemrosesan data disebut...</h3>
+                    <div class="options-grid">
+                        <div class="option-card" data-question="1" data-option="A">
+                            <div class="option-letter">A</div>
+                            <div class="option-text">RAM (Random Access Memory)</div>
+                        </div>
+                        <div class="option-card" data-question="1" data-option="B">
+                            <div class="option-letter">B</div>
+                            <div class="option-text">CPU (Central Processing Unit)</div>
+                        </div>
+                        <div class="option-card" data-question="1" data-option="C">
+                            <div class="option-letter">C</div>
+                            <div class="option-text">GPU (Graphics Processing Unit)</div>
+                        </div>
+                        <div class="option-card" data-question="1" data-option="D">
+                            <div class="option-letter">D</div>
+                            <div class="option-text">PSU (Power Supply Unit)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-container" id="question2" style="display: none;">
+                    <div class="question-header">
+                        <div class="question-number">Soal 2 dari 8</div>
+                        <div class="question-points">Nilai: 10 poin</div>
+                    </div>
+                    <h3 class="question-text">Komponen yang berfungsi untuk menyimpan data secara permanen meskipun komputer dimatikan adalah...</h3>
+                    <div class="options-grid">
+                        <div class="option-card" data-question="2" data-option="A">
+                            <div class="option-letter">A</div>
+                            <div class="option-text">RAM</div>
+                        </div>
+                        <div class="option-card" data-question="2" data-option="B">
+                            <div class="option-letter">B</div>
+                            <div class="option-text">Cache Memory</div>
+                        </div>
+                        <div class="option-card" data-question="2" data-option="C">
+                            <div class="option-letter">C</div>
+                            <div class="option-text">Hard Disk Drive (HDD)</div>
+                        </div>
+                        <div class="option-card" data-question="2" data-option="D">
+                            <div class="option-letter">D</div>
+                            <div class="option-text">Processor</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-container" id="question3" style="display: none;">
+                    <div class="question-header">
+                        <div class="question-number">Soal 3 dari 8</div>
+                        <div class="question-points">Nilai: 15 poin</div>
+                    </div>
+                    <h3 class="question-text">Komponen yang menghubungkan semua komponen PC dan memungkinkan komunikasi antar komponen adalah...</h3>
+                    <div class="options-grid">
+                        <div class="option-card" data-question="3" data-option="A">
+                            <div class="option-letter">A</div>
+                            <div class="option-text">Power Supply</div>
+                        </div>
+                        <div class="option-card" data-question="3" data-option="B">
+                            <div class="option-letter">B</div>
+                            <div class="option-text">Motherboard</div>
+                        </div>
+                        <div class="option-card" data-question="3" data-option="C">
+                            <div class="option-letter">C</div>
+                            <div class="option-text">VGA Card</div>
+                        </div>
+                        <div class="option-card" data-question="3" data-option="D">
+                            <div class="option-letter">D</div>
+                            <div class="option-text">CPU Cooler</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-container" id="question4" style="display: none;">
+                    <div class="question-header">
+                        <div class="question-number">Soal 4 dari 8</div>
+                        <div class="question-points">Nilai: 15 poin</div>
+                    </div>
+                    <h3 class="question-text">Komponen yang berfungsi mengubah tegangan listrik dari AC menjadi DC dan mendistribusikannya ke komponen PC adalah...</h3>
+                    <div class="options-grid">
+                        <div class="option-card" data-question="4" data-option="A">
+                            <div class="option-letter">A</div>
+                            <div class="option-text">Motherboard</div>
+                        </div>
+                        <div class="option-card" data-question="4" data-option="B">
+                            <div class="option-letter">B</div>
+                            <div class="option-text">Power Supply Unit (PSU)</div>
+                        </div>
+                        <div class="option-card" data-question="4" data-option="C">
+                            <div class="option-letter">C</div>
+                            <div class="option-text">Processor</div>
+                        </div>
+                        <div class="option-card" data-question="4" data-option="D">
+                            <div class="option-letter">D</div>
+                            <div class="option-text">Hard Disk</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-container" id="question5" style="display: none;">
+                    <div class="question-header">
+                        <div class="question-number">Soal 5 dari 8</div>
+                        <div class="question-points">Nilai: 10 poin</div>
+                    </div>
+                    <h3 class="question-text">Komponen yang berfungsi untuk menampilkan output visual dari komputer ke monitor disebut...</h3>
+                    <div class="options-grid">
+                        <div class="option-card" data-question="5" data-option="A">
+                            <div class="option-letter">A</div>
+                            <div class="option-text">Sound Card</div>
+                        </div>
+                        <div class="option-card" data-question="5" data-option="B">
+                            <div class="option-letter">B</div>
+                            <div class="option-text">Network Card</div>
+                        </div>
+                        <div class="option-card" data-question="5" data-option="C">
+                            <div class="option-letter">C</div>
+                            <div class="option-text">Graphics Card (VGA)</div>
+                        </div>
+                        <div class="option-card" data-question="5" data-option="D">
+                            <div class="option-letter">D</div>
+                            <div class="option-text">RAM</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-container" id="question6" style="display: none;">
+                    <div class="question-header">
+                        <div class="question-number">Soal 6 dari 8</div>
+                        <div class="question-points">Nilai: 10 poin</div>
+                    </div>
+                    <h3 class="question-text">Komponen yang berfungsi sebagai memori sementara untuk menyimpan data yang sedang diproses oleh CPU adalah...</h3>
+                    <div class="options-grid">
+                        <div class="option-card" data-question="6" data-option="A">
+                            <div class="option-letter">A</div>
+                            <div class="option-text">Hard Disk</div>
+                        </div>
+                        <div class="option-card" data-question="6" data-option="B">
+                            <div class="option-letter">B</div>
+                            <div class="option-text">SSD</div>
+                        </div>
+                        <div class="option-card" data-question="6" data-option="C">
+                            <div class="option-letter">C</div>
+                            <div class="option-text">ROM</div>
+                        </div>
+                        <div class="option-card" data-question="6" data-option="D">
+                            <div class="option-letter">D</div>
+                            <div class="option-text">RAM</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-container" id="question7" style="display: none;">
+                    <div class="question-header">
+                        <div class="question-number">Soal 7 dari 8</div>
+                        <div class="question-points">Nilai: 15 poin</div>
+                    </div>
+                    <h3 class="question-text">Komponen yang berfungsi untuk mendinginkan processor agar tidak overheat saat bekerja adalah...</h3>
+                    <div class="options-grid">
+                        <div class="option-card" data-question="7" data-option="A">
+                            <div class="option-letter">A</div>
+                            <div class="option-text">Power Supply</div>
+                        </div>
+                        <div class="option-card" data-question="7" data-option="B">
+                            <div class="option-letter">B</div>
+                            <div class="option-text">CPU Cooler (Heatsink + Fan)</div>
+                        </div>
+                        <div class="option-card" data-question="7" data-option="C">
+                            <div class="option-letter">C</div>
+                            <div class="option-text">Case Fan</div>
+                        </div>
+                        <div class="option-card" data-question="7" data-option="D">
+                            <div class="option-letter">D</div>
+                            <div class="option-text">VGA Card</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-container" id="question8" style="display: none;">
+                    <div class="question-header">
+                        <div class="question-number">Soal 8 dari 8</div>
+                        <div class="question-points">Nilai: 15 poin</div>
+                    </div>
+                    <h3 class="question-text">Komponen yang memungkinkan komputer terhubung ke jaringan lokal atau internet disebut...</h3>
+                    <div class="options-grid">
+                        <div class="option-card" data-question="8" data-option="A">
+                            <div class="option-letter">A</div>
+                            <div class="option-text">Sound Card</div>
+                        </div>
+                        <div class="option-card" data-question="8" data-option="B">
+                            <div class="option-letter">B</div>
+                            <div class="option-text">Network Interface Card (NIC)</div>
+                        </div>
+                        <div class="option-card" data-question="8" data-option="C">
+                            <div class="option-letter">C</div>
+                            <div class="option-text">Graphics Card</div>
+                        </div>
+                        <div class="option-card" data-question="8" data-option="D">
+                            <div class="option-letter">D</div>
+                            <div class="option-text">Hard Disk</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="navigation-buttons">
+                    <button class="btn btn-secondary" id="prevBtn" disabled>
+                        <i class="fas fa-arrow-left"></i> Sebelumnya
+                    </button>
+                    <button class="btn btn-primary" id="nextBtn">
+                        Selanjutnya <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button class="btn btn-success" id="submitTheoryBtn">
+                        <i class="fas fa-paper-plane"></i> Selesai Teori
+                    </button>
+                </div>
+            </div>
+
+            <!-- Panel Interaktif -->
+            <div class="panel interactive-panel" id="interactivePanel">
+                <h2 class="panel-title"><i class="fas fa-search"></i> Identifikasi Komponen PC</h2>
+                <p>Klik pada komponen di dalam casing PC untuk melihat detail dan fungsinya</p>
+                
+                <div class="pc-diagram-container" id="pcDiagram">
+                    <!-- Komponen PC akan ditambahkan secara dinamis -->
+                </div>
+
+                <div class="component-details" id="componentDetails" style="display: none;">
+                    <div class="component-header">
+                        <div class="component-icon" id="componentIcon">
+                            <i class="fas fa-microchip"></i>
+                        </div>
+                        <div class="component-info">
+                            <h3 id="componentName">Nama Komponen</h3>
+                            <p id="componentDescription">Deskripsi komponen akan muncul di sini</p>
+                        </div>
+                    </div>
+                    <div class="component-functions">
+                        <h4>Fungsi Utama:</h4>
+                        <div id="componentFunctions">
+                            <!-- Fungsi akan ditambahkan dinamis -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="navigation-buttons">
+                    <button class="btn btn-secondary" id="backToTheoryBtn">
+                        <i class="fas fa-book"></i> Kembali ke Teori
+                    </button>
+                    <button class="btn btn-primary" id="nextToMatchingBtn">
+                        Lanjut ke Game Mencocokkan <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Panel Matching Game -->
+            <div class="panel matching-game" id="matchingPanel">
+                <h2 class="panel-title"><i class="fas fa-puzzle-piece"></i> Game Mencocokkan Komponen & Fungsi</h2>
+                <p class="matching-title">Seret komponen di kiri ke fungsi yang sesuai di kanan</p>
+                
+                <div class="matching-container">
+                    <div class="matching-column" id="componentsColumn">
+                        <!-- Komponen akan ditambahkan secara dinamis -->
+                    </div>
+                    <div class="matching-column" id="functionsColumn">
+                        <!-- Fungsi akan ditambahkan secara dinamis -->
+                    </div>
+                </div>
+
+                <div class="matching-controls">
+                    <button class="btn btn-secondary" id="resetMatchingBtn">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                    <button class="btn btn-primary" id="checkMatchingBtn">
+                        <i class="fas fa-check-circle"></i> Periksa
+                    </button>
+                    <button class="btn btn-success" id="submitExamBtn">
+                        <i class="fas fa-paper-plane"></i> Kumpulkan Ujian
+                    </button>
+                </div>
+
+                <div class="navigation-buttons">
+                    <button class="btn btn-secondary" id="backToInteractiveBtn">
+                        <i class="fas fa-arrow-left"></i> Kembali ke Simulasi
+                    </button>
+                </div>
+            </div>
+
+            <!-- Panel Hasil -->
+            <div class="panel result-panel" id="resultPanel">
+                <div class="result-icon success" id="resultIcon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <h2 class="result-title" id="resultTitle">Ujian Selesai!</h2>
+                <div class="result-score" id="finalScore">0</div>
+                
+                <div class="result-details">
+                    <div class="result-box">
+                        <h4>Nilai Teori</h4>
+                        <p id="theoryScore">0/100</p>
+                    </div>
+                    <div class="result-box">
+                        <h4>Nilai Interaktif</h4>
+                        <p id="interactiveScore">0/100</p>
+                    </div>
+                    <div class="result-box">
+                        <h4>Status Kelulusan</h4>
+                        <p id="passStatus">TIDAK LULUS</p>
+                    </div>
+                </div>
+
+                <div class="result-feedback" id="resultFeedback">
+                    <!-- Feedback akan ditambahkan dinamis -->
+                </div>
+
+                <div class="result-actions">
+                    <button class="btn btn-secondary btn-lg" id="reviewBtn">
+                        <i class="fas fa-search"></i> Tinjau Jawaban
+                    </button>
+                    <button class="btn btn-primary btn-lg" id="newExamBtn">
+                        <i class="fas fa-redo"></i> Ujian Baru
+                    </button>
+                    <button class="btn btn-success btn-lg" id="certificateBtn">
+                        <i class="fas fa-certificate"></i> Cetak Sertifikat
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 Ujian Remidi UKK TKJ - Pengenalan Komponen PC | SMK Negeri 1 Kedungpring</p>
+            <p>Kompetensi Keahlian Teknik Komputer dan Jaringan</p>
+        </footer>
+    </div>
+
+    <script>
+        // Data aplikasi
+        const examData = {
+            studentName: "Siswa TKJ",
+            timeRemaining: 20 * 60, // 20 menit dalam detik
+            timerInterval: null,
+            currentQuestion: 1,
+            totalQuestions: 8,
+            theoryAnswers: {},
+            interactiveScore: 0,
+            matchingPairs: {},
+            examStarted: false,
+            examSubmitted: false,
+            
+            // Jawaban benar untuk teori
+            correctTheoryAnswers: {
+                1: "B", 2: "C", 3: "B", 4: "B",
+                5: "C", 6: "D", 7: "B", 8: "B"
+            },
+            
+            // Poin per soal
+            questionPoints: {
+                1: 10, 2: 10, 3: 15, 4: 15,
+                5: 10, 6: 10, 7: 15, 8: 15
+            },
+            
+            // Data komponen PC
+            pcComponents: [
+                {
+                    id: "cpu",
+                    name: "CPU (Processor)",
+                    description: "Central Processing Unit - Otak komputer",
+                    icon: "fas fa-microchip",
+                    color: "#3b82f6",
+                    functions: [
+                        "Melakukan semua perhitungan dan pemrosesan data",
+                        "Mengontrol operasi komputer",
+                        "Menjalankan instruksi dari program"
+                    ],
+                    position: { top: "30%", left: "40%", width: "15%", height: "10%" }
+                },
+                {
+                    id: "ram",
+                    name: "RAM (Memory)",
+                    description: "Random Access Memory - Penyimpanan sementara",
+                    icon: "fas fa-memory",
+                    color: "#10b981",
+                    functions: [
+                        "Menyimpan data yang sedang diproses CPU",
+                        "Mempercepat akses data",
+                        "Bersifat volatile (hilang saat komputer mati)"
+                    ],
+                    position: { top: "50%", left: "65%", width: "12%", height: "15%" }
+                },
+                {
+                    id: "motherboard",
+                    name: "Motherboard (Mainboard)",
+                    description: "Papan induk yang menghubungkan semua komponen",
+                    icon: "fas fa-project-diagram",
+                    color: "#8b5cf6",
+                    functions: [
+                        "Menghubungkan semua komponen PC",
+                        "Menyediakan jalur komunikasi antar komponen",
+                        "Tempat dipasangnya CPU, RAM, dan komponen lain"
+                    ],
+                    position: { top: "40%", left: "20%", width: "50%", height: "40%" }
+                },
+                {
+                    id: "hdd",
+                    name: "Hard Disk Drive",
+                    description: "Penyimpanan data permanen",
+                    icon: "fas fa-hdd",
+                    color: "#f59e0b",
+                    functions: [
+                        "Menyimpan data secara permanen",
+                        "Menyimpan sistem operasi dan aplikasi",
+                        "Kapasitas besar untuk penyimpanan jangka panjang"
+                    ],
+                    position: { top: "70%", left: "75%", width: "15%", height: "8%" }
+                },
+                {
+                    id: "psu",
+                    name: "Power Supply Unit",
+                    description: "Sumber daya untuk semua komponen",
+                    icon: "fas fa-bolt",
+                    color: "#ef4444",
+                    functions: [
+                        "Mengubah listrik AC menjadi DC",
+                        "Mendistribusikan daya ke semua komponen",
+                        "Menjaga kestabilan daya"
+                    ],
+                    position: { top: "70%", left: "10%", width: "12%", height: "15%" }
+                },
+                {
+                    id: "gpu",
+                    name: "Graphics Card (VGA)",
+                    description: "Kartu grafis untuk tampilan visual",
+                    icon: "fas fa-desktop",
+                    color: "#ec4899",
+                    functions: [
+                        "Memproses dan menampilkan grafis ke monitor",
+                        "Mempercepat rendering gambar dan video",
+                        "Mendukung gaming dan aplikasi grafis berat"
+                    ],
+                    position: { top: "25%", left: "75%", width: "15%", height: "12%" }
+                },
+                {
+                    id: "cooler",
+                    name: "CPU Cooler",
+                    description: "Pendingin processor",
+                    icon: "fas fa-fan",
+                    color: "#06b6d4",
+                    functions: [
+                        "Mendinginkan processor agar tidak overheat",
+                        "Biasanya terdiri dari heatsink dan kipas",
+                        "Meningkatkan umur processor"
+                    ],
+                    position: { top: "25%", left: "40%", width: "15%", height: "12%" }
+                },
+                {
+                    id: "nic",
+                    name: "Network Interface Card",
+                    description: "Kartu jaringan untuk koneksi internet",
+                    icon: "fas fa-network-wired",
+                    color: "#84cc16",
+                    functions: [
+                        "Menghubungkan komputer ke jaringan",
+                        "Mengirim dan menerima data melalui jaringan",
+                        "Mendukung koneksi kabel (LAN) atau wireless (Wi-Fi)"
+                    ],
+                    position: { top: "65%", left: "50%", width: "12%", height: "8%" }
+                }
+            ],
+            
+            // Data untuk game mencocokkan
+            matchingPairsCorrect: {
+                "cpu": "Melakukan semua perhitungan dan pemrosesan data komputer",
+                "ram": "Menyimpan data sementara yang sedang diproses oleh CPU",
+                "motherboard": "Menghubungkan semua komponen komputer dan memungkinkan komunikasi",
+                "hdd": "Menyimpan data secara permanen meskipun komputer dimatikan",
+                "psu": "Mengubah tegangan listrik AC menjadi DC untuk komponen PC",
+                "gpu": "Memproses dan menampilkan grafis visual ke monitor",
+                "cooler": "Mendinginkan processor agar tidak kepanasan saat bekerja",
+                "nic": "Menghubungkan komputer ke jaringan lokal atau internet"
+            }
+        };
+
+        // Inisialisasi aplikasi
+        document.addEventListener('DOMContentLoaded', function() {
+            // Setup nama siswa
+            const savedName = localStorage.getItem('pc_exam_student_name');
+            if (savedName) {
+                examData.studentName = savedName;
+                document.getElementById('studentName').textContent = savedName;
+            }
+
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Setup diagram PC
+            setupPCDiagram();
+            
+            // Setup game mencocokkan
+            setupMatchingGame();
+            
+            // Mulai timer otomatis
+            startTimer();
+            examData.examStarted = true;
+        });
+
+        function setupEventListeners() {
+            // Navigasi tab
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', switchTab);
+            });
+            
+            // Navigasi soal teori
+            document.getElementById('prevBtn').addEventListener('click', () => navigateQuestion(-1));
+            document.getElementById('nextBtn').addEventListener('click', () => navigateQuestion(1));
+            
+            // Pilihan jawaban teori
+            document.querySelectorAll('.option-card').forEach(option => {
+                option.addEventListener('click', handleTheoryAnswer);
+            });
+            
+            // Tombol submit teori
+            document.getElementById('submitTheoryBtn').addEventListener('click', submitTheory);
+            
+            // Navigasi antar panel
+            document.getElementById('backToTheoryBtn').addEventListener('click', () => switchTab('theory'));
+            document.getElementById('nextToMatchingBtn').addEventListener('click', () => switchTab('matching'));
+            document.getElementById('backToInteractiveBtn').addEventListener('click', () => switchTab('interactive'));
+            
+            // Game mencocokkan
+            document.getElementById('resetMatchingBtn').addEventListener('click', resetMatchingGame);
+            document.getElementById('checkMatchingBtn').addEventListener('click', checkMatchingGame);
+            document.getElementById('submitExamBtn').addEventListener('click', submitExam);
+            
+            // Hasil ujian
+            document.getElementById('reviewBtn').addEventListener('click', reviewExam);
+            document.getElementById('newExamBtn').addEventListener('click', newExam);
+            document.getElementById('certificateBtn').addEventListener('click', generateCertificate);
+        }
+
+        function startTimer() {
+            const timerElement = document.getElementById('timer');
+            
+            examData.timerInterval = setInterval(() => {
+                examData.timeRemaining--;
+                
+                const minutes = Math.floor(examData.timeRemaining / 60);
+                const seconds = examData.timeRemaining % 60;
+                
+                timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                // Update warna timer
+                if (examData.timeRemaining <= 300) { // 5 menit terakhir
+                    timerElement.classList.add('timer-danger');
+                    timerElement.classList.remove('timer-warning');
+                } else if (examData.timeRemaining <= 600) { // 10 menit terakhir
+                    timerElement.classList.add('timer-warning');
+                    timerElement.classList.remove('timer-danger');
+                }
+                
+                // Auto submit ketika waktu habis
+                if (examData.timeRemaining <= 0) {
+                    clearInterval(examData.timerInterval);
+                    autoSubmitExam();
+                }
+            }, 1000);
+        }
+
+        function switchTab(event) {
+            const tabId = typeof event === 'string' ? event : event.currentTarget.dataset.tab;
+            
+            // Update tab aktif
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`.nav-tab[data-tab="${tabId}"]`).classList.add('active');
+            
+            // Sembunyikan semua panel
+            document.getElementById('theoryPanel').style.display = 'none';
+            document.getElementById('interactivePanel').style.display = 'none';
+            document.getElementById('matchingPanel').style.display = 'none';
+            document.getElementById('resultPanel').style.display = 'none';
+            
+            // Tampilkan panel yang dipilih
+            document.getElementById(`${tabId}Panel`).style.display = 'block';
+            
+            // Jika ke panel interaktif, update skor
+            if (tabId === 'interactive') {
+                updateInteractiveScore();
+            }
+        }
+
+        function showQuestion(questionNumber) {
+            // Sembunyikan semua soal
+            document.querySelectorAll('.question-container').forEach(q => {
+                q.style.display = 'none';
+            });
+            
+            // Tampilkan soal yang diminta
+            document.getElementById(`question${questionNumber}`).style.display = 'block';
+            
+            // Update navigasi
+            document.getElementById('prevBtn').disabled = questionNumber === 1;
+            document.getElementById('nextBtn').disabled = questionNumber === examData.totalQuestions;
+            
+            // Tampilkan jawaban yang sudah dipilih sebelumnya
+            if (examData.theoryAnswers[questionNumber]) {
+                const selectedOption = document.querySelector(`.option-card[data-question="${questionNumber}"][data-option="${examData.theoryAnswers[questionNumber]}"]`);
+                if (selectedOption) {
+                    selectedOption.classList.add('selected');
+                }
+            }
+            
+            examData.currentQuestion = questionNumber;
+        }
+
+        function navigateQuestion(direction) {
+            const newQuestion = examData.currentQuestion + direction;
+            
+            if (newQuestion >= 1 && newQuestion <= examData.totalQuestions) {
+                showQuestion(newQuestion);
+            }
+        }
+
+        function handleTheoryAnswer(event) {
+            if (!examData.examStarted || examData.examSubmitted) return;
+            
+            const option = event.currentTarget;
+            const question = parseInt(option.dataset.question);
+            const selectedOption = option.dataset.option;
+            
+            // Hapus seleksi sebelumnya untuk soal ini
+            document.querySelectorAll(`.option-card[data-question="${question}"]`).forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Tandai yang dipilih
+            option.classList.add('selected');
+            
+            // Simpan jawaban
+            examData.theoryAnswers[question] = selectedOption;
+        }
+
+        function setupPCDiagram() {
+            const diagramContainer = document.getElementById('pcDiagram');
+            
+            // Tambahkan komponen ke diagram
+            examData.pcComponents.forEach(component => {
+                const componentDiv = document.createElement('div');
+                componentDiv.className = 'pc-component';
+                componentDiv.id = `component-${component.id}`;
+                componentDiv.innerHTML = component.name.split(' ')[0]; // Ambil kata pertama
+                
+                // Atur posisi dan styling
+                Object.assign(componentDiv.style, {
+                    top: component.position.top,
+                    left: component.position.left,
+                    width: component.position.width,
+                    height: component.position.height,
+                    backgroundColor: component.color,
+                    color: 'white'
+                });
+                
+                // Tambahkan event listener
+                componentDiv.addEventListener('click', () => showComponentDetails(component));
+                
+                diagramContainer.appendChild(componentDiv);
+            });
+        }
+
+        function showComponentDetails(component) {
+            const detailsPanel = document.getElementById('componentDetails');
+            const clickedComponent = document.getElementById(`component-${component.id}`);
+            
+            // Highlight komponen yang dipilih
+            document.querySelectorAll('.pc-component').forEach(comp => {
+                comp.classList.remove('selected');
+            });
+            clickedComponent.classList.add('selected');
+            
+            // Update detail komponen
+            document.getElementById('componentName').textContent = component.name;
+            document.getElementById('componentDescription').textContent = component.description;
+            document.getElementById('componentIcon').innerHTML = `<i class="${component.icon}"></i>`;
+            
+            // Update fungsi
+            const functionsContainer = document.getElementById('componentFunctions');
+            functionsContainer.innerHTML = '';
+            
+            component.functions.forEach(func => {
+                const funcItem = document.createElement('div');
+                funcItem.className = 'function-item';
+                funcItem.innerHTML = `
+                    <i class="fas fa-check-circle"></i>
+                    <span>${func}</span>
+                `;
+                functionsContainer.appendChild(funcItem);
+            });
+            
+            // Tampilkan panel detail
+            detailsPanel.style.display = 'block';
+            
+            // Tambah skor interaktif
+            if (!examData.interactiveClicked) {
+                examData.interactiveClicked = {};
+            }
+            
+            if (!examData.interactiveClicked[component.id]) {
+                examData.interactiveScore += 5; // 5 poin per komponen yang diidentifikasi
+                examData.interactiveClicked[component.id] = true;
+                updateInteractiveScore();
+                
+                // Feedback visual
+                clickedComponent.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    clickedComponent.style.transform = '';
+                }, 500);
+            }
+        }
+
+        function updateInteractiveScore() {
+            // Skor akan digunakan saat menghitung total
+            console.log(`Skor interaktif saat ini: ${examData.interactiveScore}/40`);
+        }
+
+        function setupMatchingGame() {
+            const componentsColumn = document.getElementById('componentsColumn');
+            const functionsColumn = document.getElementById('functionsColumn');
+            
+            // Reset kolom
+            componentsColumn.innerHTML = '';
+            functionsColumn.innerHTML = '';
+            
+            // Buat array acak untuk komponen
+            const shuffledComponents = [...Object.keys(examData.matchingPairsCorrect)].sort(() => Math.random() - 0.5);
+            
+            // Tambahkan komponen ke kolom kiri
+            shuffledComponents.forEach(componentId => {
+                const component = examData.pcComponents.find(c => c.id === componentId);
+                if (component) {
+                    const item = document.createElement('div');
+                    item.className = 'matching-item';
+                    item.id = `match-${componentId}`;
+                    item.draggable = true;
+                    item.dataset.component = componentId;
+                    item.innerHTML = `
+                        <i class="${component.icon}" style="color: ${component.color}; margin-right: 10px;"></i>
+                        ${component.name}
+                    `;
+                    
+                    item.addEventListener('dragstart', handleDragStart);
+                    componentsColumn.appendChild(item);
+                }
+            });
+            
+            // Buat array acak untuk fungsi
+            const shuffledFunctions = [...Object.values(examData.matchingPairsCorrect)].sort(() => Math.random() - 0.5);
+            
+            // Tambahkan fungsi ke kolom kanan
+            shuffledFunctions.forEach((func, index) => {
+                const item = document.createElement('div');
+                item.className = 'matching-item';
+                item.id = `func-${index}`;
+                item.dataset.function = func;
+                item.innerHTML = func;
+                
+                item.addEventListener('dragover', handleDragOver);
+                item.addEventListener('drop', handleDrop);
+                functionsColumn.appendChild(item);
+            });
+        }
+
+        let draggedItem = null;
+
+        function handleDragStart(e) {
+            draggedItem = e.target;
+            e.target.classList.add('dragging');
+            e.dataTransfer.setData('text/plain', e.target.dataset.component);
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const functionItem = e.target;
+            const componentId = e.dataTransfer.getData('text/plain');
+            
+            // Simpan pasangan
+            examData.matchingPairs[componentId] = functionItem.dataset.function;
+            
+            // Tampilkan komponen di fungsi
+            const component = examData.pcComponents.find(c => c.id === componentId);
+            if (component) {
+                functionItem.innerHTML = `
+                    <i class="${component.icon}" style="color: ${component.color}; margin-right: 10px;"></i>
+                    ${component.name} → ${functionItem.dataset.function}
+                `;
+                functionItem.classList.add('matched');
+            }
+            
+            // Reset dragged item
+            if (draggedItem) {
+                draggedItem.classList.remove('dragging');
+                draggedItem.style.display = 'none';
+                draggedItem = null;
+            }
+        }
+
+        function resetMatchingGame() {
+            examData.matchingPairs = {};
+            setupMatchingGame();
+        }
+
+        function checkMatchingGame() {
+            let correctCount = 0;
+            const totalPairs = Object.keys(examData.matchingPairsCorrect).length;
+            
+            // Periksa setiap pasangan
+            for (const [componentId, userFunction] of Object.entries(examData.matchingPairs)) {
+                const correctFunction = examData.matchingPairsCorrect[componentId];
+                if (userFunction === correctFunction) {
+                    correctCount++;
+                }
+            }
+            
+            const score = Math.round((correctCount / totalPairs) * 100);
+            alert(`Hasil sementara: ${correctCount}/${totalPairs} cocok (${score}%)\n\nLanjutkan atau perbaiki pasangan yang salah.`);
+        }
+
+        function calculateMatchingScore() {
+            let correctCount = 0;
+            const totalPairs = Object.keys(examData.matchingPairsCorrect).length;
+            
+            for (const [componentId, userFunction] of Object.entries(examData.matchingPairs)) {
+                const correctFunction = examData.matchingPairsCorrect[componentId];
+                if (userFunction === correctFunction) {
+                    correctCount++;
+                }
+            }
+            
+            return Math.round((correctCount / totalPairs) * 100);
+        }
+
+        function calculateTheoryScore() {
+            let totalPoints = 0;
+            let earnedPoints = 0;
+            
+            for (let i = 1; i <= examData.totalQuestions; i++) {
+                totalPoints += examData.questionPoints[i];
+                
+                if (examData.theoryAnswers[i] === examData.correctTheoryAnswers[i]) {
+                    earnedPoints += examData.questionPoints[i];
+                }
+            }
+            
+            return Math.round((earnedPoints / totalPoints) * 100);
+        }
+
+        function submitTheory() {
+            if (Object.keys(examData.theoryAnswers).length < examData.totalQuestions) {
+                if (!confirm(`Anda belum menjawab semua soal (${Object.keys(examData.theoryAnswers).length}/${examData.totalQuestions}). Lanjutkan ke simulasi interaktif?`)) {
+                    return;
+                }
+            }
+            
+            switchTab('interactive');
+        }
+
+        function submitExam() {
+            if (!confirm("Apakah Anda yakin ingin mengumpulkan ujian? Setelah dikumpulkan, Anda tidak dapat mengubah jawaban.")) {
+                return;
+            }
+            
+            examData.examSubmitted = true;
+            clearInterval(examData.timerInterval);
+            
+            // Hitung nilai
+            const theoryScore = calculateTheoryScore();
+            const matchingScore = calculateMatchingScore();
+            const interactiveScore = Math.min(examData.interactiveScore, 40); // Maks 40 poin
+            const interactivePercentage = Math.round((interactiveScore / 40) * 100);
+            
+            const finalScore = Math.round(
+                (theoryScore * 0.5) +       // 50% teori
+                (interactivePercentage * 0.3) + // 30% interaktif
+                (matchingScore * 0.2)       // 20% matching
+            );
+            
+            // Tampilkan hasil
+            switchTab('result');
+            
+            // Update tampilan hasil
+            document.getElementById('theoryScore').textContent = `${theoryScore}/100`;
+            document.getElementById('interactiveScore').textContent = `${interactivePercentage}/100`;
+            document.getElementById('finalScore').textContent = `${finalScore}`;
+            
+            // Tentukan status kelulusan
+            const isPass = finalScore >= 75;
+            document.getElementById('passStatus').textContent = isPass ? "LULUS" : "TIDAK LULUS";
+            document.getElementById('passStatus').style.color = isPass ? "#22c55e" : "#ef4444";
+            
+            // Update icon hasil
+            const resultIcon = document.getElementById('resultIcon');
+            resultIcon.className = isPass ? 'result-icon success' : 'result-icon danger';
+            resultIcon.innerHTML = isPass ? '<i class="fas fa-trophy"></i>' : '<i class="fas fa-times-circle"></i>';
+            
+            // Update judul
+            document.getElementById('resultTitle').textContent = isPass ? "Selamat! Anda Lulus" : "Ujian Remidi Selesai";
+            
+            // Tampilkan feedback
+            const feedback = document.getElementById('resultFeedback');
+            let feedbackHTML = `<h3>${isPass ? '🎉 Performance Excellent!' : '📚 Perlu Lebih Banyak Belajar'}</h3>`;
+            
+            if (isPass) {
+                feedbackHTML += `
+                    <p>Anda telah berhasil mengidentifikasi komponen PC dan memahami fungsinya dengan baik.</p>
+                    <p><strong>Detail Nilai:</strong></p>
+                    <ul>
+                        <li>Teori: ${theoryScore}/100 (${theoryScore >= 80 ? 'Excellent' : 'Good'})</li>
+                        <li>Simulasi Interaktif: ${interactivePercentage}/100 (${interactivePercentage >= 80 ? 'Excellent' : 'Good'})</li>
+                        <li>Game Mencocokkan: ${matchingScore}/100 (${matchingScore >= 80 ? 'Excellent' : 'Good'})</li>
+                    </ul>
+                    <p>Total nilai: <strong>${finalScore}/100</strong> - Anda memenuhi syarat kelulusan!</p>
+                `;
+            } else {
+                feedbackHTML += `
+                    <p>Anda perlu lebih banyak mempelajari komponen PC dan fungsinya.</p>
+                    <p><strong>Area yang perlu diperbaiki:</strong></p>
+                    <ul>
+                        <li>Teori: ${theoryScore}/100 (target: ≥80)</li>
+                        <li>Simulasi Interaktif: ${interactivePercentage}/100 (target: ≥80)</li>
+                        <li>Game Mencocokkan: ${matchingScore}/100 (target: ≥80)</li>
+                    </ul>
+                    <p>Total nilai: <strong>${finalScore}/100</strong> - Nilai minimal kelulusan adalah 75.</p>
+                    <p>Silakan pelajari kembali materi dan coba ujian lagi.</p>
+                `;
+            }
+            
+            feedback.innerHTML = feedbackHTML;
+            
+            // Highlight jawaban yang benar dan salah
+            highlightTheoryAnswers();
+        }
+
+        function autoSubmitExam() {
+            alert("Waktu ujian telah habis! Jawaban Anda akan dikumpulkan otomatis.");
+            submitExam();
+        }
+
+        function highlightTheoryAnswers() {
+            // Highlight jawaban teori
+            for (const [question, correctAnswer] of Object.entries(examData.correctTheoryAnswers)) {
+                const correctOption = document.querySelector(`.option-card[data-question="${question}"][data-option="${correctAnswer}"]`);
+                if (correctOption) {
+                    correctOption.classList.add('correct');
+                }
+                
+                // Tandai jawaban user jika salah
+                const userAnswer = examData.theoryAnswers[question];
+                if (userAnswer && userAnswer !== correctAnswer) {
+                    const userOption = document.querySelector(`.option-card[data-question="${question}"][data-option="${userAnswer}"]`);
+                    if (userOption) {
+                        userOption.classList.add('incorrect');
+                    }
+                }
+            }
+        }
+
+        function reviewExam() {
+            // Kembali ke panel teori dengan jawaban ter-highlight
+            switchTab('theory');
+        }
+
+        function newExam() {
+            if (!confirm("Mulai ujian baru? Semua jawaban saat ini akan dihapus.")) {
+                return;
+            }
+            
+            // Reset data
+            examData.timeRemaining = 20 * 60;
+            examData.currentQuestion = 1;
+            examData.theoryAnswers = {};
+            examData.interactiveScore = 0;
+            examData.matchingPairs = {};
+            examData.examStarted = true;
+            examData.examSubmitted = false;
+            examData.interactiveClicked = {};
+            
+            // Reset tampilan
+            document.getElementById('timer').textContent = '20:00';
+            document.getElementById('timer').classList.remove('timer-warning', 'timer-danger');
+            
+            // Reset soal teori
+            document.querySelectorAll('.option-card').forEach(option => {
+                option.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            // Reset komponen interaktif
+            document.querySelectorAll('.pc-component').forEach(comp => {
+                comp.classList.remove('selected');
+            });
+            document.getElementById('componentDetails').style.display = 'none';
+            
+            // Reset matching game
+            resetMatchingGame();
+            
+            // Tampilkan soal pertama
+            showQuestion(1);
+            
+            // Mulai timer
+            startTimer();
+            
+            // Kembali ke panel teori
+            switchTab('theory');
+        }
+
+        function generateCertificate() {
+            const theoryScore = calculateTheoryScore();
+            const interactiveScore = Math.min(examData.interactiveScore, 40);
+            const interactivePercentage = Math.round((interactiveScore / 40) * 100);
+            const matchingScore = calculateMatchingScore();
+            const finalScore = Math.round(
+                (theoryScore * 0.5) +
+                (interactivePercentage * 0.3) +
+                (matchingScore * 0.2)
+            );
+            
+            const isPass = finalScore >= 75;
+            
+            // Buat jendela sertifikat
+            const certificateWindow = window.open('', '_blank', 'width=800,height=600');
+            certificateWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Sertifikat Remidi UKK TKJ</title>
+                    <style>
+                        body {
+                            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                            margin: 0;
+                            padding: 40px;
+                            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            min-height: 100vh;
+                        }
+                        .certificate {
+                            width: 700px;
+                            background: white;
+                            border-radius: 20px;
+                            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+                            padding: 40px;
+                            border: 8px solid #3b82f6;
+                            position: relative;
+                            text-align: center;
+                        }
+                        .header {
+                            border-bottom: 2px solid #e2e8f0;
+                            padding-bottom: 20px;
+                            margin-bottom: 30px;
+                        }
+                        .header h1 {
+                            color: #1e293b;
+                            margin: 0;
+                            font-size: 2.5rem;
+                        }
+                        .header h2 {
+                            color: #3b82f6;
+                            margin: 10px 0 0;
+                            font-size: 1.5rem;
+                        }
+                        .content {
+                            margin: 30px 0;
+                        }
+                        .student-name {
+                            font-size: 2.2rem;
+                            color: #1e293b;
+                            margin: 20px 0;
+                            padding: 15px;
+                            background: #f8fafc;
+                            border-radius: 10px;
+                            border: 2px dashed #cbd5e1;
+                        }
+                        .score {
+                            font-size: 4rem;
+                            font-weight: 800;
+                            color: ${isPass ? '#22c55e' : '#ef4444'};
+                            margin: 20px 0;
+                            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+                        }
+                        .details {
+                            display: grid;
+                            grid-template-columns: repeat(3, 1fr);
+                            gap: 20px;
+                            margin: 30px 0;
+                        }
+                        .detail-box {
+                            background: #f8fafc;
+                            padding: 20px;
+                            border-radius: 10px;
+                            border-top: 4px solid #3b82f6;
+                        }
+                        .detail-box h4 {
+                            margin: 0 0 10px;
+                            color: #64748b;
+                            font-size: 0.9rem;
+                            text-transform: uppercase;
+                        }
+                        .detail-box p {
+                            margin: 0;
+                            font-size: 1.5rem;
+                            font-weight: 700;
+                            color: #1e293b;
+                        }
+                        .footer {
+                            margin-top: 40px;
+                            padding-top: 20px;
+                            border-top: 2px solid #e2e8f0;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                        }
+                        .signature {
+                            text-align: center;
+                        }
+                        .signature p {
+                            margin: 5px 0;
+                            color: #64748b;
+                        }
+                        .signature-line {
+                            width: 200px;
+                            height: 1px;
+                            background: #1e293b;
+                            margin: 20px auto;
+                        }
+                        .stamp {
+                            position: absolute;
+                            bottom: 40px;
+                            right: 40px;
+                            width: 120px;
+                            height: 120px;
+                            border: 3px solid ${isPass ? '#22c55e' : '#ef4444'};
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-weight: 800;
+                            color: ${isPass ? '#22c55e' : '#ef4444'};
+                            transform: rotate(-15deg);
+                            font-size: 1.2rem;
+                        }
+                        @media print {
+                            body { background: white; }
+                            .certificate { box-shadow: none; border-width: 4px; }
+                            button { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="certificate">
+                        <div class="header">
+                            <h1>SERTIFIKAT UJIAN REMIDI</h1>
+                            <h2>Pengenalan Komponen PC dan Fungsinya</h2>
+                            <p>UKK Teknik Komputer dan Jaringan 2025</p>
+                        </div>
+                        <div class="content">
+                            <p>Diberikan kepada:</p>
+                            <div class="student-name">${examData.studentName}</div>
+                            <p>dengan perolehan nilai:</p>
+                            <div class="score">${finalScore}/100</div>
+                            <p>Status: <strong>${isPass ? 'LULUS' : 'TIDAK LULUS'}</strong></p>
+                            
+                            <div class="details">
+                                <div class="detail-box">
+                                    <h4>Nilai Teori</h4>
+                                    <p>${theoryScore}/100</p>
+                                </div>
+                                <div class="detail-box">
+                                    <h4>Nilai Simulasi</h4>
+                                    <p>${interactivePercentage}/100</p>
+                                </div>
+                                <div class="detail-box">
+                                    <h4>Nilai Game</h4>
+                                    <p>${matchingScore}/100</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="footer">
+                            <div class="signature">
+                                <p>Kedungpring, ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                                <div class="signature-line"></div>
+                                <p>Ketua Jurusan TKJ</p>
+                                <p><strong>Aditya Pratama</strong></p>
+                            </div>
+                        </div>
+                        <div class="stamp">
+                            ${isPass ? 'LULUS' : 'REMIDI'}
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button onclick="window.print()" style="padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">
+                            🖨️ Cetak Sertifikat
+                        </button>
+                    </div>
+                </body>
+                </html>
+            `);
+            certificateWindow.document.close();
+        }
+    </script>
+</body>
+</html>
